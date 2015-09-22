@@ -3,15 +3,8 @@ package com.debugtoday.htmldecoder.struct.html;
 public class Meta extends Element {
 	private String name;
 	private String content;
-	
-	public Meta(String name, String content) {
-		this.setName(name);
-		this.setContent(content);
-	}
-	
-	public Meta() {
-		this(null, null);
-	}
+	private String fullText;
+	private int startPos;
 
 	public String getName() {
 		return name;
@@ -27,5 +20,21 @@ public class Meta extends Element {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	public String getFullText() {
+		return fullText;
+	}
+
+	public void setFullText(String fullText) {
+		this.fullText = fullText;
+	}
+
+	public int getStartPos() {
+		return startPos;
+	}
+
+	public void setStartPos(int startPos) {
+		this.startPos = startPos;
 	}
 }

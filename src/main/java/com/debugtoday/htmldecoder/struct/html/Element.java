@@ -3,12 +3,17 @@ package com.debugtoday.htmldecoder.struct.html;
 import java.io.File;
 import java.util.Map;
 
+import com.debugtoday.htmldecoder.struct.Document;
+
 public class Element {
 	private String tag;	// element tag, i.g. div
 	private String fullText;	// element full text, include tag\attributes\content 
-	private File file;	// the file element belongs to
+	private Document document;	// document that the element belongs to
 	private Map<String, String> attributes;	// element attributes
 	private int fileStartPos;	// start position of tag from the file
+	private int endPosOffset;	// end position offset to fileStartPos
+	private int contentStartPosOffset;	// start position offset of content to fileStartPos
+	private int contentEndPosOffset;	// end position offset of content to fileStartPos
 	
 	public String getTag() {
 		return tag;
@@ -22,11 +27,14 @@ public class Element {
 	public void setFullText(String fullText) {
 		this.fullText = fullText;
 	}
-	public File getFile() {
-		return file;
+	public String getContentText() {
+		return this.fullText.substring(contentStartPosOffset, contentEndPosOffset + 1);
 	}
-	public void setFile(File file) {
-		this.file = file;
+	public Document getDocument() {
+		return document;
+	}
+	public void setDocument(Document document) {
+		this.document = document;
 	}
 	public Map<String, String> getAttributes() {
 		return attributes;
@@ -58,7 +66,4 @@ public class Element {
 	public void setContentEndPosOffset(int contentEndPosOffset) {
 		this.contentEndPosOffset = contentEndPosOffset;
 	}
-	private int endPosOffset;	// end position offset to fileStartPos
-	private int contentStartPosOffset;	// start position offset of content to fileStartPos
-	private int contentEndPosOffset;	// end position offset of content to fileStartPos
 }

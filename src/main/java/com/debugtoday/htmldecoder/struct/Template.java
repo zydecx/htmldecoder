@@ -4,21 +4,14 @@ import java.io.File;
 
 import com.debugtoday.htmldecoder.struct.html.Element;
 
-public class Template {
-	private File file;
+public class Template extends Document {
 	private Element headContainer;
 	private Element bodyContainer;
 	
 	public Template(File file) {
-		this.file = file;
+		super(file);
 	}
-	
-	public File getFile() {
-		return file;
-	}
-	public void setFile(File file) {
-		this.file = file;
-	}
+
 	public Element getHeadContainer() {
 		return headContainer;
 	}
