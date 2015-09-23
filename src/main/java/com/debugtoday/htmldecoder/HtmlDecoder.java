@@ -1,11 +1,21 @@
 package com.debugtoday.htmldecoder;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.codehaus.jackson.map.ObjectMapper;
 
 import com.debugtoday.htmldecoder.conf.Configuration;
 import com.debugtoday.htmldecoder.conf.FileConfiguration;
@@ -13,7 +23,9 @@ import com.debugtoday.htmldecoder.decoder.ArticleDecoder;
 import com.debugtoday.htmldecoder.decoder.TemplateDecoder;
 import com.debugtoday.htmldecoder.exception.GeneralException;
 import com.debugtoday.htmldecoder.struct.Article;
+import com.debugtoday.htmldecoder.struct.ArticleAbstract;
 import com.debugtoday.htmldecoder.struct.Template;
+import com.debugtoday.htmldecoder.util.FileUtil;
 
 public class HtmlDecoder {
 	
@@ -48,21 +60,166 @@ public class HtmlDecoder {
 		File documentFolder = new File(conf.getConf(Configuration.DOCUMENT_FOLDER));
 		
 		String destFolderPath = conf.getConf(Configuration.DESTINATION_FOLDER);
+		String pageScriptPath = conf.getConf(Configuration.SCRIPT_PAGE_FILE);
+		String pageCategoryPath = conf.getConf(Configuration.SCRIPT_CATEGORY_FILE);
+		String pageRecentPath = conf.getConf(Configuration.SCRIPT_RECENT_FILE);
 		
 		for (File file : resourceFolder.listFiles()) {
-			copy(file, new File(destFolderPath + File.separator + file.getName()));
+			FileUtil.copy(file, new File(destFolderPath + File.separator + file.getName()));
 		}
 		
+		List<ArticleAbstract> articleList = new ArrayList<>();
 		for (File file : documentFolder.listFiles()) {
 			Article article = ArticleDecoder.decode(file);
+			ArticleAbstract articleAbstract = article.formatArticleAbsract();
+			articleAbstract.setRelativePath("/" + FileUtil.relativePath(documentFolder, file));
+			articleList.add(articleAbstract);
 			writeDocumentWithTemplate(template, article, new File(destFolderPath + File.separator + file.getName()));
 		}
 		
 		/**
 		 * !! Existing Problems !!
 		 * 1. only copy files one layer downside given folder
-		 * 2. search.js/categories.js/recent.js/page.js NOT created
+		 * 2. categories.js/recent.js/page.js NOT created
 		 */
+
+		writeAccessorialScriptOfPage(new File(pageScriptPath), articleList);
+		writeAccessorialScriptOfCategory(new File(pageCategoryPath), articleList);
+		writeAccessorialScriptOfRecent(new File(pageRecentPath), articleList);
+	}
+	
+	private void writeAccessorialScriptOfPage(File toFile, List<ArticleAbstract> articleList) throws GeneralException {
+		if (!toFile.exists()) {
+			try {
+				toFile.createNewFile();
+			} catch (IOException e) {
+				throw new GeneralException("fail to create new file[" + toFile.getName() + "]", e);
+			}
+		}
+		
+		try (
+				PrintWriter pw = new PrintWriter(toFile);
+				) {
+			pw.append("htmldecoderPageList=").append(new ObjectMapper().writeValueAsString(articleList));
+		} catch (IOException e) {
+			throw new GeneralException("fail to write to file [" + toFile.getName() + "]", e);
+		}
+	}
+	
+	private void writeAccessorialScriptOfCategory(File toFile, List<ArticleAbstract> articleList) throws GeneralException {
+		if (!toFile.exists()) {
+			try {
+				toFile.createNewFile();
+			} catch (IOException e) {
+				throw new GeneralException("fail to create new file[" + toFile.getName() + "]", e);
+			}
+		}
+		
+		class ArticleIndexWrapper {
+			String category;
+			Set<Integer> articleIndex;
+			
+			public ArticleIndexWrapper(String category) {
+				this.category = category;
+				this.articleIndex = new HashSet<>();
+			}
+		}
+		
+		Map<String, ArticleIndexWrapper> categoryMap = new HashMap<>();
+		int i = -1;
+		Iterator<ArticleAbstract> iter = articleList.iterator();
+		while (iter.hasNext()) {
+			i++;
+			ArticleAbstract article = iter.next();
+			String[] categories = article.getCategories();
+			if (categories == null || categories.length == 0) continue;
+			
+			for (String category : categories) {
+				ArticleIndexWrapper articleIndex = categoryMap.get(category);
+				if (articleIndex == null) {
+					articleIndex = new ArticleIndexWrapper(category);
+					categoryMap.put(category, articleIndex);
+				}
+				
+				articleIndex.articleIndex.add(i);
+			}
+		}
+		
+		List<ArticleIndexWrapper> articleIndexList = new ArrayList<>(categoryMap.values());
+		Collections.sort(articleIndexList, new Comparator<ArticleIndexWrapper>() {
+
+			@Override
+			public int compare(ArticleIndexWrapper o1, ArticleIndexWrapper o2) {
+				return o1.articleIndex.size() - o2.articleIndex.size();
+			}
+		});
+		
+		Map<String, Set<Integer>> selectedCategoryMap = new LinkedHashMap<>();
+		for (ArticleIndexWrapper articleIndex : articleIndexList.subList(0, Math.min(5, articleIndexList.size()))) {
+			selectedCategoryMap.put(articleIndex.category, articleIndex.articleIndex);
+		}
+		
+		
+		try (
+				PrintWriter pw = new PrintWriter(toFile);
+				) {
+			pw.append("htmldecoderCategoryObject=").append(new ObjectMapper().writeValueAsString(selectedCategoryMap));
+		} catch (IOException e) {
+			throw new GeneralException("fail to write to file [" + toFile.getName() + "]", e);
+		}
+	}
+	
+	private void writeAccessorialScriptOfRecent(File toFile, List<ArticleAbstract> articleList) throws GeneralException {
+		if (!toFile.exists()) {
+			try {
+				toFile.createNewFile();
+			} catch (IOException e) {
+				throw new GeneralException("fail to create new file[" + toFile.getName() + "]", e);
+			}
+		}
+		
+		class ArticleIndexWrapper {
+			int index;
+			ArticleAbstract article;
+			
+			public ArticleIndexWrapper(ArticleAbstract article, int index) {
+				this.article = article;
+				this.index = index;
+			}
+		}
+		
+		List<ArticleIndexWrapper> articleIndexList = new ArrayList<>();
+		
+		int i = -1;
+		Iterator<ArticleAbstract> iter = articleList.iterator();
+		while (iter.hasNext()) {
+			i++;
+			articleIndexList.add(new ArticleIndexWrapper(iter.next(), i));
+		}
+		
+		Collections.sort(articleIndexList, new Comparator<ArticleIndexWrapper>() {
+
+			@Override
+			public int compare(ArticleIndexWrapper o1, ArticleIndexWrapper o2) {
+				return o1.article.getLastUpdateDate().compareTo(o2.article.getLastUpdateDate());
+			}
+		});
+		
+		List<Integer> selectedArticleIndexList = new ArrayList<>();
+		int length = Math.min(5, articleIndexList.size());
+		i = 0;
+		for (; i < length; i++) {
+			selectedArticleIndexList.add(articleIndexList.get(i).index);
+		}
+		
+		
+		try (
+				PrintWriter pw = new PrintWriter(toFile);
+				) {
+			pw.append("htmldecoderRecentObject=").append(new ObjectMapper().writeValueAsString(selectedArticleIndexList));
+		} catch (IOException e) {
+			throw new GeneralException("fail to write to file [" + toFile.getName() + "]", e);
+		}
 	}
 	
 	private void writeDocumentWithTemplate(Template template, Article article, File toFile) throws GeneralException {
@@ -75,7 +232,7 @@ public class HtmlDecoder {
 		}
 		
 		if (!article.getEnabled()) {
-			copy(article.getFile(), toFile);
+			FileUtil.copy(article.getFile(), toFile);
 		} else {
 			try (
 					PrintWriter pw = new PrintWriter(toFile);
@@ -89,33 +246,9 @@ public class HtmlDecoder {
 				.append(template.getFullText().substring(templateBodyContainerIndex));
 				pw.flush();
 			} catch (FileNotFoundException e) {
-				throw new GeneralException("fail to write article to [" + toFile.getName() + "]", e);
+				throw new GeneralException("fail to write to file [" + toFile.getName() + "]", e);
 			}
 		}
-	}
-	
-	private static void copy(File from, File to) throws GeneralException {
-		if (!to.exists()) {
-			try {
-				to.createNewFile();
-			} catch (IOException e) {
-				throw new GeneralException("fail to create new file[" + to.getName() + "]", e);
-			}
-		}
-		
-		try (
-				FileInputStream fis = new FileInputStream(from);
-				FileOutputStream fos = new FileOutputStream(to);
-				) {
-			byte[] data = new byte[1024];
-			int length;
-			while ((length = fis.read(data)) != -1) {
-				fos.write(data, 0, length);
-			}
-		} catch (IOException e) {
-			throw new GeneralException("fail to copy file from [" + from.getName() + "] to [" + to.getName() + "]", e);
-		}
-		
 	}
 
 }

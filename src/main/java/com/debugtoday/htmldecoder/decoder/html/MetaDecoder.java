@@ -1,5 +1,8 @@
 package com.debugtoday.htmldecoder.decoder.html;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.debugtoday.htmldecoder.exception.GeneralException;
 import com.debugtoday.htmldecoder.struct.html.Meta;
 
@@ -36,7 +39,13 @@ public class MetaDecoder {
 	}
 	
 	public static String[] decodeKeyword(Meta meta) {
-		return meta.getContent().split(META_DELIMITER);
+		List<String> list = new ArrayList<>();
+		for (String s : meta.getContent().split(META_DELIMITER)) {
+			if (!"".equals(s.trim())) {
+				list.add(s.trim());
+			}
+		}
+		return list.toArray(new String[]{});
 	}
 	
 	public static String[] decodeKeyword(Meta meta, boolean forceNullIfNotMatched) {
@@ -44,7 +53,13 @@ public class MetaDecoder {
 	}
 	
 	public static String[] decodeCategory(Meta meta) {
-		return meta.getContent().split(META_DELIMITER);
+		List<String> list = new ArrayList<>();
+		for (String s : meta.getContent().split(META_DELIMITER)) {
+			if (!"".equals(s.trim())) {
+				list.add(s.trim());
+			}
+		}
+		return list.toArray(new String[]{});
 	}
 	
 	public static String[] decodeCategory(Meta meta, boolean forceNullIfNotMatched) {

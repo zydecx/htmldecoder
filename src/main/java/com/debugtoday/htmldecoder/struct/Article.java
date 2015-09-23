@@ -1,12 +1,14 @@
 package com.debugtoday.htmldecoder.struct;
 
 import java.io.File;
+import java.util.Date;
 
 import com.debugtoday.htmldecoder.struct.html.Element;
 
 public class Article extends Document {
 	
 	private boolean enabled;
+	private Element title;
 	private String abstractContent;
 	private String[] keyword;
 	private String[] categories;
@@ -23,6 +25,14 @@ public class Article extends Document {
 
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+	}
+
+	public Element getTitle() {
+		return title;
+	}
+
+	public void setTitle(Element title) {
+		this.title = title;
 	}
 
 	public String getAbstractContent() {
@@ -54,6 +64,18 @@ public class Article extends Document {
 	}
 	public void setBody(Element body) {
 		this.body = body;
+	}
+	
+	public ArticleAbstract formatArticleAbsract() {
+		ArticleAbstract articleAbstract = new ArticleAbstract();
+		articleAbstract.setTitle(title == null ? getFile().getName() : title.getContentText());
+		articleAbstract.setAbstractContent(abstractContent);
+		articleAbstract.setCategories(categories);
+		articleAbstract.setKeyword(keyword);
+		articleAbstract.setCreateDate(new Date(getFile().lastModified()));
+		articleAbstract.setLastUpdateDate(new Date(getFile().lastModified()));
+		
+		return articleAbstract;
 	}
 
 }

@@ -33,9 +33,12 @@ public class ArticleDecoder {
 			int offsetPos = 0;
 			Element head = decodeArticleElement(article, "head", offsetPos);
 			
+			Element title = decodeArticleElement(article, "title", head.getFileStartPos());
+			
 			offsetPos = head == null ? 0 : (head.getFileStartPos() + head.getEndPosOffset());
 			Element body = decodeArticleElement(article, "body", offsetPos);
 			
+			article.setTitle(title);
 			article.setHead(head);
 			article.setBody(body);
 

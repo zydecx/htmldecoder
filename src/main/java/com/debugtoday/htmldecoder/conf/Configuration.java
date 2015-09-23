@@ -10,6 +10,9 @@ public abstract class Configuration {
 	public static final String RESOURCE_FOLDER = "resource-folder";
 	public static final String DOCUMENT_FOLDER = "document-folder";
 	public static final String DESTINATION_FOLDER = "destination-folder";
+	public static final String SCRIPT_PAGE_FILE = "script-page-file";
+	public static final String SCRIPT_CATEGORY_FILE = "script-category-file";
+	public static final String SCRIPT_RECENT_FILE = "script-recent-file";
 	
 	private Map<String, String> conf = new HashMap<>();
 	
