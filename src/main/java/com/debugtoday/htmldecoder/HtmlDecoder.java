@@ -64,18 +64,9 @@ public class HtmlDecoder {
 		String pageCategoryPath = conf.getConf(Configuration.SCRIPT_CATEGORY_FILE);
 		String pageRecentPath = conf.getConf(Configuration.SCRIPT_RECENT_FILE);
 		
-		for (File file : resourceFolder.listFiles()) {
-			FileUtil.copy(file, new File(destFolderPath + File.separator + file.getName()));
-		}
+		FileUtil.copyDirectory(resourceFolder, new File(destFolderPath));
 		
-		List<ArticleAbstract> articleList = new ArrayList<>();
-		for (File file : documentFolder.listFiles()) {
-			Article article = ArticleDecoder.decode(file);
-			ArticleAbstract articleAbstract = article.formatArticleAbsract();
-			articleAbstract.setRelativePath("/" + FileUtil.relativePath(documentFolder, file));
-			articleList.add(articleAbstract);
-			writeDocumentWithTemplate(template, article, new File(destFolderPath + File.separator + file.getName()));
-		}
+		List<ArticleAbstract> articleList = writeDocumentFolderWithTemplate(template, documentFolder, documentFolder, destFolderPath);
 		
 		/**
 		 * !! Existing Problems !!
@@ -88,12 +79,42 @@ public class HtmlDecoder {
 		writeAccessorialScriptOfRecent(new File(pageRecentPath), articleList);
 	}
 	
+	private List<ArticleAbstract> writeDocumentFolderWithTemplate(Template template, File topDocumentFolder, File documentFolder, String destFolderPath) throws GeneralException {
+		List<ArticleAbstract> articleAbstractList = new ArrayList<>();
+		
+		for (File file : documentFolder.listFiles()) {
+			if (file.isDirectory()) {
+				String relativePath = FileUtil.relativePath(topDocumentFolder, file);
+				File tempDir = new File(destFolderPath + File.separator + relativePath);
+				if (!tempDir.exists()) {
+					tempDir.mkdirs();
+				}
+				articleAbstractList.addAll(writeDocumentFolderWithTemplate(template, topDocumentFolder, file, destFolderPath));
+			} else {
+				articleAbstractList.add(writeDocumentSingleFileWithTemplate(template, topDocumentFolder, file, destFolderPath));
+			}
+		}
+		
+		return articleAbstractList;
+	}
+	
+	private ArticleAbstract writeDocumentSingleFileWithTemplate(Template template, File topDocumentFolder, File documentFile, String destFolderPath) throws GeneralException {
+		Article article = ArticleDecoder.decode(documentFile);
+		ArticleAbstract articleAbstract = article.formatArticleAbsract();
+		
+		String relativePath = FileUtil.relativePath(topDocumentFolder, documentFile);
+		articleAbstract.setRelativePath("/" + relativePath);
+		writeDocumentWithTemplate(template, article, new File(destFolderPath + File.separator + relativePath));
+		
+		return articleAbstract;
+	}
+	
 	private void writeAccessorialScriptOfPage(File toFile, List<ArticleAbstract> articleList) throws GeneralException {
 		if (!toFile.exists()) {
 			try {
 				toFile.createNewFile();
 			} catch (IOException e) {
-				throw new GeneralException("fail to create new file[" + toFile.getName() + "]", e);
+				throw new GeneralException("fail to create new file[" + toFile.getPath() + "]", e);
 			}
 		}
 		
@@ -102,7 +123,7 @@ public class HtmlDecoder {
 				) {
 			pw.append("htmldecoderPageList=").append(new ObjectMapper().writeValueAsString(articleList));
 		} catch (IOException e) {
-			throw new GeneralException("fail to write to file [" + toFile.getName() + "]", e);
+			throw new GeneralException("fail to write to file [" + toFile.getPath() + "]", e);
 		}
 	}
 	
@@ -111,7 +132,7 @@ public class HtmlDecoder {
 			try {
 				toFile.createNewFile();
 			} catch (IOException e) {
-				throw new GeneralException("fail to create new file[" + toFile.getName() + "]", e);
+				throw new GeneralException("fail to create new file[" + toFile.getPath() + "]", e);
 			}
 		}
 		
@@ -165,7 +186,7 @@ public class HtmlDecoder {
 				) {
 			pw.append("htmldecoderCategoryObject=").append(new ObjectMapper().writeValueAsString(selectedCategoryMap));
 		} catch (IOException e) {
-			throw new GeneralException("fail to write to file [" + toFile.getName() + "]", e);
+			throw new GeneralException("fail to write to file [" + toFile.getPath() + "]", e);
 		}
 	}
 	
@@ -174,7 +195,7 @@ public class HtmlDecoder {
 			try {
 				toFile.createNewFile();
 			} catch (IOException e) {
-				throw new GeneralException("fail to create new file[" + toFile.getName() + "]", e);
+				throw new GeneralException("fail to create new file[" + toFile.getPath() + "]", e);
 			}
 		}
 		
@@ -218,7 +239,7 @@ public class HtmlDecoder {
 				) {
 			pw.append("htmldecoderRecentObject=").append(new ObjectMapper().writeValueAsString(selectedArticleIndexList));
 		} catch (IOException e) {
-			throw new GeneralException("fail to write to file [" + toFile.getName() + "]", e);
+			throw new GeneralException("fail to write to file [" + toFile.getPath() + "]", e);
 		}
 	}
 	
@@ -227,7 +248,7 @@ public class HtmlDecoder {
 			try {
 				toFile.createNewFile();
 			} catch (IOException e) {
-				throw new GeneralException("fail to create new file[" + toFile.getName() + "]", e);
+				throw new GeneralException("fail to create new file[" + toFile.getPath() + "]", e);
 			}
 		}
 		
@@ -246,7 +267,7 @@ public class HtmlDecoder {
 				.append(template.getFullText().substring(templateBodyContainerIndex));
 				pw.flush();
 			} catch (FileNotFoundException e) {
-				throw new GeneralException("fail to write to file [" + toFile.getName() + "]", e);
+				throw new GeneralException("fail to write to file [" + toFile.getPath() + "]", e);
 			}
 		}
 	}

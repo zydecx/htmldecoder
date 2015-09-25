@@ -41,12 +41,41 @@ public class FileUtil {
 		return null;
 	}
 	
+	/**
+	 * 递归复制文件夹
+	 * @param from
+	 * @param to
+	 * @throws GeneralException 
+	 */
+	public static void copyDirectory(File from, File to) throws GeneralException {
+		if (!from.isDirectory()) {
+			throw new GeneralException("invalid directory[" + from.getPath() + "]");
+		}
+		
+		if (!to.exists()) {
+			to.mkdirs();
+		}
+		
+		for (File file : from.listFiles()) {
+			File destFile = new File(to.getAbsolutePath() + File.separator + relativePath(from, file));
+			if (file.isFile()) {
+				copy(file, destFile);
+			} else {
+				copyDirectory(file, destFile);
+			}
+		}
+	}
+	
 	public static void copy(File from, File to) throws GeneralException {
+		if (!from.isFile()) {
+			throw new GeneralException("invalid file[" + from.getPath() + "]");
+		}
+		
 		if (!to.exists()) {
 			try {
 				to.createNewFile();
 			} catch (IOException e) {
-				throw new GeneralException("fail to create new file[" + to.getName() + "]", e);
+				throw new GeneralException("fail to create new file[" + to.getPath() + "]", e);
 			}
 		}
 		
@@ -60,7 +89,7 @@ public class FileUtil {
 				fos.write(data, 0, length);
 			}
 		} catch (IOException e) {
-			throw new GeneralException("fail to copy file from [" + from.getName() + "] to [" + to.getName() + "]", e);
+			throw new GeneralException("fail to copy file from [" + from.getPath() + "] to [" + to.getPath() + "]", e);
 		}
 		
 	}
