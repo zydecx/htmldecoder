@@ -53,20 +53,44 @@ public class HtmlDecoder {
 			throw new GeneralException("configuration not initialized");
 		}
 		
-		File templateFile = new File(conf.getConf(Configuration.TEMPLATE_FILE));
-		Template template = TemplateDecoder.decode(templateFile);
+		String siteUrl = conf.getConf(Configuration.SITE_URL);
+		if (siteUrl == null) {
+			siteUrl = ".";
+		} else if (siteUrl.endsWith("/")) {
+			siteUrl = siteUrl.substring(0, siteUrl.length() - 1);
+		}
 		
-		File resourceFolder = new File(conf.getConf(Configuration.RESOURCE_FOLDER));
-		File documentFolder = new File(conf.getConf(Configuration.DOCUMENT_FOLDER));
+		String ignoreListStr = conf.getConf(Configuration.IGNORE_PATH_LIST);
+		String[] ignoreList = ignoreListStr == null ? new String[]{} : ignoreListStr.split(",");
+		for (int i = 0; i < ignoreList.length; i++) {
+			String s = ignoreList[i];
+			if (s.startsWith(" ") || s.endsWith(" ")) {
+				ignoreList[i] = s.trim();
+			}
+		}
 		
-		String destFolderPath = conf.getConf(Configuration.DESTINATION_FOLDER);
-		String pageScriptPath = conf.getConf(Configuration.SCRIPT_PAGE_FILE);
-		String pageCategoryPath = conf.getConf(Configuration.SCRIPT_CATEGORY_FILE);
-		String pageRecentPath = conf.getConf(Configuration.SCRIPT_RECENT_FILE);
+		int paginationSize = 10;
+		try {
+			paginationSize = Integer.parseInt(conf.getConf(Configuration.PAGINATION_SIZE));
+		} catch (Exception e) {
+			System.err.println("fail to read paginationsize, use default instead;" + e.getMessage());
+		}
 		
-		FileUtil.copyDirectory(resourceFolder, new File(destFolderPath));
+		File templateFile = new File(conf.getConf(Configuration.TEMPLATE_PATH));
+		Template template = TemplateDecoder.decode(templateFile, conf);
 		
-		List<ArticleAbstract> articleList = writeDocumentFolderWithTemplate(template, documentFolder, documentFolder, destFolderPath);
+		File contentFolder = new File(conf.getConf(Configuration.CONTENT_PATH));
+		File outputFolder = new File(conf.getConf(Configuration.OUTPUT_PATH));
+		File staticPageFolder = new File(contentFolder.getAbsoluteFile() + File.separator + conf.getConf(Configuration.STATIC_PAGE_PATH));
+		
+		ConfigurationUtil confUtil = new ConfigurationUtil(siteUrl, paginationSize, ignoreList, templateFile, contentFolder, outputFolder, staticPageFolder);
+		
+		/*FileUtil.copyDirectory(resourceFolder, new File(destFolderPath));*/
+		
+		/**
+		 * !! Waiting to be fininshed !!
+		 */
+		/*List<ArticleAbstract> articleList = writeDocumentFolderWithTemplate(template, documentFolder, documentFolder, destFolderPath);*/
 		
 		/**
 		 * !! Existing Problems !!
@@ -74,9 +98,9 @@ public class HtmlDecoder {
 		 * 2. categories.js/recent.js/page.js NOT created
 		 */
 
-		writeAccessorialScriptOfPage(new File(pageScriptPath), articleList);
+		/*writeAccessorialScriptOfPage(new File(pageScriptPath), articleList);
 		writeAccessorialScriptOfCategory(new File(pageCategoryPath), articleList);
-		writeAccessorialScriptOfRecent(new File(pageRecentPath), articleList);
+		writeAccessorialScriptOfRecent(new File(pageRecentPath), articleList);*/
 	}
 	
 	private List<ArticleAbstract> writeDocumentFolderWithTemplate(Template template, File topDocumentFolder, File documentFolder, String destFolderPath) throws GeneralException {
@@ -270,6 +294,26 @@ public class HtmlDecoder {
 				throw new GeneralException("fail to write to file [" + toFile.getPath() + "]", e);
 			}
 		}
+	}
+	
+	private class ConfigurationUtil {
+		public ConfigurationUtil(String siteUrl, int paginationSize, String[] ignoreList, File templateFile, File contentFolder, File outputFolder, File staticPageFolder) {
+			this.siteUrl  =siteUrl;
+			this.paginationSize = paginationSize;
+			this.ignoreList = ignoreList;
+			this.templateFile = templateFile;
+			this.contentFolder = contentFolder;
+			this.outputFolder = outputFolder;
+			this.staticPageFolder = staticPageFolder;
+		}
+		
+		String siteUrl;
+		int paginationSize;
+		String[] ignoreList;
+		File templateFile;
+		File contentFolder;
+		File outputFolder;
+		File staticPageFolder;
 	}
 
 }

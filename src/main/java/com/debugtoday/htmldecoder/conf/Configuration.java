@@ -6,13 +6,14 @@ import java.util.Map;
 import com.debugtoday.htmldecoder.exception.GeneralException;
 
 public abstract class Configuration {
-	public static final String TEMPLATE_FILE = "template-file";
-	public static final String RESOURCE_FOLDER = "resource-folder";
-	public static final String DOCUMENT_FOLDER = "document-folder";
-	public static final String DESTINATION_FOLDER = "destination-folder";
-	public static final String SCRIPT_PAGE_FILE = "script-page-file";
-	public static final String SCRIPT_CATEGORY_FILE = "script-category-file";
-	public static final String SCRIPT_RECENT_FILE = "script-recent-file";
+	public static final String SITE_URL = "siteurl";
+	public static final String PAGINATION_SIZE = "paginationsize";
+	
+	public static final String TEMPLATE_PATH = "template";
+	public static final String CONTENT_PATH = "content";
+	public static final String OUTPUT_PATH = "output";
+	public static final String STATIC_PAGE_PATH = "staticpage";
+	public static final String IGNORE_PATH_LIST = "ignorelist";
 	
 	private Map<String, String> conf = new HashMap<>();
 	

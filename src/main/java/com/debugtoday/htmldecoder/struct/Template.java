@@ -7,6 +7,7 @@ import com.debugtoday.htmldecoder.struct.html.Element;
 public class Template extends Document {
 	private Element headContainer;
 	private Element bodyContainer;
+	private Element navContainer;
 	
 	public Template(File file) {
 		super(file);
@@ -23,6 +24,14 @@ public class Template extends Document {
 	}
 	public void setBodyContainer(Element bodyContainer) {
 		this.bodyContainer = bodyContainer;
+	}
+
+	public Element getNavContainer() {
+		return navContainer;
+	}
+
+	public void setNavContainer(Element navContainer) {
+		this.navContainer = navContainer;
 	}
 
 }

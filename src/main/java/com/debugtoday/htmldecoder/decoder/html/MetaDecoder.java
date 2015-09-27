@@ -7,22 +7,28 @@ import com.debugtoday.htmldecoder.exception.GeneralException;
 import com.debugtoday.htmldecoder.struct.html.Meta;
 
 public class MetaDecoder {
-	
-	public static final String META_ABSTRACT = "htmldecoder:abstract";
-	public static final String META_KEYWORD = "htmldecoder:keyword";
+
+	public static final String META_DATE = "htmldecoder:date";
+	public static final String META_MODIFIED = "htmldecoder:modified";
+	public static final String META_TAGS = "htmldecoder:tags";
 	public static final String META_CATEGORY = "htmldecoder:category";
+	public static final String META_ABSTRACT = "htmldecoder:abstract";
 	public static final String META_ENABLED = "htmldecoder:enabled";
 	
 	private static final String META_DELIMITER = ",";	// 内容关键字分隔符
 	
 	public static String[] decodeMeta(Meta meta) throws GeneralException {
 		switch (meta.getName()) {
-		case META_ABSTRACT:
-			return new String[]{decodeAbstract(meta)};
+		case META_DATE:
+			return new String[]{decodeDate(meta)};
+		case META_MODIFIED:
+			return new String[]{decodeModified(meta)};
+		case META_TAGS:
+			return decodeTags(meta);
 		case META_CATEGORY:
 			return decodeCategory(meta);
-		case META_KEYWORD:
-			return decodeKeyword(meta);
+		case META_ABSTRACT:
+			return new String[]{decodeAbstract(meta)};
 		case META_ENABLED:
 			return new String[] {Boolean.toString(decodeEnabled(meta))};
 		}
@@ -30,15 +36,15 @@ public class MetaDecoder {
 		throw new GeneralException("unrecognized meta");
 	}
 	
-	public static String decodeAbstract(Meta meta) {
+	private static String decodeString(Meta meta) {
 		return meta.getContent();
 	}
 	
-	public static String decodeAbstract(Meta meta, boolean forceNullIfNotMatched) {
-		return forceNullIfNotMatched && !meta.getName().equalsIgnoreCase(META_ABSTRACT) ? null : decodeAbstract(meta);
+	private static String decodeString(Meta meta, String name, boolean forceNullIfNotMatched) {
+		return forceNullIfNotMatched && !meta.getName().equalsIgnoreCase(name) ? null : decodeString(meta);
 	}
 	
-	public static String[] decodeKeyword(Meta meta) {
+	private static String[] decodeStringArray(Meta meta) {
 		List<String> list = new ArrayList<>();
 		for (String s : meta.getContent().split(META_DELIMITER)) {
 			if (!"".equals(s.trim())) {
@@ -48,22 +54,48 @@ public class MetaDecoder {
 		return list.toArray(new String[]{});
 	}
 	
-	public static String[] decodeKeyword(Meta meta, boolean forceNullIfNotMatched) {
-		return forceNullIfNotMatched && !meta.getName().equalsIgnoreCase(META_KEYWORD) ? null : decodeKeyword(meta);
+	private static String[] decodeStringArray(Meta meta, String name, boolean forceNullIfNotMatched) {
+		return forceNullIfNotMatched && !meta.getName().equalsIgnoreCase(name) ? null : decodeStringArray(meta);
+	}
+	
+	public static String decodeDate(Meta meta) {
+		return decodeString(meta);
+	}
+	
+	public static String decodeDate(Meta meta, boolean forceNullIfNotMatched) {
+		return decodeString(meta, META_DATE, forceNullIfNotMatched);
+	}
+	
+	public static String decodeModified(Meta meta) {
+		return decodeString(meta);
+	}
+	
+	public static String decodeModified(Meta meta, boolean forceNullIfNotMatched) {
+		return decodeString(meta, META_MODIFIED, forceNullIfNotMatched);
+	}
+	
+	public static String[] decodeTags(Meta meta) {
+		return decodeStringArray(meta);
+	}
+	
+	public static String[] decodeTags(Meta meta, boolean forceNullIfNotMatched) {
+		return decodeStringArray(meta, META_TAGS, forceNullIfNotMatched);
 	}
 	
 	public static String[] decodeCategory(Meta meta) {
-		List<String> list = new ArrayList<>();
-		for (String s : meta.getContent().split(META_DELIMITER)) {
-			if (!"".equals(s.trim())) {
-				list.add(s.trim());
-			}
-		}
-		return list.toArray(new String[]{});
+		return decodeStringArray(meta);
 	}
 	
 	public static String[] decodeCategory(Meta meta, boolean forceNullIfNotMatched) {
-		return forceNullIfNotMatched && !meta.getName().equalsIgnoreCase(META_CATEGORY) ? null : decodeCategory(meta);
+		return decodeStringArray(meta, META_TAGS, forceNullIfNotMatched);
+	}
+	
+	public static String decodeAbstract(Meta meta) {
+		return decodeString(meta);
+	}
+	
+	public static String decodeAbstract(Meta meta, boolean forceNullIfNotMatched) {
+		return decodeString(meta, META_ABSTRACT, forceNullIfNotMatched);
 	}
 	
 	public static Boolean decodeEnabled(Meta meta) {

@@ -7,11 +7,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 
+import com.debugtoday.htmldecoder.conf.Configuration;
 import com.debugtoday.htmldecoder.exception.GeneralException;
 import com.debugtoday.htmldecoder.struct.Template;
 import com.debugtoday.htmldecoder.struct.html.Element;
 
-public class TemplateDecoder {
+public class TemplateDecoder extends GeneralDecoder {
 	
 	/**
 	 * decode template file
@@ -19,7 +20,7 @@ public class TemplateDecoder {
 	 * @return
 	 * @throws GeneralException
 	 */
-	public static Template decode(File file) throws GeneralException {
+	public static Template decode(File file, Configuration conf) throws GeneralException {
 		try (
 				BufferedReader reader = new BufferedReader(new FileReader(file));
 				) {
@@ -30,9 +31,10 @@ public class TemplateDecoder {
 				fullText.append(inLine).append("\n");
 			}
 			
-			template.setFullText(fullText.toString());
+			template.setFullText(replaceGeneralArguments(fullText.toString(), conf));
 			template.setHeadContainer(decodeTemplateContainer(template, CONTAINER_HEAD));
 			template.setBodyContainer(decodeTemplateContainer(template, CONTAINER_BODY));
+			template.setNavContainer(decodeTemplateContainer(template, CONTAINER_NAV));
 			
 			return template;
 		} catch (IOException e) {
@@ -40,45 +42,12 @@ public class TemplateDecoder {
 		}
 	}
 	
-	/**
-	 * decode container wrapper in template
-	 * @param template
-	 * @param container
-	 * @return
-	 */
 	private static Element decodeTemplateContainer(Template template, String container) {
-		String fullText = template.getFullText();
-		
-		String formattedContainer = formatContainer(container);
-		int index = fullText.indexOf(formattedContainer);
-		
-		if (index < 0) {
-			return null;
-		}
-		
-		Element element = new Element();
-		element.setDocument(template);
-		/*element.setTag(null);
-		element.setAttributes(new HashMap<String, String>());*/
-		element.setFullText(formattedContainer);
-		element.setFileStartPos(index);
-		element.setEndPosOffset(formattedContainer.length() - 1);
-		element.setContentStartPosOffset(0);
-		element.setContentEndPosOffset(formattedContainer.length() - 1);
-		
-		return element;
-	}
-	
-	/**
-	 * format container as it's form in template file
-	 * @param container
-	 * @return
-	 */
-	private static String formatContainer(String container) {
-		return "<!--" + container + "-->";
+		return decodeGeneralContainer(template, container);
 	}
 	
 	private static final String CONTAINER_HEAD = "htmldecoder:head";
 	private static final String CONTAINER_BODY = "htmldecoder:body";
+	private static final String CONTAINER_NAV = "htmldecoder:nav";
 
 }

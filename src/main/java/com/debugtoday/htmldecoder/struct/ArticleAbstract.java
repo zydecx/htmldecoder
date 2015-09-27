@@ -5,7 +5,7 @@ import java.util.Date;
 public class ArticleAbstract {
 	private String relativePath;
 	private String abstractContent;
-	private String[] keyword;
+	private String[] tags;
 	private String[] categories;
 	private String title;
 	private Date createDate;
@@ -23,11 +23,11 @@ public class ArticleAbstract {
 	public void setAbstractContent(String abstractContent) {
 		this.abstractContent = abstractContent;
 	}
-	public String[] getKeyword() {
-		return keyword;
+	public String[] getTags() {
+		return tags;
 	}
-	public void setKeyword(String[] keyword) {
-		this.keyword = keyword;
+	public void setTags(String[] tags) {
+		this.tags = tags;
 	}
 	public String[] getCategories() {
 		return categories;

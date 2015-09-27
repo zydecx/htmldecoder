@@ -10,10 +10,13 @@ public class Article extends Document {
 	private boolean enabled;
 	private Element title;
 	private String abstractContent;
-	private String[] keyword;
+	private String[] tags;
 	private String[] categories;
+	private Date createDate;
+	private Date lastUpdateDate;
 	private Element head;
 	private Element body;
+	private Element more;
 	
 	public Article(File file) {
 		super(file);
@@ -41,11 +44,11 @@ public class Article extends Document {
 	public void setAbstractContent(String abstractContent) {
 		this.abstractContent = abstractContent;
 	}
-	public String[] getKeyword() {
-		return keyword;
+	public String[] getTags() {
+		return tags;
 	}
-	public void setKeyword(String[] keyword) {
-		this.keyword = keyword;
+	public void setTags(String[] tags) {
+		this.tags = tags;
 	}
 	public String[] getCategories() {
 		return categories;
@@ -53,6 +56,22 @@ public class Article extends Document {
 	public void setCategories(String[] categories) {
 		this.categories = categories;
 	}
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
+	public Date getLastUpdateDate() {
+		return lastUpdateDate;
+	}
+
+	public void setLastUpdateDate(Date lastUpdateDate) {
+		this.lastUpdateDate = lastUpdateDate;
+	}
+
 	public Element getHead() {
 		return head;
 	}
@@ -66,14 +85,22 @@ public class Article extends Document {
 		this.body = body;
 	}
 	
+	public Element getMore() {
+		return more;
+	}
+
+	public void setMore(Element more) {
+		this.more = more;
+	}
+
 	public ArticleAbstract formatArticleAbsract() {
 		ArticleAbstract articleAbstract = new ArticleAbstract();
 		articleAbstract.setTitle(title == null ? getFile().getName() : title.getContentText());
 		articleAbstract.setAbstractContent(abstractContent);
 		articleAbstract.setCategories(categories);
-		articleAbstract.setKeyword(keyword);
-		articleAbstract.setCreateDate(new Date(getFile().lastModified()));
-		articleAbstract.setLastUpdateDate(new Date(getFile().lastModified()));
+		articleAbstract.setTags(tags);
+		articleAbstract.setCreateDate(createDate);
+		articleAbstract.setLastUpdateDate(lastUpdateDate);
 		
 		return articleAbstract;
 	}
