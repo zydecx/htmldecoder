@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -83,14 +85,50 @@ public class HtmlDecoder {
 		File outputFolder = new File(conf.getConf(Configuration.OUTPUT_PATH));
 		File staticPageFolder = new File(contentFolder.getAbsoluteFile() + File.separator + conf.getConf(Configuration.STATIC_PAGE_PATH));
 		
-		ConfigurationUtil confUtil = new ConfigurationUtil(siteUrl, paginationSize, ignoreList, templateFile, contentFolder, outputFolder, staticPageFolder);
-		
-		/*FileUtil.copyDirectory(resourceFolder, new File(destFolderPath));*/
+		ConfigurationUtil confUtil = new ConfigurationUtil(conf, siteUrl, paginationSize, ignoreList, templateFile, contentFolder, outputFolder, staticPageFolder);
 		
 		/**
 		 * !! Waiting to be fininshed !!
 		 */
-		/*List<ArticleAbstract> articleList = writeDocumentFolderWithTemplate(template, documentFolder, documentFolder, destFolderPath);*/
+		List<ArticleAbstract> articleList = analyzeContentFolderAndMoveResources(contentFolder, confUtil);
+		// sort descending
+		Collections.sort(articleList, new Comparator<ArticleAbstract>() {
+
+			@Override
+			public int compare(ArticleAbstract o1, ArticleAbstract o2) {
+				return o2.getLastUpdateDate().compareTo(o1.getLastUpdateDate());
+			}
+		});
+		String navRecent = extractNavRecent(articleList, 5, confUtil.siteUrl);
+		
+		List<CategoryUtil> categoryList = analyzeArticleCategory(articleList);
+		// sort descending
+		Collections.sort(categoryList, new Comparator<CategoryUtil>() {
+
+			@Override
+			public int compare(CategoryUtil o1, CategoryUtil o2) {
+				return o2.articleSet.size() - o1.articleSet.size();
+			}
+		});
+		String navCategory = extractNavCategory(categoryList, 5, confUtil.siteUrl);
+
+		List<TagUtil> tagList = analyzeArticleTag(articleList);
+		// sort descending
+		Collections.sort(tagList, new Comparator<TagUtil>() {
+
+			@Override
+			public int compare(TagUtil o1, TagUtil o2) {
+				return o2.articleSet.size() - o1.articleSet.size();
+			}
+		});
+		String navTag = extractNavTag(tagList, 5, confUtil.siteUrl);
+		
+		
+		String navHtml = navRecent + navCategory + navTag;
+		template.setNavHtml(navHtml);
+		for (ArticleAbstract article : articleList) {
+			writeDocumentWithTemplate(template, article, confUtil);
+		}
 		
 		/**
 		 * !! Existing Problems !!
@@ -103,34 +141,172 @@ public class HtmlDecoder {
 		writeAccessorialScriptOfRecent(new File(pageRecentPath), articleList);*/
 	}
 	
-	private List<ArticleAbstract> writeDocumentFolderWithTemplate(Template template, File topDocumentFolder, File documentFolder, String destFolderPath) throws GeneralException {
+	/**
+	 * analyze content folder, decode article to Java Object and copy other resources to output folder.
+	 * @param contentFolder
+	 * @param confUtil
+	 * @return
+	 * @throws GeneralException
+	 */
+	private List<ArticleAbstract> analyzeContentFolderAndMoveResources(File contentFolder, ConfigurationUtil confUtil) throws GeneralException {
 		List<ArticleAbstract> articleAbstractList = new ArrayList<>();
 		
-		for (File file : documentFolder.listFiles()) {
+		for (File file : contentFolder.listFiles()) {
+			if (confUtil.isIgnored(file)) {
+				continue;
+			}
+			
 			if (file.isDirectory()) {
-				String relativePath = FileUtil.relativePath(topDocumentFolder, file);
-				File tempDir = new File(destFolderPath + File.separator + relativePath);
-				if (!tempDir.exists()) {
-					tempDir.mkdirs();
+				try {
+					String relativePath = FileUtil.relativePath(confUtil.contentFolder, file);
+					File tempDir = new File(confUtil.outputFolder.getCanonicalPath() + File.separator + relativePath.replace("/", File.separator));
+					if (!tempDir.exists()) {
+						tempDir.mkdirs();
+					}
+				} catch (IOException e) {
+					throw new GeneralException(e);
 				}
-				articleAbstractList.addAll(writeDocumentFolderWithTemplate(template, topDocumentFolder, file, destFolderPath));
+				articleAbstractList.addAll(analyzeContentFolderAndMoveResources(file, confUtil));
 			} else {
-				articleAbstractList.add(writeDocumentSingleFileWithTemplate(template, topDocumentFolder, file, destFolderPath));
+				ArticleAbstract article = analyzeContentFileAndMoveResource(file, confUtil);
+				if (article != null) {
+					articleAbstractList.add(article);
+				}
 			}
 		}
 		
 		return articleAbstractList;
 	}
 	
-	private ArticleAbstract writeDocumentSingleFileWithTemplate(Template template, File topDocumentFolder, File documentFile, String destFolderPath) throws GeneralException {
-		Article article = ArticleDecoder.decode(documentFile);
-		ArticleAbstract articleAbstract = article.formatArticleAbsract();
+	/**
+	 * analyze content file, decode to Java Object if the file is an article; otherwise, copy to output folder.
+	 * @param file
+	 * @param confUtil
+	 * @return
+	 * @throws GeneralException
+	 */
+	private ArticleAbstract analyzeContentFileAndMoveResource(File file, ConfigurationUtil confUtil) throws GeneralException {
+		String relativePath;
+		try {
+			relativePath = FileUtil.relativePath(confUtil.contentFolder, file);
+		} catch (IOException e) {
+			throw new GeneralException(e);
+		}
 		
-		String relativePath = FileUtil.relativePath(topDocumentFolder, documentFile);
-		articleAbstract.setRelativePath("/" + relativePath);
-		writeDocumentWithTemplate(template, article, new File(destFolderPath + File.separator + relativePath));
+		if (file.getName().endsWith(".htm") || file.getName().endsWith(".html")) {
+			Article article = ArticleDecoder.decode(file, confUtil.conf);
+			ArticleAbstract articleAbstract = article.formatArticleAbsract();
+			
+			articleAbstract.setRelativePath("/" + relativePath);
+			
+			return articleAbstract;
+		} else {
+			try {
+				FileUtil.copy(file, new File(confUtil.outputFolder.getCanonicalPath() + File.separator + relativePath.replace("/", File.separator)));
+			} catch (IOException e) {
+				throw new GeneralException(e);
+			}
+			return null;
+		}
+	}
+	
+	private List<CategoryUtil> analyzeArticleCategory(List<ArticleAbstract> articleList) {
+		Map<String, CategoryUtil> categoryMap = new HashMap<>();
+
+		Iterator<ArticleAbstract> iter = articleList.iterator();
+		while (iter.hasNext()) {
+			ArticleAbstract article = iter.next();
+			String[] categories = article.getCategories();
+			if (categories == null || categories.length == 0) continue;
+			
+			for (String category : categories) {
+				CategoryUtil categoryUtil = categoryMap.get(category);
+				if (categoryUtil == null) {
+					categoryUtil = new CategoryUtil(category);
+					categoryMap.put(category, categoryUtil);
+				}
+				
+				categoryUtil.articleSet.add(article);
+			}
+		}
 		
-		return articleAbstract;
+		return new ArrayList<>(categoryMap.values());
+	}
+	
+	private List<TagUtil> analyzeArticleTag(List<ArticleAbstract> articleList) {
+		Map<String, TagUtil> tagMap = new HashMap<>();
+
+		Iterator<ArticleAbstract> iter = articleList.iterator();
+		while (iter.hasNext()) {
+			ArticleAbstract article = iter.next();
+			String[] categories = article.getCategories();
+			if (categories == null || categories.length == 0) continue;
+			
+			for (String tag : categories) {
+				TagUtil tagUtil = tagMap.get(tag);
+				if (tagUtil == null) {
+					tagUtil = new TagUtil(tag);
+					tagMap.put(tag, tagUtil);
+				}
+				
+				tagUtil.articleSet.add(article);
+			}
+		}
+		
+		return new ArrayList<>(tagMap.values());
+	}
+	
+	private String extractNavCategory(List<CategoryUtil> categoryList, int size, String siteUrl) {
+		int length = Math.min(size, categoryList.size());
+		
+		StringBuilder navHtml = new StringBuilder("<nav><ul>");
+		for (int j = 0; j < length; j++) {
+			String categoryName = categoryList.get(j).category;
+			try {
+				navHtml.append("<li><a href='").append(siteUrl).append("/category/")
+						.append(URLEncoder.encode(categoryName, "UTF-8")).append("'>")
+						.append(categoryName).append("</a></li>");
+			} catch (UnsupportedEncodingException e) {
+				System.err.println("fail to create url of category[" + categoryName + "]");
+			}
+		}
+		navHtml.append("</ul></nav>");
+		
+		return navHtml.toString();
+	}
+	
+	private String extractNavTag(List<TagUtil> tagList, int size, String siteUrl) {
+		int length = Math.min(size, tagList.size());
+		
+		StringBuilder navHtml = new StringBuilder("<nav><ul>");
+		for (int j = 0; j < length; j++) {
+			String tagName = tagList.get(j).tag;
+			try {
+				navHtml.append("<li><a href='").append(siteUrl).append("/tag/")
+						.append(URLEncoder.encode(tagName, "UTF-8")).append("'>")
+						.append(tagName).append("</a></li>");
+			} catch (UnsupportedEncodingException e) {
+				System.err.println("fail to create url of tag[" + tagName + "]");
+			}
+		}
+		navHtml.append("</ul></nav>");
+		
+		return navHtml.toString();
+	}
+	
+	private String extractNavRecent(List<ArticleAbstract> articleList, int size, String siteUrl) {
+		
+		int length = Math.min(size, articleList.size());
+		
+		StringBuilder navHtml = new StringBuilder("<nav><ul>");
+		for (ArticleAbstract article : articleList) {
+			navHtml.append("<li><a href='").append(siteUrl)
+					.append(article.getRelativePath()).append("'>")
+					.append(article.getTitle()).append("</a></li>");
+		}
+		navHtml.append("</ul></nav>");
+		
+		return navHtml.toString();
 	}
 	
 	private void writeAccessorialScriptOfPage(File toFile, List<ArticleAbstract> articleList) throws GeneralException {
@@ -267,14 +443,18 @@ public class HtmlDecoder {
 		}
 	}
 	
-	private void writeDocumentWithTemplate(Template template, Article article, File toFile) throws GeneralException {
-		if (!toFile.exists()) {
-			try {
+	private void writeDocumentWithTemplate(Template template, ArticleAbstract articleAbstract, ConfigurationUtil confUtil) throws GeneralException {
+		File toFile;
+		try {
+			toFile = new File(confUtil.outputFolder.getCanonicalPath() + articleAbstract.getRelativePath().replace("/", File.separator));
+			if (!toFile.exists()) {
 				toFile.createNewFile();
-			} catch (IOException e) {
-				throw new GeneralException("fail to create new file[" + toFile.getPath() + "]", e);
 			}
+		} catch (IOException e) {
+			throw new GeneralException("fail to create new file", e);
 		}
+		
+		Article article  = articleAbstract.getArticle();
 		
 		if (!article.getEnabled()) {
 			FileUtil.copy(article.getFile(), toFile);
@@ -284,11 +464,14 @@ public class HtmlDecoder {
 					) {
 				int templateHeadContainerIndex = template.getHeadContainer().getFileStartPos();
 				int templateBodyContainerIndex = template.getBodyContainer().getFileStartPos();
+				int templateNavContainerIndex = template.getNavContainer().getFileStartPos();
 				pw.append(template.getFullText().substring(0, templateHeadContainerIndex))
 				.append(article.getHead().getContentText())
 				.append(template.getFullText().substring(templateHeadContainerIndex, templateBodyContainerIndex))
 				.append(article.getBody().getContentText())
-				.append(template.getFullText().substring(templateBodyContainerIndex));
+				.append(template.getFullText().substring(templateBodyContainerIndex, templateNavContainerIndex))
+				.append(template.getNavHtml())
+				.append(template.getFullText().substring(templateNavContainerIndex));
 				pw.flush();
 			} catch (FileNotFoundException e) {
 				throw new GeneralException("fail to write to file [" + toFile.getPath() + "]", e);
@@ -296,8 +479,29 @@ public class HtmlDecoder {
 		}
 	}
 	
+	private class TagUtil {
+		String tag;
+		Set<ArticleAbstract> articleSet;
+		
+		public TagUtil(String tag) {
+			this.tag = tag;
+			this.articleSet = new HashSet<>();
+		}
+	}
+	
+	private class CategoryUtil {
+		String category;
+		Set<ArticleAbstract> articleSet;
+		
+		public CategoryUtil(String category) {
+			this.category = category;
+			this.articleSet = new HashSet<>();
+		}
+	}
+	
 	private class ConfigurationUtil {
-		public ConfigurationUtil(String siteUrl, int paginationSize, String[] ignoreList, File templateFile, File contentFolder, File outputFolder, File staticPageFolder) {
+		public ConfigurationUtil(Configuration conf, String siteUrl, int paginationSize, String[] ignoreList, File templateFile, File contentFolder, File outputFolder, File staticPageFolder) {
+			this.conf = conf;
 			this.siteUrl  =siteUrl;
 			this.paginationSize = paginationSize;
 			this.ignoreList = ignoreList;
@@ -307,6 +511,7 @@ public class HtmlDecoder {
 			this.staticPageFolder = staticPageFolder;
 		}
 		
+		Configuration conf;
 		String siteUrl;
 		int paginationSize;
 		String[] ignoreList;
@@ -314,6 +519,18 @@ public class HtmlDecoder {
 		File contentFolder;
 		File outputFolder;
 		File staticPageFolder;
+		
+		public boolean isIgnored(File file) {
+			String filePath = file.getAbsolutePath();
+			String contentFilePath = contentFolder.getAbsolutePath();
+			for (String s : ignoreList) {
+				if (filePath.indexOf(contentFilePath + File.separator + s) == 0) {
+					return true;
+				}
+			}
+			
+			return false;
+		}
 	}
 
 }

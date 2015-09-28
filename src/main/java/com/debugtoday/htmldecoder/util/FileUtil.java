@@ -57,7 +57,12 @@ public class FileUtil {
 		}
 		
 		for (File file : from.listFiles()) {
-			File destFile = new File(to.getAbsolutePath() + File.separator + relativePath(from, file));
+			File destFile;
+			try {
+				destFile = new File(to.getAbsolutePath() + File.separator + relativePath(from, file));
+			} catch (IOException e) {
+				throw new GeneralException(e);
+			}
 			if (file.isFile()) {
 				copy(file, destFile);
 			} else {
@@ -94,10 +99,17 @@ public class FileUtil {
 		
 	}
 	
-	public static final String relativePath(File parent, File child) {
-		String parentPath = parent.getAbsolutePath();
-		String childPath = child.getAbsolutePath();
+	/**
+	 * 获得相对路径，不以“/”开头；相对路径中文件分隔符统计替换成“/”
+	 * @param parent
+	 * @param child
+	 * @return
+	 * @throws IOException
+	 */
+	public static final String relativePath(File parent, File child) throws IOException {
+		String parentPath = parent.getCanonicalPath();
+		String childPath = child.getCanonicalPath();
 		
-		return childPath.substring(parentPath.length() + 1);
+		return childPath.substring(parentPath.length() + 1).replace(File.separator, "/");
 	}
 }

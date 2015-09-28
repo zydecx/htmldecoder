@@ -5,11 +5,13 @@ import java.util.Date;
 public class ArticleAbstract {
 	private String relativePath;
 	private String abstractContent;
+	private String excerpt;
 	private String[] tags;
 	private String[] categories;
 	private String title;
 	private Date createDate;
 	private Date lastUpdateDate;
+	private Article article;
 	
 	public String getRelativePath() {
 		return relativePath;
@@ -22,6 +24,12 @@ public class ArticleAbstract {
 	}
 	public void setAbstractContent(String abstractContent) {
 		this.abstractContent = abstractContent;
+	}
+	public String getExcerpt() {
+		return excerpt;
+	}
+	public void setExcerpt(String excerpt) {
+		this.excerpt = excerpt;
 	}
 	public String[] getTags() {
 		return tags;
@@ -52,6 +60,12 @@ public class ArticleAbstract {
 	}
 	public void setLastUpdateDate(Date lastUpdateDate) {
 		this.lastUpdateDate = lastUpdateDate;
+	}
+	public Article getArticle() {
+		return article;
+	}
+	public void setArticle(Article article) {
+		this.article = article;
 	}
 
 }

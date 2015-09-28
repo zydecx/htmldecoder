@@ -97,12 +97,27 @@ public class Article extends Document {
 		ArticleAbstract articleAbstract = new ArticleAbstract();
 		articleAbstract.setTitle(title == null ? getFile().getName() : title.getContentText());
 		articleAbstract.setAbstractContent(abstractContent);
+		articleAbstract.setExcerpt(extractExcerpt());
 		articleAbstract.setCategories(categories);
 		articleAbstract.setTags(tags);
 		articleAbstract.setCreateDate(createDate);
 		articleAbstract.setLastUpdateDate(lastUpdateDate);
+		articleAbstract.setArticle(this);
 		
 		return articleAbstract;
+	}
+	
+	/**
+	 * extract excerpt of article. Use content of body if more tag not defined
+	 * @return
+	 */
+	private String extractExcerpt() {
+		
+		if (more == null) {
+			return body.getFullText();
+		}
+		
+		return body.getContentText().substring(0, more.getFileStartPos() - body.getFileStartPos() - body.getContentStartPosOffset());
 	}
 
 }

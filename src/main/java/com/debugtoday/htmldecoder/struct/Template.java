@@ -8,6 +8,7 @@ public class Template extends Document {
 	private Element headContainer;
 	private Element bodyContainer;
 	private Element navContainer;
+	private String navHtml;
 	
 	public Template(File file) {
 		super(file);
@@ -32,6 +33,14 @@ public class Template extends Document {
 
 	public void setNavContainer(Element navContainer) {
 		this.navContainer = navContainer;
+	}
+
+	public String getNavHtml() {
+		return navHtml;
+	}
+
+	public void setNavHtml(String navHtml) {
+		this.navHtml = navHtml;
 	}
 
 }
