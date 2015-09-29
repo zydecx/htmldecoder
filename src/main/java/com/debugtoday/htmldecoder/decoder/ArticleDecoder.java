@@ -43,7 +43,7 @@ public class ArticleDecoder extends GeneralDecoder {
 			offsetPos = head == null ? 0 : (head.getFileStartPos() + head.getEndPosOffset());
 			Element body = decodeArticleElement(article, "body", offsetPos);
 			
-			Element more = decodeGeneralContainer(article, "more", offsetPos);
+			Element more = decodeGeneralContainer(article, CONTAINER_MORE, offsetPos);
 			
 			article.setTitle(title);
 			article.setHead(head);

@@ -24,6 +24,8 @@ import com.debugtoday.htmldecoder.conf.FileConfiguration;
 import com.debugtoday.htmldecoder.decoder.ArticleDecoder;
 import com.debugtoday.htmldecoder.decoder.TemplateDecoder;
 import com.debugtoday.htmldecoder.exception.GeneralException;
+import com.debugtoday.htmldecoder.export.ArticlePaginationExport;
+import com.debugtoday.htmldecoder.export.TagPaginationExport;
 import com.debugtoday.htmldecoder.struct.Article;
 import com.debugtoday.htmldecoder.struct.ArticleAbstract;
 import com.debugtoday.htmldecoder.struct.Template;
@@ -101,13 +103,13 @@ public class HtmlDecoder {
 		});
 		String navRecent = extractNavRecent(articleList, 5, confUtil.siteUrl);
 		
-		List<CategoryUtil> categoryList = analyzeArticleCategory(articleList);
+		List<TagUtil> categoryList = analyzeArticleCategory(articleList);
 		// sort descending
-		Collections.sort(categoryList, new Comparator<CategoryUtil>() {
+		Collections.sort(categoryList, new Comparator<TagUtil>() {
 
 			@Override
-			public int compare(CategoryUtil o1, CategoryUtil o2) {
-				return o2.articleSet.size() - o1.articleSet.size();
+			public int compare(TagUtil o1, TagUtil o2) {
+				return o2.getArticleSet().size() - o1.getArticleSet().size();
 			}
 		});
 		String navCategory = extractNavCategory(categoryList, 5, confUtil.siteUrl);
@@ -128,6 +130,30 @@ public class HtmlDecoder {
 		template.setNavHtml(navHtml);
 		for (ArticleAbstract article : articleList) {
 			writeDocumentWithTemplate(template, article, confUtil);
+		}
+		
+		
+		// export pagination pages of article
+		new ArticlePaginationExport("", outputFolder, "", articleList, paginationSize, template, siteUrl).export();
+		
+		// export pagination pages of tags
+		File topTagFolder = new File(outputFolder.getAbsolutePath() + File.separator + "tag");
+		new TagPaginationExport("Tags", topTagFolder, "tag", tagList, paginationSize, template, siteUrl).export();
+		
+		// export pagination pages of categories
+		File topCategoryFolder = new File(outputFolder.getAbsolutePath() + File.separator + "category");
+		new TagPaginationExport("Categories", topCategoryFolder, "category", categoryList, paginationSize, template, siteUrl).export();
+
+		// export pagination pages of article of each tag
+		for (TagUtil tag : tagList) {
+			File tagFolder = new File(outputFolder.getAbsolutePath() + File.separator + "tag" + File.separator + tag.getTag());
+			new ArticlePaginationExport(tag.getTag(), tagFolder, "tag/" + tag.getTag(), new ArrayList<>(tag.getArticleSet()), paginationSize, template, siteUrl).export();
+		}
+
+		// export pagination pages of article of each category
+		for (TagUtil category : categoryList) {
+			File categoryFolder = new File(outputFolder.getAbsolutePath() + File.separator + "category" + File.separator + category.getTag());
+			new ArticlePaginationExport(category.getTag(), categoryFolder, "category/" + category.getTag(), new ArrayList<>(category.getArticleSet()), paginationSize, template, siteUrl).export();
 		}
 		
 		/**
@@ -197,7 +223,7 @@ public class HtmlDecoder {
 			Article article = ArticleDecoder.decode(file, confUtil.conf);
 			ArticleAbstract articleAbstract = article.formatArticleAbsract();
 			
-			articleAbstract.setRelativePath("/" + relativePath);
+			articleAbstract.setRelativePath(relativePath);
 			
 			return articleAbstract;
 		} else {
@@ -210,8 +236,8 @@ public class HtmlDecoder {
 		}
 	}
 	
-	private List<CategoryUtil> analyzeArticleCategory(List<ArticleAbstract> articleList) {
-		Map<String, CategoryUtil> categoryMap = new HashMap<>();
+	private List<TagUtil> analyzeArticleCategory(List<ArticleAbstract> articleList) {
+		Map<String, TagUtil> categoryMap = new HashMap<>();
 
 		Iterator<ArticleAbstract> iter = articleList.iterator();
 		while (iter.hasNext()) {
@@ -220,13 +246,13 @@ public class HtmlDecoder {
 			if (categories == null || categories.length == 0) continue;
 			
 			for (String category : categories) {
-				CategoryUtil categoryUtil = categoryMap.get(category);
+				TagUtil categoryUtil = categoryMap.get(category);
 				if (categoryUtil == null) {
 					categoryUtil = new CategoryUtil(category);
 					categoryMap.put(category, categoryUtil);
 				}
 				
-				categoryUtil.articleSet.add(article);
+				categoryUtil.getArticleSet().add(article);
 			}
 		}
 		
@@ -239,29 +265,29 @@ public class HtmlDecoder {
 		Iterator<ArticleAbstract> iter = articleList.iterator();
 		while (iter.hasNext()) {
 			ArticleAbstract article = iter.next();
-			String[] categories = article.getCategories();
-			if (categories == null || categories.length == 0) continue;
+			String[] tags = article.getTags();
+			if (tags == null || tags.length == 0) continue;
 			
-			for (String tag : categories) {
+			for (String tag : tags) {
 				TagUtil tagUtil = tagMap.get(tag);
 				if (tagUtil == null) {
 					tagUtil = new TagUtil(tag);
 					tagMap.put(tag, tagUtil);
 				}
 				
-				tagUtil.articleSet.add(article);
+				tagUtil.getArticleSet().add(article);
 			}
 		}
 		
 		return new ArrayList<>(tagMap.values());
 	}
 	
-	private String extractNavCategory(List<CategoryUtil> categoryList, int size, String siteUrl) {
+	private String extractNavCategory(List<TagUtil> categoryList, int size, String siteUrl) {
 		int length = Math.min(size, categoryList.size());
 		
 		StringBuilder navHtml = new StringBuilder("<nav><ul>");
 		for (int j = 0; j < length; j++) {
-			String categoryName = categoryList.get(j).category;
+			String categoryName = categoryList.get(j).getTag();
 			try {
 				navHtml.append("<li><a href='").append(siteUrl).append("/category/")
 						.append(URLEncoder.encode(categoryName, "UTF-8")).append("'>")
@@ -300,7 +326,7 @@ public class HtmlDecoder {
 		
 		StringBuilder navHtml = new StringBuilder("<nav><ul>");
 		for (ArticleAbstract article : articleList) {
-			navHtml.append("<li><a href='").append(siteUrl)
+			navHtml.append("<li><a href='").append(siteUrl).append("/")
 					.append(article.getRelativePath()).append("'>")
 					.append(article.getTitle()).append("</a></li>");
 		}
@@ -446,7 +472,7 @@ public class HtmlDecoder {
 	private void writeDocumentWithTemplate(Template template, ArticleAbstract articleAbstract, ConfigurationUtil confUtil) throws GeneralException {
 		File toFile;
 		try {
-			toFile = new File(confUtil.outputFolder.getCanonicalPath() + articleAbstract.getRelativePath().replace("/", File.separator));
+			toFile = new File(confUtil.outputFolder.getCanonicalPath() + File.separator + articleAbstract.getRelativePath().replace("/", File.separator));
 			if (!toFile.exists()) {
 				toFile.createNewFile();
 			}
@@ -479,23 +505,44 @@ public class HtmlDecoder {
 		}
 	}
 	
-	private class TagUtil {
-		String tag;
-		Set<ArticleAbstract> articleSet;
+	public class TagUtil {
+		private String tag;
+		private Set<ArticleAbstract> articleSet;
 		
 		public TagUtil(String tag) {
 			this.tag = tag;
 			this.articleSet = new HashSet<>();
 		}
+		
+		public String getTag() {
+			return this.tag;
+		}
+		
+		public void setTag(String tag) {
+			this.tag = tag;
+		}
+		
+		public Set<ArticleAbstract> getArticleSet() {
+			return this.articleSet;
+		}
+		
+		public void setArticleSet(Set<ArticleAbstract> articleSet) {
+			this.articleSet = articleSet;
+		}
 	}
 	
-	private class CategoryUtil {
-		String category;
-		Set<ArticleAbstract> articleSet;
+	public class CategoryUtil extends TagUtil {
 		
 		public CategoryUtil(String category) {
-			this.category = category;
-			this.articleSet = new HashSet<>();
+			super(category);
+		}
+		
+		public String getCategory() {
+			return super.getTag();
+		}
+		
+		public void setCategory(String category) {
+			super.setTag(category);
 		}
 	}
 	
