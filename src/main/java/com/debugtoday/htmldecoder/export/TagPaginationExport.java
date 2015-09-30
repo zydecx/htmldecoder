@@ -100,7 +100,7 @@ public class TagPaginationExport {
 			return "";
 		}
 		
-		StringBuilder sb = new StringBuilder("<div class='pagination'><ul>");
+		StringBuilder sb = new StringBuilder("<footer class='pagination'><ul>");
 		sb.append("<li class='prev").append(num == 1 ? "disabled" : "")
 				.append("'><a href='")
 				.append(extractPaginationHref(num == 1 ? 1 : (num - 1)))
@@ -115,19 +115,18 @@ public class TagPaginationExport {
 				.append("'><a href='")
 				.append(extractPaginationHref(num == pageSize ? pageSize
 						: (num + 1))).append(">Next&nbsp;→</a></li>");
-		sb.append("</ul></div>");
+		sb.append("</ul></footer>");
 
 		return sb.toString();
 	}
 	
 	private String extracttagListHtml(List<TagUtil> tagList) {
-		StringBuilder sb = new StringBuilder("<div class='article_list'>");
+		StringBuilder sb = new StringBuilder();
 		for (TagUtil tag : tagList) {
 			sb.append("<article>")
-			.append("<div class='tag_content'><a href='").append(extractTagHref(tag)).append("'>").append(tag.getTag()).append("</a>").append("<span class='tag_num'>").append(tag.getArticleSet().size()).append("</span></div>")
+			.append("<div class='tag-content'><a href='").append(extractTagHref(tag)).append("'>").append(tag.getTag()).append("</a>").append("<span class='tag-num'>").append(tag.getArticleSet().size()).append("</span></div>")
 			.append("</article");
 		}
-		sb.append("</div>");
 		
 		return sb.toString();
 	}

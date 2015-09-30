@@ -285,7 +285,7 @@ public class HtmlDecoder {
 	private String extractNavCategory(List<TagUtil> categoryList, int size, String siteUrl) {
 		int length = Math.min(size, categoryList.size());
 		
-		StringBuilder navHtml = new StringBuilder("<nav><ul>");
+		StringBuilder navHtml = new StringBuilder("<nav><ul>").append("<strong>Category</strong>");
 		for (int j = 0; j < length; j++) {
 			String categoryName = categoryList.get(j).getTag();
 			try {
@@ -304,7 +304,7 @@ public class HtmlDecoder {
 	private String extractNavTag(List<TagUtil> tagList, int size, String siteUrl) {
 		int length = Math.min(size, tagList.size());
 		
-		StringBuilder navHtml = new StringBuilder("<nav><ul>");
+		StringBuilder navHtml = new StringBuilder("<nav><ul>").append("<strong>Tag</strong>");
 		for (int j = 0; j < length; j++) {
 			String tagName = tagList.get(j).tag;
 			try {
@@ -324,7 +324,7 @@ public class HtmlDecoder {
 		
 		int length = Math.min(size, articleList.size());
 		
-		StringBuilder navHtml = new StringBuilder("<nav><ul>");
+		StringBuilder navHtml = new StringBuilder("<nav><ul>").append("<strong>Recent</strong>");
 		for (ArticleAbstract article : articleList) {
 			navHtml.append("<li><a href='").append(siteUrl).append("/")
 					.append(article.getRelativePath()).append("'>")

@@ -100,7 +100,7 @@ public class ArticlePaginationExport {
 			return "";
 		}
 		
-		StringBuilder sb = new StringBuilder("<div class='pagination'><ul>");
+		StringBuilder sb = new StringBuilder("<footer class='pagination'><ul>");
 		sb.append("<li class='prev").append(num == 1 ? "disabled" : "")
 				.append("'><a href='")
 				.append(extractPaginationHref(num == 1 ? 1 : (num - 1)))
@@ -115,21 +115,20 @@ public class ArticlePaginationExport {
 				.append("'><a href='")
 				.append(extractPaginationHref(num == pageSize ? pageSize
 						: (num + 1))).append(">Next&nbsp;→</a></li>");
-		sb.append("</ul></div>");
+		sb.append("</ul></footer>");
 
 		return sb.toString();
 	}
 	
 	private String extractArticleListHtml(List<ArticleAbstract> articleList) {
-		StringBuilder sb = new StringBuilder("<div class='article_list'>");
+		StringBuilder sb = new StringBuilder();
 		for (ArticleAbstract article : articleList) {
 			sb.append("<article>")
-			.append("<div class='article_title'><h1><a href='").append(extractArticleHref(article)).append("'>").append(article.getTitle()).append("</a></h1><div class='article_info'><span class='article_time'>").append(article.getCreateDate()).append("</span></div></div>")
-			.append("<div class='article_content'>").append(article.getExcerpt()).append("</div>")
-			.append("<div class='article_more'><a href='").append(extractArticleHref(article)).append("'></a></div>")
+			.append("<header><h1><a href='").append(extractArticleHref(article)).append("'>").append(article.getTitle()).append("</a></h1><div class='article-media'><p class='media-extra'><span><strong>Time</strong> <time>").append(article.getCreateDate()).append("</time></span></p></div></header>")
+			.append("<div class='article-content'>").append(article.getExcerpt()).append("</div>")
+			.append("<div class='article-more'><a href='").append(extractArticleHref(article)).append("'></a></div>")
 			.append("</article");
 		}
-		sb.append("</div>");
 		
 		return sb.toString();
 	}
