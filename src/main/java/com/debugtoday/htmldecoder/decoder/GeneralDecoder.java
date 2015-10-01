@@ -7,16 +7,16 @@ import com.debugtoday.htmldecoder.struct.html.Element;
 
 public abstract class GeneralDecoder {
 	/**
-	 * 返回配置常量在文件中呈现的格式
+	 * return existing format of configuration in file
 	 * @param conf
 	 * @return
 	 */
-	private static String formatConfArgument(String conf) {
-		return "{{htmldecoder:" + conf + "}}";
+	public static String formatArgumentRegex(String conf) {
+		return "{{" + conf + "}}";
 	}
 	
 	/**
-	 * 替换文件中的通用常量，如siteurl
+	 * replace general configuration in fulltext, i.g. siteurl
 	 * @param fullText
 	 * @param conf
 	 * @return
@@ -27,20 +27,20 @@ public abstract class GeneralDecoder {
 	}
 	
 	protected static String replaceGeneralArgument(String fullText, Configuration conf, String argument) throws GeneralException {
-		return fullText.replace(formatConfArgument(argument), conf.getConf(argument));
+		return fullText.replaceAll(formatArgumentRegex(argument), conf.getConf(argument));
 	}
 	
 	/**
-	 * decode container wrapper in template
+	 * decode placeholder wrapper in template
 	 * @param document
-	 * @param container
+	 * @param placeholder
 	 * @return
 	 */
-	protected static Element decodeGeneralContainer(Document document, String container, int fromIndex) {
+	protected static Element decodeGeneralPlaceholder(Document document, String placeholder, int fromIndex) {
 		String fullText = document.getFullText();
 		
-		String formattedContainer = formatGeneralContainer(container);
-		int index = fullText.indexOf(formattedContainer, fromIndex);
+		String formattedPlaceholder = formatPlaceholderRegex(placeholder);
+		int index = fullText.indexOf(formattedPlaceholder, fromIndex);
 		
 		if (index < 0) {
 			return null;
@@ -50,24 +50,24 @@ public abstract class GeneralDecoder {
 		element.setDocument(document);
 		/*element.setTag(null);
 		element.setAttributes(new HashMap<String, String>());*/
-		element.setFullText(formattedContainer);
+		element.setFullText(formattedPlaceholder);
 		element.setFileStartPos(index);
-		element.setEndPosOffset(formattedContainer.length() - 1);
+		element.setEndPosOffset(formattedPlaceholder.length() - 1);
 		element.setContentStartPosOffset(0);
-		element.setContentEndPosOffset(formattedContainer.length() - 1);
+		element.setContentEndPosOffset(formattedPlaceholder.length() - 1);
 		
 		return element;
 	}
-	protected static Element decodeGeneralContainer(Document document, String container) {
-		return decodeGeneralContainer(document, container, 0);
+	protected static Element decodeGeneralPlacehoder(Document document, String placeholder) {
+		return decodeGeneralPlaceholder(document, placeholder, 0);
 	}
 	
 	/**
-	 * format container as it's form in template file
-	 * @param container
+	 * format placeholder as it's form in template file
+	 * @param placeholder
 	 * @return
 	 */
-	protected static String formatGeneralContainer(String container) {
-		return "<!--" + container + "-->";
+	public static String formatPlaceholderRegex(String name) {
+		return "<!--htmldecoder:" + name + "-->";
 	}
 }

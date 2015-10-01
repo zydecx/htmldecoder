@@ -11,17 +11,19 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import com.debugtoday.htmldecoder.conf.Configuration;
+import com.debugtoday.htmldecoder.conf.ConfigurationWrapper;
 import com.debugtoday.htmldecoder.decoder.html.ElementDecoder;
 import com.debugtoday.htmldecoder.decoder.html.MetaDecoder;
 import com.debugtoday.htmldecoder.exception.GeneralException;
 import com.debugtoday.htmldecoder.struct.Article;
+import com.debugtoday.htmldecoder.struct.ArticleMeta;
 import com.debugtoday.htmldecoder.struct.Document;
 import com.debugtoday.htmldecoder.struct.html.Element;
 import com.debugtoday.htmldecoder.struct.html.Meta;
+import com.debugtoday.htmldecoder.util.FileUtil;
 
 public class ArticleDecoder extends GeneralDecoder {
-	public static Article decode(File file, Configuration conf) throws GeneralException {
+	public static Article decode(File file, ConfigurationWrapper conf) throws GeneralException {
 		try (
 				BufferedReader reader = new BufferedReader(new FileReader(file));
 				) {
@@ -33,7 +35,7 @@ public class ArticleDecoder extends GeneralDecoder {
 				fullText.append(inLine).append("\n");
 			}
 			
-			article.setFullText(replaceGeneralArguments(fullText.toString(), conf));;
+			article.setFullText(replaceGeneralArguments(fullText.toString(), conf.getConfiguration()));;
 			
 			int offsetPos = 0;
 			Element head = decodeArticleElement(article, "head", offsetPos);
@@ -43,19 +45,26 @@ public class ArticleDecoder extends GeneralDecoder {
 			offsetPos = head == null ? 0 : (head.getFileStartPos() + head.getEndPosOffset());
 			Element body = decodeArticleElement(article, "body", offsetPos);
 			
-			Element more = decodeGeneralContainer(article, CONTAINER_MORE, offsetPos);
+			Element more = decodeGeneralPlaceholder(article, PLACEHOLDER_MORE, offsetPos);
 			
 			article.setTitle(title);
 			article.setHead(head);
 			article.setBody(body);
 			article.setMore(more);
+			article.setRelativePath(FileUtil.relativePath(conf.getContentFile(), file));
 
-			article.setAbstractContent("");
-			article.setTags(new String[]{});
-			article.setCategories(new String[]{});
-			article.setEnabled(true);
-			article.setCreateDate(new Date());
-			article.setLastUpdateDate(article.getCreateDate());
+			ArticleMeta articleMeta = new ArticleMeta();
+			
+			article.setMeta(articleMeta);
+			
+			articleMeta.setAbstractContent("");
+			articleMeta.setTags(new String[]{});
+			articleMeta.setCategories(new String[]{});
+			articleMeta.setEnabled(true);
+			articleMeta.setAuthor("");
+			articleMeta.setAuthorUrl("");
+			articleMeta.setCreateDate(new Date());
+			articleMeta.setLastUpdateDate(articleMeta.getCreateDate());
 			if (head != null) {
 				List<Meta> metaList = new ArrayList<>();
 				Meta nextMeta = null;
@@ -73,17 +82,21 @@ public class ArticleDecoder extends GeneralDecoder {
 					if (meta.getName() == null) continue;
 					
 					if (meta.getName().equals(MetaDecoder.META_ABSTRACT)) {
-						article.setAbstractContent(MetaDecoder.decodeAbstract(meta));
+						articleMeta.setAbstractContent(MetaDecoder.decodeAbstract(meta));
 					} else if (meta.getName().equals(MetaDecoder.META_TAGS)) {
-						article.setTags(MetaDecoder.decodeTags(meta));
+						articleMeta.setTags(MetaDecoder.decodeTags(meta));
 					} else if (meta.getName().equals(MetaDecoder.META_CATEGORY)) {
-						article.setCategories(MetaDecoder.decodeCategory(meta));
+						articleMeta.setCategories(MetaDecoder.decodeCategory(meta));
 					} else if (meta.getName().equals(MetaDecoder.META_ENABLED)) {
-						article.setEnabled(MetaDecoder.decodeEnabled(meta));
+						articleMeta.setEnabled(MetaDecoder.decodeEnabled(meta));
+					} else if (meta.getName().equals(MetaDecoder.META_AUTHOR)) {
+						articleMeta.setAuthor(MetaDecoder.decodeAuthor(meta));
+					} else if (meta.getName().equals(MetaDecoder.META_AUTHORURL)) {
+						articleMeta.setAuthorUrl(MetaDecoder.decodeAuthorUrl(meta));
 					} else if (meta.getName().equals(MetaDecoder.META_DATE)) {
-						article.setCreateDate(formatDate(article, MetaDecoder.decodeDate(meta)));
+						articleMeta.setCreateDate(formatDate(article, MetaDecoder.decodeDate(meta)));
 					} else if (meta.getName().equals(MetaDecoder.META_MODIFIED)) {
-						article.setLastUpdateDate(formatDate(article,MetaDecoder.decodeModified(meta)));
+						articleMeta.setLastUpdateDate(formatDate(article,MetaDecoder.decodeModified(meta)));
 					}
 				}
 			}
@@ -158,6 +171,6 @@ public class ArticleDecoder extends GeneralDecoder {
 		return "<!--" + container + "-->";
 	}
 	
-	private static final String CONTAINER_MORE = "htmldecoder:more";
+	private static final String PLACEHOLDER_MORE = "more";
 
 }

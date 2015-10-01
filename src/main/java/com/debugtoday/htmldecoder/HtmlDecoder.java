@@ -22,7 +22,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import com.debugtoday.htmldecoder.conf.Configuration;
 import com.debugtoday.htmldecoder.conf.FileConfiguration;
 import com.debugtoday.htmldecoder.decoder.ArticleDecoder;
-import com.debugtoday.htmldecoder.decoder.TemplateDecoder;
+import com.debugtoday.htmldecoder.decoder.ThemeDecoder;
 import com.debugtoday.htmldecoder.exception.GeneralException;
 import com.debugtoday.htmldecoder.export.ArticlePaginationExport;
 import com.debugtoday.htmldecoder.export.TagPaginationExport;
@@ -81,7 +81,7 @@ public class HtmlDecoder {
 		}
 		
 		File templateFile = new File(conf.getConf(Configuration.TEMPLATE_PATH));
-		Template template = TemplateDecoder.decode(templateFile, conf);
+		Template template = ThemeDecoder.decode(templateFile, conf);
 		
 		File contentFolder = new File(conf.getConf(Configuration.CONTENT_PATH));
 		File outputFolder = new File(conf.getConf(Configuration.OUTPUT_PATH));

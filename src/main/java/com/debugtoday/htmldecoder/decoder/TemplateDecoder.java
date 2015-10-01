@@ -2,52 +2,120 @@ package com.debugtoday.htmldecoder.decoder;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import com.debugtoday.htmldecoder.conf.Configuration;
+import com.debugtoday.htmldecoder.conf.ConfigurationWrapper;
 import com.debugtoday.htmldecoder.exception.GeneralException;
 import com.debugtoday.htmldecoder.struct.Template;
-import com.debugtoday.htmldecoder.struct.html.Element;
+import com.debugtoday.htmldecoder.struct.TemplateArgument;
+import com.debugtoday.htmldecoder.struct.TemplatePlaceHolder;
 
 public class TemplateDecoder extends GeneralDecoder {
 	
-	/**
-	 * decode template file
-	 * @param file
-	 * @return
-	 * @throws GeneralException
-	 */
-	public static Template decode(File file, Configuration conf) throws GeneralException {
+	public static Template decodeDefault(String templateName, String resourceName, ConfigurationWrapper conf) throws GeneralException {
 		try (
-				BufferedReader reader = new BufferedReader(new FileReader(file));
-				) {
+				InputStream inputStream = ThemeDecoder.class.getResourceAsStream(resourceName);
+				BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+		) {
 			String inLine;
-			Template template = new Template(file);
+			Template template = new Template(templateName, null);
 			StringBuilder fullText = new StringBuilder();
 			while ((inLine = reader.readLine()) != null) {
 				fullText.append(inLine).append("\n");
 			}
 			
-			template.setFullText(replaceGeneralArguments(fullText.toString(), conf));
-			template.setHeadContainer(decodeTemplateContainer(template, CONTAINER_HEAD));
-			template.setBodyContainer(decodeTemplateContainer(template, CONTAINER_BODY));
-			template.setNavContainer(decodeTemplateContainer(template, CONTAINER_NAV));
+			template.setFullText(replaceGeneralArguments(fullText.toString(), conf.getConfiguration()));
+			decodeTemplateFullText(template);
 			
 			return template;
 		} catch (IOException e) {
-			throw new GeneralException("fail to read file", e);
+			throw new GeneralException("fail to decode template[" + resourceName + "]", e);
 		}
 	}
 	
-	private static Element decodeTemplateContainer(Template template, String container) {
-		return decodeGeneralContainer(template, container);
+	public static Template decodeCustomerized(String templateName, File file, ConfigurationWrapper conf) throws GeneralException {
+		try (
+				BufferedReader reader = new BufferedReader(new FileReader(file));
+		) {
+			String inLine;
+			Template template = new Template(templateName, file);
+			StringBuilder fullText = new StringBuilder();
+			while ((inLine = reader.readLine()) != null) {
+				fullText.append(inLine).append("\n");
+			}
+			
+			template.setFullText(replaceGeneralArguments(fullText.toString(), conf.getConfiguration()));
+			
+			// Seems useless to decode placeholder and arguments.
+			/*decodeTemplateFullText(template);*/
+			
+			return template;
+		} catch (IOException e) {
+			throw new GeneralException("fail to decode template[" + file.getAbsolutePath() + "]", e);
+		}
 	}
 	
-	private static final String CONTAINER_HEAD = "htmldecoder:head";
-	private static final String CONTAINER_BODY = "htmldecoder:body";
-	private static final String CONTAINER_NAV = "htmldecoder:nav";
+	private static void decodeTemplateFullText(Template template) {
+		if (template == null || template.getFullText() == null) {
+			return;
+		}
+		
+		// match place holders
+		Pattern p = Pattern.compile("<!--htmldecoder:\\w+-->");
+		Matcher m = p.matcher(template.getFullText());
+		
+		while (m.find()) {
+			TemplatePlaceHolder placeHolder = new TemplatePlaceHolder();
+			placeHolder.setOffsetStart(m.start());
+			placeHolder.setOffsetEnd(m.end());
+			
+			String s = m.group();
+			String name = s.substring(17, s.length() - 3);	// match part of \\w+
+			placeHolder.setName(name);
+			
+			List<TemplatePlaceHolder> placeHolders = template.getPlaceHolders().get(name);
+			if (placeHolders == null) {
+				placeHolders = new ArrayList<>();
+				template.getPlaceHolders().put(name, placeHolders);
+			}
+			placeHolders.add(placeHolder);
+		}
+		
+		// match arguments
+		p = Pattern.compile("{{\\w+}}");
+		m = p.matcher(template.getFullText());
+		
+		while (m.find()) {
+			TemplateArgument arg = new TemplateArgument();
+			arg.setOffsetStart(m.start());
+			arg.setOffsetEnd(m.end());
+			
+			String s = m.group();
+			String name = s.substring(2, s.length() - 2);	// match part of \\w+
+			arg.setName(name);
+			
+			List<TemplateArgument> args = template.getArguments().get(name);
+			if (args == null) {
+				args = new ArrayList<>();
+				template.getArguments().put(name, args);
+			}
+			args.add(arg);
+		}
+	}
+	
+	public static String formatArgumentRegex(String name) {
+		return "{{" + name + "}}";
+	}
+	
+	public static String formatPlaceholderRegex(String name) {
+		return "<!--htmldecoder:" + name + "-->";
+	}
 
 }
