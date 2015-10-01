@@ -291,7 +291,7 @@ public class HtmlDecoder {
 			try {
 				navHtml.append("<li><a href='").append(siteUrl).append("/category/")
 						.append(URLEncoder.encode(categoryName, "UTF-8")).append("'>")
-						.append(categoryName).append("</a></li>");
+						.append(categoryName).append("(").append(categoryList.get(j).getArticleSet().size()).append(")").append("</a></li>");
 			} catch (UnsupportedEncodingException e) {
 				System.err.println("fail to create url of category[" + categoryName + "]");
 			}
@@ -310,7 +310,7 @@ public class HtmlDecoder {
 			try {
 				navHtml.append("<li><a href='").append(siteUrl).append("/tag/")
 						.append(URLEncoder.encode(tagName, "UTF-8")).append("'>")
-						.append(tagName).append("</a></li>");
+						.append(tagName).append("(").append(tagList.get(j).getArticleSet().size()).append(")").append("</a></li>");
 			} catch (UnsupportedEncodingException e) {
 				System.err.println("fail to create url of tag[" + tagName + "]");
 			}

@@ -124,7 +124,7 @@ public class TagPaginationExport {
 		StringBuilder sb = new StringBuilder();
 		for (TagUtil tag : tagList) {
 			sb.append("<article>")
-			.append("<div class='tag-content'><a href='").append(extractTagHref(tag)).append("'>").append(tag.getTag()).append("</a>").append("<span class='tag-num'>").append(tag.getArticleSet().size()).append("</span></div>")
+			.append("<div class='tag-content'><a href='").append(extractTagHref(tag)).append("'>").append(tag.getTag()).append("</a>").append("<span class='tag-num'>(").append(tag.getArticleSet().size()).append(")</span></div>")
 			.append("</article");
 		}
 		
