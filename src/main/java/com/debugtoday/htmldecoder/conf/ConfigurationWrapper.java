@@ -9,7 +9,7 @@ import com.debugtoday.htmldecoder.exception.GeneralException;
 /**
  * wrapper of Configuration class.<br>
  * this class parse some configuration to special format for convenient further use.
- * @author chuff
+ * @author zydecx
  *
  */
 public class ConfigurationWrapper {

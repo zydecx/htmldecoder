@@ -29,13 +29,17 @@ public class PaginationOutput implements Output {
 		Template template = theme.getTemplates().get(TemplateKey.PAGINATION);
 		String templateFullText = template.getFullText();
 		
+		int size = arg.getSize();
+		int index = arg.getIndex();
+		String rootUrl = arg.getRootUrl();
+		if (size <= 1) {	// donot display pagination where page size less-equal than 1
+			return "";
+		}
+		
 		PaginationItemOutput itemOutput = new PaginationItemOutput(conf, theme);
 		PaginationItemActiveOutput itemActiveOutput = new PaginationItemActiveOutput(conf, theme);
 		PaginationItemDisabledOutput itemDisabledOutput = new PaginationItemDisabledOutput(conf, theme);
 		
-		int size = arg.getSize();
-		int index = arg.getIndex();
-		String rootUrl = arg.getRootUrl();
 		
 		StringBuilder sb = new StringBuilder();
 		NavItemOutputArg itemArg;

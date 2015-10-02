@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,9 +20,10 @@ import com.debugtoday.htmldecoder.struct.TemplatePlaceHolder;
 public class TemplateDecoder extends GeneralDecoder {
 	
 	public static Template decodeDefault(String templateName, String resourceName, ConfigurationWrapper conf) throws GeneralException {
-		File file = new File(ThemeDecoder.class.getResource(resourceName).getFile());
+		File file = new File(ThemeDecoder.class.getResource(resourceName).getFile());	// CANNOT be read
 		try (
-				BufferedReader reader = new BufferedReader(new FileReader(file));
+				InputStream inputStream = ThemeDecoder.class.getResourceAsStream(resourceName);
+				BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
 		) {
 			String inLine;
 			Template template = new Template(templateName, file);

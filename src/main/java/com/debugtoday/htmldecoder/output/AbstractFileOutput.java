@@ -19,7 +19,7 @@ import com.debugtoday.htmldecoder.struct.TemplateKey;
 
 /**
  * base class for output relative to file output, i.g. article/article page/tag page/category page
- * @author chuff
+ * @author zydecx
  *
  */
 public class AbstractFileOutput implements Output {

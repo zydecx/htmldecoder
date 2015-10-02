@@ -7,7 +7,7 @@ import com.debugtoday.htmldecoder.exception.GeneralException;
  * Under most circumstances, it accepts the object it requires to format with theme resource and export.<br>
  * So, often a type cast is needed when entering <i>export()</i>.<br>
  * If more resources, i.g. configurations, are needed to do the job, it's recommended to import with constructor. 
- * @author chuff
+ * @author zydecx
  *
  */
 public interface Output {

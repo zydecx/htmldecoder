@@ -16,7 +16,7 @@
 			</resource>
 		</resources>
 		<plugins>
-			<!-- 指定JDK版本和编码 -->
+			<!-- JDK version & encoding -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -27,7 +27,7 @@
 					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
-			<!-- 指定Resources文件编码 -->
+			<!-- Resources encoding -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
@@ -36,7 +36,7 @@
 					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
-			<!-- 把依赖的jar包拷到lib目录下 -->
+			<!-- copy dependency library -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
@@ -56,6 +56,21 @@
 						</configuration>
 					</execution>
 				</executions>
+			</plugin>
+			<!-- startup main -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>dependency-lib/</classpathPrefix>
+							<mainClass>com.debugtoday.htmldecoder.HtmlDecoderJob</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

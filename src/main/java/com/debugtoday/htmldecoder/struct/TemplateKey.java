@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * defines a list of keys of template.<br>
  * <i>getKey()</i> returns that can be used to locate template file.
- * @author chuff
+ * @author zydecx
  *
  */
 public enum TemplateKey {

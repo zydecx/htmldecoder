@@ -223,6 +223,10 @@ strong {
 /*  overflow: hidden;*/
 }
 
+article {
+  margin-bottom: 25px;
+}
+
 article header {
   margin-bottom: 22px;
 }
@@ -259,6 +263,10 @@ article .media-extra {
   margin: 0;
   padding: 0;
   list-style-type: none;
+}
+
+article .article-more {
+  margin-top: -15px;
 }
 
 #main-container .page-content, #main-container aside nav {

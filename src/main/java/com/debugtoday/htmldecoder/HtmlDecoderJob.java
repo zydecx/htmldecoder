@@ -21,7 +21,7 @@ public class HtmlDecoderJob {
 	
 	public static void main(String[] args) {
 		System.out.println("Welcome to HtmlDecoder project!");
-		String confFilePath = args[0];
+		String confFilePath = args.length > 0 ? args[0] : null;
 		Configuration conf = new FileConfiguration(confFilePath);
 		try {
 			conf.init();

@@ -7,7 +7,7 @@ import com.debugtoday.htmldecoder.exception.GeneralException;
 
 /**
  * Read configurations dynamically from program.<strong>NOT ACCOMPLISHED YET!</strong>
- * @author chuff
+ * @author zydecx
  *
  */
 public class DynamicConfiguration extends Configuration {

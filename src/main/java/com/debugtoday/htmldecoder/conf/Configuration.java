@@ -21,7 +21,7 @@ import com.debugtoday.htmldecoder.exception.GeneralException;
  * User should extend this class and implement <i>readConf()</i> method to read configuration whether from file or dialog.<br>
  * Before trying to get any configuraiton, call <i>init()</i>, in which <i>readConf()</i> is called to read configuration.<br>
  * To be noticed, default configuration will be read first, as you can refer to at <i>configuration.properties</i>. So it's OK if user doesn't configure all items. 
- * @author chuff
+ * @author zydecx
  *
  */
 public abstract class Configuration {

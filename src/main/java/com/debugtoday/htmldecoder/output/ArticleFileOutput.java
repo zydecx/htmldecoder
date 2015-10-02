@@ -15,7 +15,7 @@ import com.debugtoday.htmldecoder.struct.Theme;
 
 /**
  * Write articles/static pages to output folder
- * @author chuff
+ * @author zydecx
  *
  */
 public class ArticleFileOutput extends AbstractFileOutput {

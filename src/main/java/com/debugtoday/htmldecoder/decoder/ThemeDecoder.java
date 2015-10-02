@@ -2,11 +2,17 @@ package com.debugtoday.htmldecoder.decoder;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 import java.util.Map;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 import com.debugtoday.htmldecoder.conf.Configuration;
 import com.debugtoday.htmldecoder.conf.ConfigurationWrapper;
@@ -14,7 +20,6 @@ import com.debugtoday.htmldecoder.exception.GeneralException;
 import com.debugtoday.htmldecoder.struct.Template;
 import com.debugtoday.htmldecoder.struct.TemplateKey;
 import com.debugtoday.htmldecoder.struct.Theme;
-import com.debugtoday.htmldecoder.struct.html.Element;
 import com.debugtoday.htmldecoder.util.FileUtil;
 
 public class ThemeDecoder extends GeneralDecoder {
@@ -39,12 +44,20 @@ public class ThemeDecoder extends GeneralDecoder {
 			themeFile = conf.getThemeFile();
 		}
 		
-		if (!themeFile.isDirectory()) {
-			throw new GeneralException("invalid theme file[" + themeFile.getAbsolutePath() + "]");
+		// if packaged in jar, theme CANNOT be read like an usual file.
+		// decodeTemplateFromJarFile() is specially designed to process such situation.
+		if (themeFile.isDirectory()) {
+			decodeTemplateFromFileSystem(conf, themeFile, templates);
+		} else {
+			decodeTemplateFromJarFile(conf, themeFile, templates);
 		}
 		
+		return theme;
+	}
+	
+	private static void decodeTemplateFromFileSystem(ConfigurationWrapper conf, File themeFile, Map<TemplateKey, Template> templates) throws GeneralException {
 		for (File file : themeFile.listFiles()) {
-			TemplateKey templateKey = decodeTemplateFile(file);
+			TemplateKey templateKey = decodeTemplateKey(file.getName());
 			if (templateKey == null) {
 				File toFile = new File(conf.getOutputFile().getAbsolutePath() + File.separator + file.getName());
 				if (file.isDirectory()) {
@@ -57,20 +70,92 @@ public class ThemeDecoder extends GeneralDecoder {
 				templates.put(templateKey, template);
 			}
 		}
+	}
+	
+	/**
+	 * if packaged in jar, theme CANNOT be read like an usual file.<br>
+	 * in this method, entries of jar file will be traversed to parse resources under default theme path.<br>
+	 * and template resources will be decoded and others copied to output folder.
+	 * @param conf
+	 * @param themeFile
+	 * @param templates
+	 * @throws GeneralException
+	 */
+	private static void decodeTemplateFromJarFile(ConfigurationWrapper conf, File themeFile, Map<TemplateKey, Template> templates) throws GeneralException {
+		String jarPath = themeFile.getPath().replaceFirst("[.]jar[!].*", ".jar").replaceFirst("file:", "");
 		
-		return theme;
+		// traverse jar file to extract entries under default theme path
+		String resourcePath = "theme/default/";
+		List<String> themeEntry = new ArrayList<>();
+		try (
+				JarFile jarFile = new JarFile(jarPath);
+				){
+			Enumeration<JarEntry> entries = jarFile.entries();
+			while (entries.hasMoreElements()) {
+				JarEntry entry = entries.nextElement();
+				String entryName = entry.getName();
+				if (entryName.startsWith(resourcePath)) {
+					themeEntry.add(entryName);
+				}
+			}	
+		} catch (IOException e) {
+			throw new GeneralException("fail to read file[" + themeFile.getAbsolutePath() + "]");
+		}
+		
+		// process entries under default theme path
+		int length = resourcePath.length();
+		for (String s : themeEntry) {
+			// entry like theme/default/, theme/default/javascripts will be ignored
+			if (s.equals("") || s.endsWith("/")) {
+				continue;
+			} 
+			
+			String entryName = s.substring(length);
+			TemplateKey templateKey = decodeTemplateKey(entryName);
+			if (templateKey != null) {// decode template file
+				String keyName = templateKey.getKey();
+				Template template = TemplateDecoder.decodeDefault(keyName, "/" + s, conf);
+				templates.put(templateKey, template);
+			} else { // copy non-template resources
+//				System.out.println(entryName);
+				// DONOT use replaceAll(). StringIndexOutOfBoundsException when applied for "javascripts/jquery-2.1.4.min.js"
+				File file = new File(conf.getOutputFile().getAbsoluteFile() + File.separator + entryName.replace("/", File.separator));
+				File parentFile = file.getParentFile();
+				if (!parentFile.exists()) {
+					parentFile.mkdirs();
+				}
+				if (!file.exists()) {
+					try {
+						file.createNewFile();
+					} catch (IOException e) {
+						throw new GeneralException("fail to create file[" + file.getAbsolutePath() + "]", e);
+					}
+				}
+				
+				try (
+						InputStream is = ThemeDecoder.class.getResourceAsStream("/" + s);
+						FileOutputStream fos = new FileOutputStream(file);
+						) {
+					byte[] buf = new byte[1024];
+					int len;
+					while ((len = is.read(buf)) != -1) {
+						fos.write(buf, 0, len);
+					}
+				} catch (IOException e) {
+					throw new GeneralException("fail to read resouce[" + s + "]", e);
+				}
+			}
+		}
 	}
 
-	private static TemplateKey decodeTemplateFile(File file) {
-		String fileName = file.getName();
-		
-		if (!fileName.endsWith(".html") && !fileName.endsWith(".html")) {
+	private static TemplateKey decodeTemplateKey(String name) {
+		if (!name.endsWith(".htm") && !name.endsWith(".html")) {
 			return null;
 		}
 		
-		fileName = fileName.substring(0, fileName.indexOf("."));
+		name = name.substring(0, name.indexOf("."));
 		
-		return TemplateKey.parseKey(fileName);
+		return TemplateKey.parseKey(name);
 	}
 
 }

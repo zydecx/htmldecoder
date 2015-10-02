@@ -7,7 +7,7 @@ import com.debugtoday.htmldecoder.struct.Article;
 
 /**
  * Wrap tag/category and it's article set
- * @author chuff
+ * @author zydecx
  *
  */
 public class TagWrapper {

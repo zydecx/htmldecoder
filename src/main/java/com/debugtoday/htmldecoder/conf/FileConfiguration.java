@@ -18,7 +18,7 @@ import com.debugtoday.htmldecoder.exception.GeneralException;
 
 /**
  * Read configuration from properties file.
- * @author chuff
+ * @author zydecx
  *
  */
 public class FileConfiguration extends Configuration {
@@ -47,7 +47,8 @@ public class FileConfiguration extends Configuration {
 		logger.info("reading configuraions from file...");
 		
 		if (confFilePath == null) {
-			throw new NullPointerException("conf file path is undefined");
+			logger.warn("conf file path is undefined");
+			return;
 		}
 		
 		Properties properties = new Properties();
