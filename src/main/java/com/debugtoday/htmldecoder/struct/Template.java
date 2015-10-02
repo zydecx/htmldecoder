@@ -1,46 +1,44 @@
 package com.debugtoday.htmldecoder.struct;
 
 import java.io.File;
-
-import com.debugtoday.htmldecoder.struct.html.Element;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Template extends Document {
-	private Element headContainer;
-	private Element bodyContainer;
-	private Element navContainer;
-	private String navHtml;
+	private String key;
+	private Map<String, List<TemplateArgument>> arguments;
+	private Map<String, List<TemplatePlaceHolder>> placeHolders;
 	
-	public Template(File file) {
+	public Template(String key, File file) {
 		super(file);
+		this.key = key;
+		this.arguments = new HashMap<>();
+		this.placeHolders = new HashMap<>();
 	}
 
-	public Element getHeadContainer() {
-		return headContainer;
-	}
-	public void setHeadContainer(Element headContainer) {
-		this.headContainer = headContainer;
-	}
-	public Element getBodyContainer() {
-		return bodyContainer;
-	}
-	public void setBodyContainer(Element bodyContainer) {
-		this.bodyContainer = bodyContainer;
+	public String getKey() {
+		return key;
 	}
 
-	public Element getNavContainer() {
-		return navContainer;
+	public void setKey(String key) {
+		this.key = key;
 	}
 
-	public void setNavContainer(Element navContainer) {
-		this.navContainer = navContainer;
+	public Map<String, List<TemplateArgument>> getArguments() {
+		return arguments;
 	}
 
-	public String getNavHtml() {
-		return navHtml;
+	public void setArguments(Map<String, List<TemplateArgument>> arguments) {
+		this.arguments = arguments;
 	}
 
-	public void setNavHtml(String navHtml) {
-		this.navHtml = navHtml;
+	public Map<String, List<TemplatePlaceHolder>> getPlaceHolders() {
+		return placeHolders;
+	}
+
+	public void setPlaceHolders(Map<String, List<TemplatePlaceHolder>> placeHolders) {
+		this.placeHolders = placeHolders;
 	}
 
 }

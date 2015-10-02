@@ -6,28 +6,32 @@ import java.util.Date;
 import com.debugtoday.htmldecoder.struct.html.Element;
 
 public class Article extends Document {
-	
-	private boolean enabled;
+
+	private ArticleMeta meta;
+	private String relativePath;
 	private Element title;
-	private String abstractContent;
-	private String[] tags;
-	private String[] categories;
-	private Date createDate;
-	private Date lastUpdateDate;
 	private Element head;
 	private Element body;
 	private Element more;
-	
+
 	public Article(File file) {
 		super(file);
 	}
 	
-	public boolean getEnabled() {
-		return enabled;
+	public ArticleMeta getMeta() {
+		return meta;
 	}
 
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
+	public void setMeta(ArticleMeta meta) {
+		this.meta = meta;
+	}
+
+	public String getRelativePath() {
+		return relativePath;
+	}
+
+	public void setRelativePath(String relativePath) {
+		this.relativePath = relativePath;
 	}
 
 	public Element getTitle() {
@@ -36,40 +40,6 @@ public class Article extends Document {
 
 	public void setTitle(Element title) {
 		this.title = title;
-	}
-
-	public String getAbstractContent() {
-		return abstractContent;
-	}
-	public void setAbstractContent(String abstractContent) {
-		this.abstractContent = abstractContent;
-	}
-	public String[] getTags() {
-		return tags;
-	}
-	public void setTags(String[] tags) {
-		this.tags = tags;
-	}
-	public String[] getCategories() {
-		return categories;
-	}
-	public void setCategories(String[] categories) {
-		this.categories = categories;
-	}
-	public Date getCreateDate() {
-		return createDate;
-	}
-
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
-
-	public Date getLastUpdateDate() {
-		return lastUpdateDate;
-	}
-
-	public void setLastUpdateDate(Date lastUpdateDate) {
-		this.lastUpdateDate = lastUpdateDate;
 	}
 
 	public Element getHead() {
@@ -92,32 +62,35 @@ public class Article extends Document {
 	public void setMore(Element more) {
 		this.more = more;
 	}
-
-	public ArticleAbstract formatArticleAbsract() {
-		ArticleAbstract articleAbstract = new ArticleAbstract();
-		articleAbstract.setTitle(title == null ? getFile().getName() : title.getContentText());
-		articleAbstract.setAbstractContent(abstractContent);
-		articleAbstract.setExcerpt(extractExcerpt());
-		articleAbstract.setCategories(categories);
-		articleAbstract.setTags(tags);
-		articleAbstract.setCreateDate(createDate);
-		articleAbstract.setLastUpdateDate(lastUpdateDate);
-		articleAbstract.setArticle(this);
-		
-		return articleAbstract;
+	
+	/**
+	 * extract title of article. Use file name if <title> not defined.
+	 * @return
+	 */
+	public String extractTitle() {
+		return title == null ? getFile().getName() : title.getContentText();
 	}
 	
 	/**
 	 * extract excerpt of article. Use content of body if more tag not defined
 	 * @return
 	 */
-	private String extractExcerpt() {
+	public String extractExcerpt() {
 		
 		if (more == null) {
 			return body.getFullText();
 		}
 		
 		return body.getContentText().substring(0, more.getFileStartPos() - body.getFileStartPos() - body.getContentStartPosOffset());
+	}
+	
+	/**
+	 * format url of article.
+	 * @param siteUrl root url of site
+	 * @return
+	 */
+	public String formatUrl(String siteUrl) {
+		return siteUrl + "/" + relativePath;
 	}
 
 }

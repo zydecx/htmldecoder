@@ -10,6 +10,8 @@ public class MetaDecoder {
 
 	public static final String META_DATE = "htmldecoder:date";
 	public static final String META_MODIFIED = "htmldecoder:modified";
+	public static final String META_AUTHOR = "htmldecoder:author";
+	public static final String META_AUTHORURL = "htmldecoder:authorurl";
 	public static final String META_TAGS = "htmldecoder:tags";
 	public static final String META_CATEGORY = "htmldecoder:category";
 	public static final String META_ABSTRACT = "htmldecoder:abstract";
@@ -23,6 +25,10 @@ public class MetaDecoder {
 			return new String[]{decodeDate(meta)};
 		case META_MODIFIED:
 			return new String[]{decodeModified(meta)};
+		case META_AUTHOR:
+			return new String[]{decodeAuthor(meta)};
+		case META_AUTHORURL:
+			return new String[]{decodeAuthorUrl(meta)};
 		case META_TAGS:
 			return decodeTags(meta);
 		case META_CATEGORY:
@@ -72,6 +78,22 @@ public class MetaDecoder {
 	
 	public static String decodeModified(Meta meta, boolean forceNullIfNotMatched) {
 		return decodeString(meta, META_MODIFIED, forceNullIfNotMatched);
+	}
+	
+	public static String decodeAuthor(Meta meta) {
+		return decodeString(meta);
+	}
+	
+	public static String decodeAuthor(Meta meta, boolean forceNullIfNotMatched) {
+		return decodeString(meta, META_AUTHOR, forceNullIfNotMatched);
+	}
+	
+	public static String decodeAuthorUrl(Meta meta) {
+		return decodeString(meta);
+	}
+	
+	public static String decodeAuthorUrl(Meta meta, boolean forceNullIfNotMatched) {
+		return decodeString(meta, META_AUTHORURL, forceNullIfNotMatched);
 	}
 	
 	public static String[] decodeTags(Meta meta) {

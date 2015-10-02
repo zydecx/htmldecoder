@@ -5,6 +5,11 @@ import java.util.Map;
 
 import com.debugtoday.htmldecoder.exception.GeneralException;
 
+/**
+ * Read configurations dynamically from program.<strong>NOT ACCOMPLISHED YET!</strong>
+ * @author chuff
+ *
+ */
 public class DynamicConfiguration extends Configuration {
 	
 	private Map<String, String> conf;
@@ -38,8 +43,8 @@ public class DynamicConfiguration extends Configuration {
 	}
 	
 	@Override
-	protected Map<String, String> readConf() {
-		return this.conf;
+	protected void readConf(Map<String, String> conf) {
+		// haven't accomplished yet
 	}
 }
  

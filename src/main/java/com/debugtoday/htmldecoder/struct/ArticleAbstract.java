@@ -2,6 +2,7 @@ package com.debugtoday.htmldecoder.struct;
 
 import java.util.Date;
 
+@Deprecated
 public class ArticleAbstract {
 	private String relativePath;
 	private String abstractContent;
