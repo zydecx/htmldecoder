@@ -101,8 +101,8 @@ public class AbstractFileOutput implements Output {
 			StringBuilder sb = new StringBuilder();
 			for (TagWrapper item : subList) {
 				String itemName = item.getName();
-				TagOutputArg tagArg = new TagOutputArg(itemName, formatPageUrl(arg.getRootUrl(), i), item.getArticleSet().size());
-				sb.append(tagOutput.export(arg));
+				TagOutputArg tagArg = new TagOutputArg(itemName, arg.getRootUrl() + "/" + item.getName(), item.getArticleSet().size());
+				sb.append(tagOutput.export(tagArg));
 			}
 			
 			File file = new File(formatPageFilePath(arg.getRootFile().getAbsolutePath(), i));

@@ -8,6 +8,7 @@ import com.debugtoday.htmldecoder.conf.Configuration;
 import com.debugtoday.htmldecoder.conf.ConfigurationWrapper;
 import com.debugtoday.htmldecoder.exception.GeneralException;
 import com.debugtoday.htmldecoder.output.object.TagFileOutputArg;
+import com.debugtoday.htmldecoder.output.object.TagOutputArg;
 import com.debugtoday.htmldecoder.output.object.TagWrapper;
 import com.debugtoday.htmldecoder.output.object.TemplateFullTextWrapper;
 import com.debugtoday.htmldecoder.struct.Theme;
@@ -40,10 +41,13 @@ public class CategoryPageOutput extends AbstractFileOutput {
 		arg.setTagOutput(new CategoryOutput(conf, theme));
 		arg.setPaginationOutput(new PaginationOutput(conf, theme));
 		arg.setPagination(conf.getCategoryPagination());
-		arg.setBodyTitle(conf.getConf(Configuration.CATEGORY_TITLE));
 		arg.setTagList(categoryList);
 		arg.setRootFile(rootFile);
-		arg.setRootUrl(TagWrapper.formatTagUrl(conf.getSiteUrl()));
+		arg.setRootUrl(TagWrapper.formatCategoryUrl(conf.getSiteUrl()));
+
+		String bodyTitle = conf.getConf(Configuration.CATEGORY_TITLE);
+		Output bodyTitleOuput = new CategoryTitleOutput(conf, theme);
+		arg.setBodyTitle(bodyTitleOuput.export(new TagOutputArg(bodyTitle, arg.getRootUrl(), 0)));
 		
 		exportTagPage(templateFullTextWrapper, arg);
 		

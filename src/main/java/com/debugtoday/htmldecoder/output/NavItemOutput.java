@@ -32,7 +32,7 @@ public class NavItemOutput implements Output {
 	}
 	
 	protected TemplateKey getTemplateKey() {
-		return TemplateKey.NAV;
+		return TemplateKey.NAV_ITEM;
 	}
 
 }

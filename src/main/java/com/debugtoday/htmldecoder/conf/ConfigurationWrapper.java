@@ -210,7 +210,7 @@ public class ConfigurationWrapper {
 		this.categoryPagination = categoryPagination;
 	}
 
-	public boolean isNavTagEnabled() {
+	public boolean getNavTagEnabled() {
 		return navTagEnabled;
 	}
 
@@ -218,7 +218,7 @@ public class ConfigurationWrapper {
 		this.navTagEnabled = navTagEnabled;
 	}
 
-	public boolean isNavCategoryEnabled() {
+	public boolean getNavCategoryEnabled() {
 		return navCategoryEnabled;
 	}
 
@@ -226,7 +226,7 @@ public class ConfigurationWrapper {
 		this.navCategoryEnabled = navCategoryEnabled;
 	}
 
-	public boolean isNavRecentEnabled() {
+	public boolean getNavRecentEnabled() {
 		return navRecentEnabled;
 	}
 
@@ -234,7 +234,7 @@ public class ConfigurationWrapper {
 		this.navRecentEnabled = navRecentEnabled;
 	}
 
-	public boolean isNavSearchEnabled() {
+	public boolean getNavSearchEnabled() {
 		return navSearchEnabled;
 	}
 

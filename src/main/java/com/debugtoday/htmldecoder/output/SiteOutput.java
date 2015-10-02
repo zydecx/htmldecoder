@@ -9,7 +9,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.debugtoday.htmldecoder.HtmlDecoderJob.TagUtil;
 import com.debugtoday.htmldecoder.conf.Configuration;
 import com.debugtoday.htmldecoder.conf.ConfigurationWrapper;
 import com.debugtoday.htmldecoder.exception.GeneralException;
@@ -81,19 +80,21 @@ public class SiteOutput implements Output {
 		
 		// output article page, writing to output folder
 		ArticlePageOutput articlePageOutput = new ArticlePageOutput(conf, theme, templateWrapper);
-		ArticlePageArg articlePageArg = new ArticlePageArg(conf.getConf(Configuration.SITE_TITLE), null, conf.getSiteUrl(), conf.getOutputFile(), articleList);
+		ArticlePageArg articlePageArg = new ArticlePageArg(conf.getConf(Configuration.SITE_TITLE), null, conf.getSiteUrl(), conf.getOutputFile(), articleList, null);
 		articlePageOutput.export(articlePageArg);
 
+		Output bodyTitleOutput = new TagTitleOutput(conf, theme);
 		for (TagWrapper tag : tagList) {
-			String bodyTitle = conf.getConf(Configuration.TAG_TITLE);
-			File tagFile = new File(conf.getOutputFile().getAbsolutePath() + File.separator + TagWrapper.extractTagRelativePath().replace("/", File.separator));
-			articlePageArg = new ArticlePageArg(bodyTitle, bodyTitle, TagWrapper.formatTagUrl(conf.getSiteUrl()), tagFile , new ArrayList<>(tag.getArticleSet()));
+			String bodyTitle = "#" + tag.getName();
+			File tagFile = new File(conf.getOutputFile().getAbsolutePath() + File.separator + TagWrapper.extractTagRelativePath().replace("/", File.separator) + File.separator + tag.getName());
+			articlePageArg = new ArticlePageArg(bodyTitle, bodyTitle, TagWrapper.formatTagUrl(conf.getSiteUrl()), tagFile , new ArrayList<>(tag.getArticleSet()), bodyTitleOutput);
 			articlePageOutput.export(articlePageArg);
 		}
+		bodyTitleOutput = new CategoryTitleOutput(conf, theme);
 		for (TagWrapper category : categoryList) {
-			String bodyTitle = conf.getConf(Configuration.CATEGORY_TITLE);
-			File categoryFile = new File(conf.getOutputFile().getAbsolutePath() + File.separator + TagWrapper.extractCategoryRelativePath().replace("/", File.separator));
-			articlePageArg = new ArticlePageArg(bodyTitle, bodyTitle, TagWrapper.formatTagUrl(conf.getSiteUrl()), categoryFile , new ArrayList<>(category.getArticleSet()));
+			String bodyTitle = "::" + category.getName();
+			File categoryFile = new File(conf.getOutputFile().getAbsolutePath() + File.separator + TagWrapper.extractCategoryRelativePath().replace("/", File.separator) + File.separator + category.getName());
+			articlePageArg = new ArticlePageArg(bodyTitle, bodyTitle, TagWrapper.formatCategoryUrl(conf.getSiteUrl()), categoryFile , new ArrayList<>(category.getArticleSet()), bodyTitleOutput);
 			articlePageOutput.export(articlePageArg);
 		}
 		

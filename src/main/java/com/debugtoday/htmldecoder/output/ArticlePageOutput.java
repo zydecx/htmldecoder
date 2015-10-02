@@ -8,7 +8,9 @@ import com.debugtoday.htmldecoder.exception.GeneralException;
 import com.debugtoday.htmldecoder.output.object.ArticleOutputArg;
 import com.debugtoday.htmldecoder.output.object.ArticlePageArg;
 import com.debugtoday.htmldecoder.output.object.FileOutputArg;
+import com.debugtoday.htmldecoder.output.object.NavItemOutputArg;
 import com.debugtoday.htmldecoder.output.object.PaginationOutputArg;
+import com.debugtoday.htmldecoder.output.object.TagOutputArg;
 import com.debugtoday.htmldecoder.output.object.TemplateFullTextWrapper;
 import com.debugtoday.htmldecoder.struct.Article;
 import com.debugtoday.htmldecoder.struct.Theme;
@@ -52,7 +54,9 @@ public class ArticlePageOutput extends AbstractFileOutput {
 			}
 			
 			FileOutputArg fileArg = new FileOutputArg();
-			fileArg.setBodyTitle(bodyTitle);
+			if (bodyTitle != null && arg.getBodyTitleOutput() != null) {
+				fileArg.setBodyTitle(arg.getBodyTitleOutput().export(new TagOutputArg(bodyTitle, rootUrl, 0)));
+			}
 			fileArg.setPageTitle(pageTitle);
 			fileArg.setBody(sb.toString());
 			fileArg.setPagination(paginationOutput.export(new PaginationOutputArg(rootUrl, pageSize, i)));

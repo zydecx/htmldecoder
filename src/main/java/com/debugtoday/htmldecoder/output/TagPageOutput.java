@@ -45,11 +45,14 @@ public class TagPageOutput extends AbstractFileOutput {
 		arg.setTagOutput(new TagOutput(conf, theme));
 		arg.setPaginationOutput(new PaginationOutput(conf, theme));
 		arg.setPagination(conf.getTagPagination());
-		arg.setBodyTitle(conf.getConf(Configuration.TAG_TITLE));
 		arg.setTagList(tagList);
 		arg.setRootFile(rootFile);
 		arg.setRootUrl(TagWrapper.formatTagUrl(conf.getSiteUrl()));
 		
+		String bodyTitle = conf.getConf(Configuration.TAG_TITLE);
+		Output bodyTitleOuput = new TagTitleOutput(conf, theme);
+		arg.setBodyTitle(bodyTitleOuput.export(new TagOutputArg(bodyTitle, arg.getRootUrl(), 0)));
+
 		exportTagPage(templateFullTextWrapper, arg);
 		
 		return DONE;

@@ -44,10 +44,19 @@ public class TemplateOutput implements Output {
 
 		NavOutput navOutput = new NavOutput(conf, theme);
 		StringBuilder sb = new StringBuilder();
-		sb.append(navOutput.export(formatNavRecentOutputArg(arg.getArticleList())))
-		.append(navOutput.export(formatNavTagOutputArg(arg.getTagList())))
-		.append(navOutput.export(formatNavCategoryOutputArg(arg.getCategoryList())))
-		.append(navOutput.export(formatNavSearchOutputArg()));
+		if (conf.getNavSearchEnabled()) {
+			sb.append(navOutput.export(formatNavSearchOutputArg()));
+		}
+		if (conf.getNavRecentEnabled()) {
+			sb.append(navOutput.export(formatNavRecentOutputArg(arg.getArticleList())));
+		}
+		if (conf.getNavTagEnabled()) {
+			sb.append(navOutput.export(formatNavTagOutputArg(arg.getTagList())));
+		}
+		if (conf.getNavCategoryEnabled()) {
+			sb.append(navOutput.export(formatNavCategoryOutputArg(arg.getCategoryList())));
+		}
+		
 		
 		templateFullText = templateFullText.replaceAll(GeneralDecoder.formatPlaceholderRegex(TemplateKey.NAV.getKey()), sb.toString());
 		
@@ -104,7 +113,7 @@ public class TemplateOutput implements Output {
 	}
 	
 	private NavOutputArg formatNavSearchOutputArg() throws GeneralException {
-		return new NavOutputArg(conf.getConf(Configuration.SEARCH_TITLE), null);
+		return new NavOutputArg(conf.getConf(Configuration.SEARCH_TITLE), new ArrayList<NavItemOutputArg>());
 	}
 
 }

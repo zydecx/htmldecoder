@@ -12,7 +12,7 @@ public abstract class GeneralDecoder {
 	 * @return
 	 */
 	public static String formatArgumentRegex(String conf) {
-		return "{{" + conf + "}}";
+		return "\\{\\{" + conf + "\\}\\}";
 	}
 	
 	/**

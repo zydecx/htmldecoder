@@ -88,7 +88,7 @@ public class TemplateDecoder extends GeneralDecoder {
 		}
 		
 		// match arguments
-		p = Pattern.compile("{{\\w+}}");
+		p = Pattern.compile("\\{\\{\\w+\\}\\}");
 		m = p.matcher(template.getFullText());
 		
 		while (m.find()) {
