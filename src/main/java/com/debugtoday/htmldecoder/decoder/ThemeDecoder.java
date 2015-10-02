@@ -15,6 +15,7 @@ import com.debugtoday.htmldecoder.struct.Template;
 import com.debugtoday.htmldecoder.struct.TemplateKey;
 import com.debugtoday.htmldecoder.struct.Theme;
 import com.debugtoday.htmldecoder.struct.html.Element;
+import com.debugtoday.htmldecoder.util.FileUtil;
 
 public class ThemeDecoder extends GeneralDecoder {
 	
@@ -31,22 +32,45 @@ public class ThemeDecoder extends GeneralDecoder {
 		Theme theme = new Theme(currentTheme);
 		Map<TemplateKey, Template> templates = theme.getTemplates();
 		
+		File themeFile;
 		if (isDefault) {
-			for (TemplateKey templateKey : TemplateKey.values()) {
-				String keyName = templateKey.getKey();
-				Template template = TemplateDecoder.decodeDefault(keyName, "/theme/default/" + keyName + ".html", conf);
-				templates.put(templateKey, template);
-			}
+			themeFile = new File(ThemeDecoder.class.getResource("/theme/default").getFile());
 		} else {
-			String currentThemePath = conf.getThemeFile().getAbsolutePath() + File.separator;
-			for (TemplateKey templateKey : TemplateKey.values()) {
-				String keyName = templateKey.getKey();
-				Template template = TemplateDecoder.decodeCustomerized(keyName, new File(currentThemePath + keyName + ".html"), conf);
+			themeFile = conf.getThemeFile();
+		}
+		
+		if (!themeFile.isDirectory()) {
+			throw new GeneralException("invalid theme file[" + themeFile.getAbsolutePath() + "]");
+		}
+		
+		for (File file : themeFile.listFiles()) {
+			TemplateKey templateKey = decodeTemplateFile(file);
+			if (templateKey == null) {
+				File toFile = new File(conf.getOutputFile().getAbsolutePath() + File.separator + file.getName());
+				if (file.isDirectory()) {
+					FileUtil.copyDirectory(file, toFile);
+				} else {
+					FileUtil.copy(file, toFile);
+				}
+			} else {
+				Template template = TemplateDecoder.decodeCustomerized(templateKey.getKey(), file, conf);
 				templates.put(templateKey, template);
 			}
 		}
 		
 		return theme;
+	}
+
+	private static TemplateKey decodeTemplateFile(File file) {
+		String fileName = file.getName();
+		
+		if (!fileName.endsWith(".html") && !fileName.endsWith(".html")) {
+			return null;
+		}
+		
+		fileName = fileName.substring(0, fileName.indexOf("."));
+		
+		return TemplateKey.parseKey(fileName);
 	}
 
 }
