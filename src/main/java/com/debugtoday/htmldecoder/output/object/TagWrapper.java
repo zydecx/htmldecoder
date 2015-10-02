@@ -36,4 +36,27 @@ public class TagWrapper {
 		this.articleSet = articleSet;
 	}
 	
+	public static String formatTagUrl(String siteUrl) {
+		return siteUrl + "/" + extractTagRelativePath();
+	}
+	
+	public static String formatCategoryUrl(String siteUrl) {
+		return siteUrl + "/" + extractCategoryRelativePath();
+	}
+	
+	public static String formatTagUrl(String siteUrl, String name) {
+		return formatTagUrl(siteUrl) + "/" + name;
+	}
+	
+	public static String formatCategoryUrl(String siteUrl, String name) {
+		return formatCategoryUrl(siteUrl) + "/" + name;
+	}
+	
+	public static String extractTagRelativePath() {
+		return "tag";
+	}
+	
+	public static String extractCategoryRelativePath() {
+		return "category";
+	}
 }

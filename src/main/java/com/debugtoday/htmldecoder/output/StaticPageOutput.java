@@ -33,7 +33,7 @@ public class StaticPageOutput implements Output {
 			sb.append(templateFullText
 					.replaceAll(
 							GeneralDecoder.formatArgumentRegex("url"),
-							conf.getSiteUrl() + "/" + article.getRelativePath())
+							article.formatUrl(conf.getSiteUrl()))
 					.replaceAll(
 							GeneralDecoder.formatArgumentRegex("title"),
 							article.getTitle().getContentText()));

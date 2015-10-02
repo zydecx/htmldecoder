@@ -23,13 +23,16 @@ public class NavItemOutput implements Output {
 		// TODO Auto-generated method stub
 		NavItemOutputArg arg = (NavItemOutputArg) object;
 		
-		Template template = theme.getTemplates().get(TemplateKey.NAV);
-
+		Template template = theme.getTemplates().get(getTemplateKey());
 		String templateFullText = template.getFullText()
-				.replaceAll(GeneralDecoder.formatArgumentRegex("url"), arg.getUrl())
-				.replaceAll(GeneralDecoder.formatArgumentRegex("title"), arg.getTitle());
+				.replaceAll(GeneralDecoder.formatArgumentRegex("title"), arg.getTitle())
+				.replaceAll(GeneralDecoder.formatArgumentRegex("url"), arg.getUrl());
 		
 		return templateFullText;
+	}
+	
+	protected TemplateKey getTemplateKey() {
+		return TemplateKey.NAV;
 	}
 
 }

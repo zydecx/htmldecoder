@@ -68,7 +68,7 @@ public class TemplateOutput implements Output {
 		for (int i = 0; i < length; i++) {
 			Article article = articleList.get(i);
 			String title = article.getTitle().getContentText();
-			String url = conf.getSiteUrl() + "/" + article.getRelativePath();
+			String url = article.formatUrl(conf.getSiteUrl());
 			itemArgList.add(new NavItemOutputArg(title, url));
 		}
 		
@@ -82,7 +82,7 @@ public class TemplateOutput implements Output {
 		for (int i = 0; i < length; i++) {
 			TagWrapper tag = tagList.get(i);
 			String title = tag.getName();
-			String url = conf.getSiteUrl() + "/tag/" + title;
+			String url = TagWrapper.formatTagUrl(conf.getSiteUrl(), title);
 			itemArgList.add(new NavItemOutputArg(title, url));
 		}
 		
@@ -96,7 +96,7 @@ public class TemplateOutput implements Output {
 		for (int i = 0; i < length; i++) {
 			TagWrapper tag = categoryList.get(i);
 			String title = tag.getName();
-			String url = conf.getSiteUrl() + "/category/" + title;
+			String url = TagWrapper.formatCategoryUrl(conf.getSiteUrl(), title);
 			itemArgList.add(new NavItemOutputArg(title, url));
 		}
 		

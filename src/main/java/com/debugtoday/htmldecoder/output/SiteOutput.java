@@ -1,5 +1,6 @@
 package com.debugtoday.htmldecoder.output;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -9,8 +10,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.debugtoday.htmldecoder.HtmlDecoderJob.TagUtil;
+import com.debugtoday.htmldecoder.conf.Configuration;
 import com.debugtoday.htmldecoder.conf.ConfigurationWrapper;
 import com.debugtoday.htmldecoder.exception.GeneralException;
+import com.debugtoday.htmldecoder.output.object.ArticlePageArg;
 import com.debugtoday.htmldecoder.output.object.SiteOutputArg;
 import com.debugtoday.htmldecoder.output.object.TagWrapper;
 import com.debugtoday.htmldecoder.output.object.TemplateFullTextWrapper;
@@ -67,10 +70,32 @@ public class SiteOutput implements Output {
 		String templateOutput = new TemplateOutput(conf, theme).export(new TemplateOutputArg(staticPageList, articleList, tagList, categoryList));
 		TemplateFullTextWrapper templateWrapper = new TemplateFullTextWrapper(templateOutput);
 		
-		// output article/tag/category page, writing to output folder
-		new ArticlePageOutput(conf, theme, templateWrapper).export(articleList);
+		// output articles/static pages, writing to output folder
+		ArticleFileOutput articleFileOutput = new ArticleFileOutput(conf, theme, templateWrapper);
+		articleFileOutput.export(articleList);
+		articleFileOutput.export(staticPageList);
+		
+		// output tag/category page, writing to output folder
 		new TagPageOutput(conf, theme, templateWrapper).export(tagList);
 		new CategoryPageOutput(conf, theme, templateWrapper).export(categoryList);
+		
+		// output article page, writing to output folder
+		ArticlePageOutput articlePageOutput = new ArticlePageOutput(conf, theme, templateWrapper);
+		ArticlePageArg articlePageArg = new ArticlePageArg(conf.getConf(Configuration.SITE_TITLE), null, conf.getSiteUrl(), conf.getOutputFile(), articleList);
+		articlePageOutput.export(articlePageArg);
+
+		for (TagWrapper tag : tagList) {
+			String bodyTitle = conf.getConf(Configuration.TAG_TITLE);
+			File tagFile = new File(conf.getOutputFile().getAbsolutePath() + File.separator + TagWrapper.extractTagRelativePath().replace("/", File.separator));
+			articlePageArg = new ArticlePageArg(bodyTitle, bodyTitle, TagWrapper.formatTagUrl(conf.getSiteUrl()), tagFile , new ArrayList<>(tag.getArticleSet()));
+			articlePageOutput.export(articlePageArg);
+		}
+		for (TagWrapper category : categoryList) {
+			String bodyTitle = conf.getConf(Configuration.CATEGORY_TITLE);
+			File categoryFile = new File(conf.getOutputFile().getAbsolutePath() + File.separator + TagWrapper.extractCategoryRelativePath().replace("/", File.separator));
+			articlePageArg = new ArticlePageArg(bodyTitle, bodyTitle, TagWrapper.formatTagUrl(conf.getSiteUrl()), categoryFile , new ArrayList<>(category.getArticleSet()));
+			articlePageOutput.export(articlePageArg);
+		}
 		
 		return DONE;
 	}

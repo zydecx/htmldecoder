@@ -1,13 +1,18 @@
 package com.debugtoday.htmldecoder.output;
 
-import com.debugtoday.htmldecoder.exception.GeneralException;
+import com.debugtoday.htmldecoder.conf.ConfigurationWrapper;
+import com.debugtoday.htmldecoder.struct.TemplateKey;
+import com.debugtoday.htmldecoder.struct.Theme;
 
-public class PaginationItemOutput implements Output {
-
+public class PaginationItemOutput extends NavItemOutput {
+	
+	public PaginationItemOutput(ConfigurationWrapper conf, Theme theme) {
+		super(conf, theme);
+	}
+	
 	@Override
-	public String export(Object object) throws GeneralException {
-		// TODO Auto-generated method stub
-		return null;
+	protected TemplateKey getTemplateKey() {
+		return TemplateKey.PAGINATION_ITEM;
 	}
 
 }

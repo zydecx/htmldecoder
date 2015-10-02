@@ -83,5 +83,14 @@ public class Article extends Document {
 		
 		return body.getContentText().substring(0, more.getFileStartPos() - body.getFileStartPos() - body.getContentStartPosOffset());
 	}
+	
+	/**
+	 * format url of article.
+	 * @param siteUrl root url of site
+	 * @return
+	 */
+	public String formatUrl(String siteUrl) {
+		return siteUrl + "/" + relativePath;
+	}
 
 }

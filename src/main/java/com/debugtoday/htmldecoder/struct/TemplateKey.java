@@ -14,6 +14,7 @@ public enum TemplateKey {
 	PAGINATION("pagination"),
 	PAGINATION_ITEM("pagination_item"),
 	PAGINATION_ITEM_ACTIVE("pagination_item_active"),
+	PAGINATION_ITEM_DISABLED("pagination_item_disabled"),
 	
 	NAV("nav"),
 	NAV_ITEM("nav_item"),

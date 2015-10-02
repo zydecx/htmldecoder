@@ -4,32 +4,34 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
 
-    <link rel="stylesheet" href="{{htmldecoder:siteurl}}/stylesheets/styles.css">
-    <link rel="stylesheet" href="{{htmldecoder:siteurl}}/stylesheets/github-dark.css">
-    <script src="{{htmldecoder:siteurl}}/javascripts/scale.fix.js"></script>
-    <script src="{{htmldecoder:siteurl}}/javascripts/jquery-2.1.4.min.js"></script>
+    <link rel="stylesheet" href="{{site_url}}/stylesheets/styles.css">
+    <link rel="stylesheet" href="{{site_url}}/stylesheets/github-dark.css">
+    <script src="{{site_url}}/javascripts/scale.fix.js"></script>
+    <script src="{{site_url}}/javascripts/jquery-2.1.4.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!--htmldecoder:head-->
+
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <!--htmldecoder:head-->
   </head>
   <body>
     <div id="page-wrapper">
       <div id="header-container">
         <header>
           <div class="header-wrapper">
-            <h1>DebugToday</h1>
-            <p>Debug code, debug life, debug today!</p>
+            <h1>{{site_title}}</h1>
+            <p>{{site_description}}</p>
             <ul>
-              <li><a class="buttons github" href="https://github.com/zydecx">GitHub Profile</a></li>
+              <li><a class="buttons github" href="{{site_github_home}}">View On<strong>GitHub</strong></a></li>
             </ul>
           </div>
           <div class="menu-container">
             <nav>
               <ul>
-                <li><a href="{{htmldecoder:siteurl}}">Home</a></li>
-                <li><a href="{{htmldecoder:siteurl}}">About</a></li>
+                <li><a href="{{site_url}}">{{home_static_title}}</a></li>
+                <!--htmldecoder:static_page-->
               </ul>
             </nav>
           </div>
@@ -37,7 +39,9 @@
       </div>
       <div id="main-container" class="row">
         <div class="page-content">
+          <!--htmldecoder:body_title-->
           <!--htmldecoder:body-->
+          <!--htmldecoder:pagination-->
         </div>
         <aside>
           <!--htmldecoder:nav-->

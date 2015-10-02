@@ -1,17 +1,18 @@
 package com.debugtoday.htmldecoder.output;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
+import com.debugtoday.htmldecoder.conf.Configuration;
 import com.debugtoday.htmldecoder.conf.ConfigurationWrapper;
 import com.debugtoday.htmldecoder.exception.GeneralException;
+import com.debugtoday.htmldecoder.output.object.TagFileOutputArg;
 import com.debugtoday.htmldecoder.output.object.TagWrapper;
 import com.debugtoday.htmldecoder.output.object.TemplateFullTextWrapper;
-import com.debugtoday.htmldecoder.struct.Article;
-import com.debugtoday.htmldecoder.struct.Template;
-import com.debugtoday.htmldecoder.struct.TemplateKey;
 import com.debugtoday.htmldecoder.struct.Theme;
 
-public class CategoryPageOutput implements Output {
+public class CategoryPageOutput extends AbstractFileOutput {
 	
 	private ConfigurationWrapper conf;
 	private Theme theme;
@@ -28,13 +29,25 @@ public class CategoryPageOutput implements Output {
 		// TODO Auto-generated method stub
 		List<TagWrapper> categoryList = (List<TagWrapper>) object;
 		
-		
-		
-		StringBuilder sb = new StringBuilder();
-		for (Article article : articleList) {
-			
+		File rootFile;
+		try {
+			rootFile = new File(conf.getOutputFile().getCanonicalPath() + File.separator + TagWrapper.extractCategoryRelativePath().replace("/", File.separator));
+		} catch (IOException e) {
+			throw new GeneralException("fail to locate file[" + conf.getOutputFile().getAbsolutePath() + "]", e);
 		}
-		return null;
+		
+		TagFileOutputArg arg = new TagFileOutputArg();
+		arg.setTagOutput(new CategoryOutput(conf, theme));
+		arg.setPaginationOutput(new PaginationOutput(conf, theme));
+		arg.setPagination(conf.getCategoryPagination());
+		arg.setBodyTitle(conf.getConf(Configuration.CATEGORY_TITLE));
+		arg.setTagList(categoryList);
+		arg.setRootFile(rootFile);
+		arg.setRootUrl(TagWrapper.formatTagUrl(conf.getSiteUrl()));
+		
+		exportTagPage(templateFullTextWrapper, arg);
+		
+		return DONE;
 	}
 
 }
