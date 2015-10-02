@@ -41,7 +41,7 @@ public class ThemeDecoder extends GeneralDecoder {
 		if (isDefault) {
 			themeFile = new File(ThemeDecoder.class.getResource("/theme/default").getFile());
 		} else {
-			themeFile = conf.getThemeFile();
+			themeFile = new File(conf.getThemeFile().getAbsolutePath() + File.separator + currentTheme);
 		}
 		
 		// if packaged in jar, theme CANNOT be read like an usual file.
