@@ -11,6 +11,7 @@ import java.util.Map;
  */
 public enum TemplateKey {
 	TEMPLATE("template"),
+	TEMPLATE_NOASIDE("template_noaside"),
 	
 	STATIC_PAGE("static_page"),
 	
@@ -21,6 +22,10 @@ public enum TemplateKey {
 	
 	NAV("nav"),
 	NAV_ITEM("nav_item"),
+	
+	SEARCH("search"),
+	SEARCH_GOOGLE("search_google"),
+	NAV_SEARCH("nav_search"),
 	
 	ARTICLE("article"),
 	ARTICLE_MEDIA_CATEGORY("article_media_category"),

@@ -16,14 +16,15 @@ import com.debugtoday.htmldecoder.struct.Template;
 import com.debugtoday.htmldecoder.struct.TemplateKey;
 import com.debugtoday.htmldecoder.struct.Theme;
 
-public class TemplateOutput implements Output {
+public class TemplateOutput extends TemplateNoasideOutput {
 	
 	private ConfigurationWrapper conf;
 	private Theme theme;
 	
 	public TemplateOutput(ConfigurationWrapper conf, Theme theme) {
-		this.conf = conf;
-		this.theme = theme;
+		super(conf, theme);
+		this.conf = getConf();
+		this.theme = getTheme();
 	}
 
 	@Override
@@ -31,21 +32,28 @@ public class TemplateOutput implements Output {
 		// TODO Auto-generated method stub
 		TemplateOutputArg arg = (TemplateOutputArg) object;
 		
-		Template template = theme.getTemplates().get(TemplateKey.TEMPLATE);
-		String templateFullText = replaceConfigurationArguments(template.getFullText(),
-				new String[] { Configuration.SITE_TITLE,
-						Configuration.SITE_DESCRIPTION,
-						Configuration.SITE_GITHUB_HOME,
-						Configuration.HOME_STATIC_TITLE });
+		String navFullText = exportNavOutput(arg);
 		
-		templateFullText = templateFullText.replaceAll(GeneralDecoder
-				.formatPlaceholderRegex(TemplateKey.STATIC_PAGE.getKey()),
-				new StaticPageOutput(conf, theme).export(arg.getStaticPageList()));
-
+		String templateFullText;
+		if ("".equals(navFullText)) {
+			templateFullText = super.export(arg);
+		} else {
+			Template template = theme.getTemplates().get(TemplateKey.TEMPLATE);
+			templateFullText = exportFromTemplate(template, arg)
+					.replaceAll(
+							GeneralDecoder.formatPlaceholderRegex(TemplateKey.NAV.getKey()),
+							navFullText);
+		}
+		
+		return templateFullText;
+	}
+	
+	private String exportNavOutput(TemplateOutputArg arg) throws GeneralException {
 		NavOutput navOutput = new NavOutput(conf, theme);
+		NavSearchOutput navSearchOutput = new NavSearchOutput(conf, theme);
 		StringBuilder sb = new StringBuilder();
 		if (conf.getNavSearchEnabled()) {
-			sb.append(navOutput.export(formatNavSearchOutputArg()));
+			sb.append(navSearchOutput.export(formatNavSearchOutputArg()));
 		}
 		if (conf.getNavRecentEnabled()) {
 			sb.append(navOutput.export(formatNavRecentOutputArg(arg.getArticleList())));
@@ -57,10 +65,7 @@ public class TemplateOutput implements Output {
 			sb.append(navOutput.export(formatNavCategoryOutputArg(arg.getCategoryList())));
 		}
 		
-		
-		templateFullText = templateFullText.replaceAll(GeneralDecoder.formatPlaceholderRegex(TemplateKey.NAV.getKey()), sb.toString());
-		
-		return templateFullText;
+		return sb.toString();
 	}
 	
 	private String replaceConfigurationArguments(String s, String[] confNames) throws GeneralException {

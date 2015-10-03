@@ -49,6 +49,30 @@ strong {
   font-weight: 700;
 }
 
+input.search {
+  width: 100%;
+  padding: 0px;
+  border: 1px solid #a0a0a0;
+  border-radius: 6px;
+  margin: 0px;
+  height: 28px;
+  outline: none;
+  padding: 2px 5px;
+}
+
+input.search:hover, input.search:focus {
+  border-left: 1px solid #a0a0a0;
+  border-top: 1px solid #a0a0a0;
+}
+
+input.search:focus {
+  background: rgb(255, 255, 255);
+}
+
+/* input.search.google {
+  background: url(https://www.google.com/cse/static/zh_CN/google_custom_search_watermark.gif) 0% 50% no-repeat rgb(255, 255, 255);
+} */
+
 #header-container, #main-container .page-content, #main-container aside nav {
   -moz-box-shadow: rgba(0, 0, 0, 0.2) 0 0 0 1px, rgba(0, 0, 0, 0.45) 0 8px 8px;
   -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0 0 0 1px, rgba(0, 0, 0, 0.45) 0 8px 8px;
@@ -290,6 +314,11 @@ article .article-more {
 #main-container .page-content {
   float: left;
   margin-right: 270px;
+}
+
+#main-container .page-content.noaside {
+  margin-right: 0;
+  float: none;
 }
 
 #main-container aside {

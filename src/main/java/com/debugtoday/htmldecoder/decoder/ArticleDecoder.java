@@ -38,12 +38,12 @@ public class ArticleDecoder extends GeneralDecoder {
 			article.setFullText(replaceGeneralArguments(fullText.toString(), conf.getConfiguration()));;
 			
 			int offsetPos = 0;
-			Element head = decodeArticleElement(article, "head", offsetPos);
+			Element head = decodeGeneralElement(article, "head", offsetPos);
 			
-			Element title = decodeArticleElement(article, "title", head.getFileStartPos());
+			Element title = decodeGeneralElement(article, "title", head.getFileStartPos());
 			
 			offsetPos = head == null ? 0 : (head.getFileStartPos() + head.getEndPosOffset());
-			Element body = decodeArticleElement(article, "body", offsetPos);
+			Element body = decodeGeneralElement(article, "body", offsetPos);
 			
 			Element more = decodeGeneralPlaceholder(article, PLACEHOLDER_MORE, offsetPos);
 			
@@ -122,44 +122,6 @@ public class ArticleDecoder extends GeneralDecoder {
 			System.err.println("fail to parse date[" + dateStr + "]");
 			return new Date(document.getFile().lastModified());
 		}
-	}
-	
-	private static Element decodeArticleElement(Article article, String element) {
-		return decodeArticleElement(article, element, 0);
-	}
-	
-	private static Element decodeArticleElement(Article article, String element, int fromIndex) {
-		String fullText = article.getFullText();
-		
-		int startIndex = ElementDecoder.matchElementStart(fullText, element, fromIndex);
-		if (startIndex < 0) {
-			return null;
-		}
-		
-		int endIndex = ElementDecoder.matchElementEnd(fullText, element, startIndex);
-		if (endIndex < 0) {
-			return null;
-		}
-		
-		int contentStartIndex = ElementDecoder.matchElementContentStart(fullText, element, startIndex);
-		int contentEndIndex = ElementDecoder.matchElementContentEnd(fullText, element, startIndex);
-		// i.g. <p></p>, under this circumstance, there's no actual content.
-		if (contentStartIndex > contentEndIndex) {
-			contentStartIndex = contentEndIndex = -1;
-		}
-		
-		
-		Element elementBean = new Element();
-		elementBean.setDocument(article);
-		elementBean.setTag(element);
-		elementBean.setAttributes(new HashMap<String, String>());
-		elementBean.setFullText(fullText.substring(startIndex, endIndex + 1));
-		elementBean.setFileStartPos(startIndex);
-		elementBean.setEndPosOffset(endIndex - startIndex);
-		elementBean.setContentStartPosOffset(contentStartIndex - startIndex);
-		elementBean.setContentEndPosOffset(contentEndIndex - startIndex);
-		
-		return elementBean;
 	}
 	
 	/**

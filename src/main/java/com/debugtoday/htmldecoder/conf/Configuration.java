@@ -46,6 +46,9 @@ public abstract class Configuration {
 	
 	public static final String CURRENT_THEME = "current_theme";
 	
+	public static final String SEARCH_ENGINE="search_engine";
+	public static final String GOOGLE_CUSTOMER_SEARCH_ID="google_customer_search_id";
+	
 	public static final String IGNORE_LIST = "ignore_list";
 	
 	public static final String DEFAULT_PAGINATION = "default_pagination";

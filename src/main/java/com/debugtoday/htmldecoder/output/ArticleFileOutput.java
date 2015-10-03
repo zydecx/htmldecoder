@@ -35,7 +35,6 @@ public class ArticleFileOutput extends AbstractFileOutput {
 		// TODO Auto-generated method stub
 		List<Article> articleList = (List<Article>) object;
 		
-		Template template = theme.getTemplates().get(TemplateKey.ARTICLE);
 		ArticleOutput articleOutput = new ArticleOutput(conf, theme);
 		for (Article article : articleList) {
 			ArticleOutputArg arg = new ArticleOutputArg(article, false);

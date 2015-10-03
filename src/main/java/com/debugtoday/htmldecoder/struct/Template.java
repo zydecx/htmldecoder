@@ -5,8 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.debugtoday.htmldecoder.struct.html.Element;
+
 public class Template extends Document {
 	private String key;
+	private Element head;
+	private Element body;
 	private Map<String, List<TemplateArgument>> arguments;
 	private Map<String, List<TemplatePlaceHolder>> placeHolders;
 	
@@ -23,6 +27,22 @@ public class Template extends Document {
 
 	public void setKey(String key) {
 		this.key = key;
+	}
+
+	public Element getHead() {
+		return head;
+	}
+
+	public void setHead(Element head) {
+		this.head = head;
+	}
+
+	public Element getBody() {
+		return body;
+	}
+
+	public void setBody(Element body) {
+		this.body = body;
 	}
 
 	public Map<String, List<TemplateArgument>> getArguments() {

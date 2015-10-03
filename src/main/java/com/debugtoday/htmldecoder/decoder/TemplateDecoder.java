@@ -16,6 +16,7 @@ import com.debugtoday.htmldecoder.exception.GeneralException;
 import com.debugtoday.htmldecoder.struct.Template;
 import com.debugtoday.htmldecoder.struct.TemplateArgument;
 import com.debugtoday.htmldecoder.struct.TemplatePlaceHolder;
+import com.debugtoday.htmldecoder.struct.html.Element;
 
 public class TemplateDecoder extends GeneralDecoder {
 	
@@ -33,7 +34,17 @@ public class TemplateDecoder extends GeneralDecoder {
 			}
 			
 			template.setFullText(replaceGeneralArguments(fullText.toString(), conf.getConfiguration()));
-			decodeTemplateFullText(template);
+			
+			// Seems useless to decode placeholder and arguments.
+			/*decodeTemplateFullText(template);*/
+			
+			int offsetPos = 0;
+			Element head = decodeGeneralElement(template, "head", offsetPos);
+			offsetPos = head == null ? 0 : (head.getFileStartPos() + head.getEndPosOffset());
+			Element body = decodeGeneralElement(template, "body", offsetPos);
+			
+			template.setHead(head);
+			template.setBody(body);
 			
 			return template;
 		} catch (IOException e) {
@@ -56,6 +67,14 @@ public class TemplateDecoder extends GeneralDecoder {
 			
 			// Seems useless to decode placeholder and arguments.
 			/*decodeTemplateFullText(template);*/
+			
+			int offsetPos = 0;
+			Element head = decodeGeneralElement(template, "head", offsetPos);
+			offsetPos = head == null ? 0 : (head.getFileStartPos() + head.getEndPosOffset());
+			Element body = decodeGeneralElement(template, "body", offsetPos);
+			
+			template.setHead(head);
+			template.setBody(body);
 			
 			return template;
 		} catch (IOException e) {

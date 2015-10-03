@@ -98,6 +98,13 @@ public class SiteOutput implements Output {
 			articlePageOutput.export(articlePageArg);
 		}
 		
+
+		// output common part of noaside-template, leaving only article part to output in the following 
+		String templateNoasideOutput = new TemplateNoasideOutput(conf, theme).export(new TemplateOutputArg(staticPageList, articleList, tagList, categoryList));
+		TemplateFullTextWrapper templateNoAsideWrapper = new TemplateFullTextWrapper(templateNoasideOutput);
+		// output search page, writing to output folder
+		new SearchOutput(conf, theme, templateNoAsideWrapper).export(null);
+		
 		return DONE;
 	}
 	
