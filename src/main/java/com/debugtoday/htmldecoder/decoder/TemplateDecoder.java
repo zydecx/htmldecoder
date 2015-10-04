@@ -2,6 +2,7 @@ package com.debugtoday.htmldecoder.decoder;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,6 +35,7 @@ public class TemplateDecoder extends GeneralDecoder {
 			}
 			
 			template.setFullText(replaceGeneralArguments(fullText.toString(), conf.getConfiguration()));
+			template.setPreList(decodePreElement(template));
 			
 			// Seems useless to decode placeholder and arguments.
 			/*decodeTemplateFullText(template);*/
@@ -54,7 +56,7 @@ public class TemplateDecoder extends GeneralDecoder {
 	
 	public static Template decodeCustomerized(String templateName, File file, ConfigurationWrapper conf) throws GeneralException {
 		try (
-				BufferedReader reader = new BufferedReader(new FileReader(file));
+				BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
 		) {
 			String inLine;
 			Template template = new Template(templateName, file);
@@ -64,6 +66,7 @@ public class TemplateDecoder extends GeneralDecoder {
 			}
 			
 			template.setFullText(replaceGeneralArguments(fullText.toString(), conf.getConfiguration()));
+			template.setPreList(decodePreElement(template));
 			
 			// Seems useless to decode placeholder and arguments.
 			/*decodeTemplateFullText(template);*/

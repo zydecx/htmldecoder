@@ -2,17 +2,16 @@ package com.debugtoday.htmldecoder.decoder;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import com.debugtoday.htmldecoder.conf.ConfigurationWrapper;
-import com.debugtoday.htmldecoder.decoder.html.ElementDecoder;
 import com.debugtoday.htmldecoder.decoder.html.MetaDecoder;
 import com.debugtoday.htmldecoder.exception.GeneralException;
 import com.debugtoday.htmldecoder.struct.Article;
@@ -25,7 +24,7 @@ import com.debugtoday.htmldecoder.util.FileUtil;
 public class ArticleDecoder extends GeneralDecoder {
 	public static Article decode(File file, ConfigurationWrapper conf) throws GeneralException {
 		try (
-				BufferedReader reader = new BufferedReader(new FileReader(file));
+				BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
 				) {
 			String inLine;
 			Article article = new Article(file);
@@ -35,7 +34,8 @@ public class ArticleDecoder extends GeneralDecoder {
 				fullText.append(inLine).append("\n");
 			}
 			
-			article.setFullText(replaceGeneralArguments(fullText.toString(), conf.getConfiguration()));;
+			article.setFullText(replaceGeneralArguments(fullText.toString(), conf.getConfiguration()));
+			article.setPreList(decodePreElement(article));
 			
 			int offsetPos = 0;
 			Element head = decodeGeneralElement(article, "head", offsetPos);

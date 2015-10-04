@@ -1,11 +1,12 @@
 package com.debugtoday.htmldecoder.decoder;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import com.debugtoday.htmldecoder.conf.Configuration;
 import com.debugtoday.htmldecoder.decoder.html.ElementDecoder;
 import com.debugtoday.htmldecoder.exception.GeneralException;
-import com.debugtoday.htmldecoder.struct.Article;
 import com.debugtoday.htmldecoder.struct.Document;
 import com.debugtoday.htmldecoder.struct.html.Element;
 
@@ -44,9 +45,11 @@ public abstract class GeneralDecoder {
 		String fullText = document.getFullText();
 		
 		String formattedPlaceholder = formatPlaceholderRegex(placeholder);
-		int index = fullText.indexOf(formattedPlaceholder, fromIndex);
-		
-		if (index < 0) {
+		int index = fromIndex - 1;
+		do {
+			index = fullText.indexOf(formattedPlaceholder, ++index);
+		} while (index != -1 && isInPreElement(document, index));
+		if (index == -1) {
 			return null;
 		}
 		
@@ -75,13 +78,19 @@ public abstract class GeneralDecoder {
 	protected static Element decodeGeneralElement(Document document, String element, int fromIndex) {
 		String fullText = document.getFullText();
 		
-		int startIndex = ElementDecoder.matchElementStart(fullText, element, fromIndex);
-		if (startIndex < 0) {
+		int startIndex = fromIndex - 1;
+		do {
+			startIndex = ElementDecoder.matchElementStart(fullText, element, ++startIndex);
+		} while (startIndex != -1 && isInPreElement(document, startIndex));		
+		if (startIndex == -1) {
 			return null;
 		}
 		
-		int endIndex = ElementDecoder.matchElementEnd(fullText, element, startIndex);
-		if (endIndex < 0) {
+		int endIndex = startIndex;
+		do {
+			endIndex = ElementDecoder.matchElementEnd(fullText, element, ++endIndex);
+		} while (endIndex != -1 && isInPreElement(document, endIndex));
+		if (endIndex == -1) {
 			return null;
 		}
 		
@@ -104,6 +113,37 @@ public abstract class GeneralDecoder {
 		elementBean.setContentEndPosOffset(contentEndIndex - startIndex);
 		
 		return elementBean;
+	}
+	
+	/**
+	 * decode all <pre> element in document
+	 * @param document
+	 * @return
+	 */
+	protected static List<Element> decodePreElement(Document document) {
+		List<Element> preList = new ArrayList<>();
+		
+		int index = 0;
+		Element pre = decodeGeneralElement(document, "pre", index);
+		while (pre != null) {
+			preList.add(pre);
+			index = pre.getFileStartPos() + pre.getEndPosOffset();
+		}
+		
+		return preList;
+	}
+	
+	private static boolean isInPreElement(Document document, int index) {
+		List<Element> preList = document.getPreList();
+		
+		for (Element e : preList) {
+			if (index >= (e.getFileStartPos() + e.getContentStartPosOffset())
+					&& index <= (e.getFileStartPos() + e.getContentEndPosOffset())) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	/**

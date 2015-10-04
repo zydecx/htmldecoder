@@ -38,8 +38,12 @@ public class SiteOutput implements Output {
 		
 		List<Article> staticPageList = arg.getStaticPageList();
 		List<Article> articleList = arg.getArticleList();
-		List<TagWrapper> tagList = analyzeArticleTag(articleList);
-		List<TagWrapper> categoryList = analyzeArticleCategory(articleList);
+		
+		List<Article> allArticleList = new ArrayList<>();
+		allArticleList.addAll(staticPageList);
+		allArticleList.addAll(articleList);
+		List<TagWrapper> tagList = analyzeArticleTag(allArticleList);
+		List<TagWrapper> categoryList = analyzeArticleCategory(allArticleList);
 		
 		// sort article list by time descending
 		Collections.sort(articleList, new Comparator<Article>() {

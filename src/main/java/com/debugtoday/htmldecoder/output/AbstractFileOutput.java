@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import com.debugtoday.htmldecoder.decoder.GeneralDecoder;
@@ -15,7 +17,6 @@ import com.debugtoday.htmldecoder.output.object.TagFileOutputArg;
 import com.debugtoday.htmldecoder.output.object.TagOutputArg;
 import com.debugtoday.htmldecoder.output.object.TagWrapper;
 import com.debugtoday.htmldecoder.output.object.TemplateFullTextWrapper;
-import com.debugtoday.htmldecoder.struct.TemplateKey;
 
 /**
  * base class for output relative to file output, i.g. article/article page/tag page/category page
@@ -51,7 +52,7 @@ public class AbstractFileOutput implements Output {
 		}
 		
 		try (
-				PrintWriter pw = new PrintWriter(new FileOutputStream(file));
+				PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"));
 				) {
 			String formattedHead = "";
 			if (arg.getPageTitle() != null) {
@@ -76,7 +77,7 @@ public class AbstractFileOutput implements Output {
 			}
 			
 			pw.write(templateFullText);
-		} catch (FileNotFoundException e) {
+		} catch (FileNotFoundException | UnsupportedEncodingException e) {
 			throw new GeneralException("fail to write to file[" + file.getAbsolutePath() + "]", e);
 		}
 	}
