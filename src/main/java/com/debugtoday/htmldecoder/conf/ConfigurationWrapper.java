@@ -31,6 +31,8 @@ public class ConfigurationWrapper {
 	private boolean navRecentEnabled;
 	private boolean navSearchEnabled;
 	
+	private boolean articleHeaderEnabled;
+	
 	private Configuration configuration;
 	
 	/**
@@ -69,6 +71,8 @@ public class ConfigurationWrapper {
 		wrapper.setNavCategoryEnabled(Boolean.parseBoolean(conf.getConf(Configuration.NAV_CATEGORY_ENABLED)));
 		wrapper.setNavRecentEnabled(Boolean.parseBoolean(conf.getConf(Configuration.NAV_RECENT_ENABLED)));
 		wrapper.setNavSearchEnabled(Boolean.parseBoolean(conf.getConf(Configuration.NAV_SEARCH_ENABLED)));
+		
+		wrapper.setArticleHeaderEnabled(Boolean.parseBoolean(conf.getConf(Configuration.ARTICLE_HEADER_ENABLED)));
 		
 		String siteUrl = conf.getConf(Configuration.SITE_URL);
 		if (siteUrl == null) {
@@ -210,7 +214,7 @@ public class ConfigurationWrapper {
 		this.categoryPagination = categoryPagination;
 	}
 
-	public boolean getNavTagEnabled() {
+	public boolean isNavTagEnabled() {
 		return navTagEnabled;
 	}
 
@@ -218,7 +222,7 @@ public class ConfigurationWrapper {
 		this.navTagEnabled = navTagEnabled;
 	}
 
-	public boolean getNavCategoryEnabled() {
+	public boolean isNavCategoryEnabled() {
 		return navCategoryEnabled;
 	}
 
@@ -226,7 +230,7 @@ public class ConfigurationWrapper {
 		this.navCategoryEnabled = navCategoryEnabled;
 	}
 
-	public boolean getNavRecentEnabled() {
+	public boolean isNavRecentEnabled() {
 		return navRecentEnabled;
 	}
 
@@ -234,12 +238,20 @@ public class ConfigurationWrapper {
 		this.navRecentEnabled = navRecentEnabled;
 	}
 
-	public boolean getNavSearchEnabled() {
+	public boolean isNavSearchEnabled() {
 		return navSearchEnabled;
 	}
 
 	public void setNavSearchEnabled(boolean navSearchEnabled) {
 		this.navSearchEnabled = navSearchEnabled;
+	}
+
+	public boolean isArticleHeaderEnabled() {
+		return articleHeaderEnabled;
+	}
+
+	public void setArticleHeaderEnabled(boolean articleHeaderEnabled) {
+		this.articleHeaderEnabled = articleHeaderEnabled;
 	}
 
 	public Configuration getConfiguration() {

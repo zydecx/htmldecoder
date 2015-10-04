@@ -60,6 +60,8 @@ public abstract class Configuration {
 	public static final String NAV_RECENT_ENABLED = "nav_recent_enabled";
 	public static final String NAV_SEARCH_ENABLED = "nav_search_enabled";
 	
+	public static final String ARTICLE_HEADER_ENABLED = "article_header_enabled";
+	
 	private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
 	
 	private Map<String, String> conf = new HashMap<>();

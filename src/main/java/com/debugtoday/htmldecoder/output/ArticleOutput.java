@@ -31,7 +31,8 @@ public class ArticleOutput implements Output {
 				.replaceAll(GeneralDecoder.formatArgumentRegex("title"), article.getTitle() == null ? "" : article.getTitle().getContentText())
 				.replaceAll(GeneralDecoder.formatArgumentRegex("time"), article.getMeta().getCreateDate() == null ? "" : article.getMeta().getCreateDate().toString())
 				.replaceAll(GeneralDecoder.formatArgumentRegex("author"), article.getMeta().getAuthor())
-				.replaceAll(GeneralDecoder.formatArgumentRegex("author_url"), article.getMeta().getAuthorUrl());
+				.replaceAll(GeneralDecoder.formatArgumentRegex("author_url"), article.getMeta().getAuthorUrl())
+				.replaceAll(GeneralDecoder.formatArgumentRegex("article_header_display"), conf.isArticleHeaderEnabled() ? "" : "display:none;");
 		
 		templateFullText = templateFullText
 				.replaceAll(

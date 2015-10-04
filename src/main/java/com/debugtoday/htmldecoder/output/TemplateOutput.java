@@ -52,16 +52,16 @@ public class TemplateOutput extends TemplateNoasideOutput {
 		NavOutput navOutput = new NavOutput(conf, theme);
 		NavSearchOutput navSearchOutput = new NavSearchOutput(conf, theme);
 		StringBuilder sb = new StringBuilder();
-		if (conf.getNavSearchEnabled()) {
+		if (conf.isNavSearchEnabled()) {
 			sb.append(navSearchOutput.export(formatNavSearchOutputArg()));
 		}
-		if (conf.getNavRecentEnabled()) {
+		if (conf.isNavRecentEnabled()) {
 			sb.append(navOutput.export(formatNavRecentOutputArg(arg.getArticleList())));
 		}
-		if (conf.getNavTagEnabled()) {
+		if (conf.isNavTagEnabled()) {
 			sb.append(navOutput.export(formatNavTagOutputArg(arg.getTagList())));
 		}
-		if (conf.getNavCategoryEnabled()) {
+		if (conf.isNavCategoryEnabled()) {
 			sb.append(navOutput.export(formatNavCategoryOutputArg(arg.getCategoryList())));
 		}
 		
