@@ -86,7 +86,7 @@ public class TemplateOutput extends TemplateNoasideOutput {
 			itemArgList.add(new NavItemOutputArg(title, url));
 		}
 		
-		return new NavOutputArg(conf.getConf(Configuration.RECENT_TITLE), itemArgList);
+		return new NavOutputArg(conf.getConf(Configuration.RECENT_TITLE), "#", itemArgList);
 	}
 	
 	private NavOutputArg formatNavTagOutputArg(List<TagWrapper> tagList) throws GeneralException {
@@ -100,7 +100,7 @@ public class TemplateOutput extends TemplateNoasideOutput {
 			itemArgList.add(new NavItemOutputArg(title, url));
 		}
 		
-		return new NavOutputArg(conf.getConf(Configuration.TAG_TITLE), itemArgList);
+		return new NavOutputArg(conf.getConf(Configuration.TAG_TITLE), TagWrapper.formatTagUrl(conf.getSiteUrl()), itemArgList);
 	}
 	
 	private NavOutputArg formatNavCategoryOutputArg(List<TagWrapper> categoryList) throws GeneralException {
@@ -114,11 +114,11 @@ public class TemplateOutput extends TemplateNoasideOutput {
 			itemArgList.add(new NavItemOutputArg(title, url));
 		}
 		
-		return new NavOutputArg(conf.getConf(Configuration.CATEGORY_TITLE), itemArgList);
+		return new NavOutputArg(conf.getConf(Configuration.CATEGORY_TITLE), TagWrapper.formatCategoryUrl(conf.getSiteUrl()), itemArgList);
 	}
 	
 	private NavOutputArg formatNavSearchOutputArg() throws GeneralException {
-		return new NavOutputArg(conf.getConf(Configuration.SEARCH_TITLE), new ArrayList<NavItemOutputArg>());
+		return new NavOutputArg(conf.getConf(Configuration.SEARCH_TITLE), "#", new ArrayList<NavItemOutputArg>());
 	}
 
 }

@@ -33,6 +33,7 @@ public class NavOutput implements Output {
 		}
 		String templateFullText = template.getFullText()
 				.replaceAll(GeneralDecoder.formatArgumentRegex("title"), arg.getTitle())
+				.replaceAll(GeneralDecoder.formatArgumentRegex("url"), arg.getUrl())
 				.replaceAll(GeneralDecoder.formatPlaceholderRegex(TemplateKey.NAV_ITEM.getKey()), sb.toString());
 		
 		
