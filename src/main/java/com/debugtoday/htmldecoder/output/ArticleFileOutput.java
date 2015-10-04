@@ -45,7 +45,7 @@ public class ArticleFileOutput extends AbstractFileOutput {
 			FileOutputArg fileOutputArg = new FileOutputArg();
 			fileOutputArg.setBody(fullText);
 			fileOutputArg.setHead(article.getHead().getContentText());
-			fileOutputArg.setPageTitle(article.getTitle().getContentText());
+			fileOutputArg.setPageTitle(article.getTitle() == null ? "" : article.getTitle().getContentText());
 			
 			writeToFile(file, templateFullTextWrapper, fileOutputArg);
 		}

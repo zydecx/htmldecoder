@@ -28,8 +28,8 @@ public class ArticleOutput implements Output {
 		Template template = theme.getTemplates().get(TemplateKey.ARTICLE);
 		String templateFullText = template.getFullText()
 				.replaceAll(GeneralDecoder.formatArgumentRegex("url"), article.formatUrl(conf.getSiteUrl()))
-				.replaceAll(GeneralDecoder.formatArgumentRegex("title"), article.getTitle().getContentText())
-				.replaceAll(GeneralDecoder.formatArgumentRegex("time"), article.getMeta().getCreateDate().toString())
+				.replaceAll(GeneralDecoder.formatArgumentRegex("title"), article.getTitle() == null ? "" : article.getTitle().getContentText())
+				.replaceAll(GeneralDecoder.formatArgumentRegex("time"), article.getMeta().getCreateDate() == null ? "" : article.getMeta().getCreateDate().toString())
 				.replaceAll(GeneralDecoder.formatArgumentRegex("author"), article.getMeta().getAuthor())
 				.replaceAll(GeneralDecoder.formatArgumentRegex("author_url"), article.getMeta().getAuthorUrl());
 		

@@ -26,7 +26,7 @@ public class ArticleMoreOutput implements Output {
 		
 		Template template = theme.getTemplates().get(TemplateKey.ARTICLE_MORE);
 		String templateFullText = template.getFullText()
-				.replaceAll(GeneralDecoder.formatArgumentRegex("url"), article.formatUrl(conf.getConf(Configuration.SITE_URL)));
+				.replaceAll(GeneralDecoder.formatArgumentRegex("url"), article.formatUrl(conf.getSiteUrl()));
 		return templateFullText;
 	}
 

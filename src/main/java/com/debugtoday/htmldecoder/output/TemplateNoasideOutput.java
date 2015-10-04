@@ -44,7 +44,7 @@ public class TemplateNoasideOutput implements Output {
 						Configuration.HOME_STATIC_TITLE });
 		
 		templateFullText = templateFullText.replaceAll(GeneralDecoder
-				.formatPlaceholderRegex(TemplateKey.STATIC_PAGE.getKey()),
+				.formatPlaceholderRegex("static_page"),
 				new StaticPageOutput(conf, theme).export(arg.getStaticPageList()));
 
 		return templateFullText;

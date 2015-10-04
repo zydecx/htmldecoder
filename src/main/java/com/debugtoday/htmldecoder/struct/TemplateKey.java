@@ -12,8 +12,9 @@ import java.util.Map;
 public enum TemplateKey {
 	TEMPLATE("template"),
 	TEMPLATE_NOASIDE("template_noaside"),
-	
-	STATIC_PAGE("static_page"),
+
+	STATIC_PAGE_ITEM("static_page_item"),
+	STATIC_PAGE_GROUP("static_page_group"),
 	
 	PAGINATION("pagination"),
 	PAGINATION_ITEM("pagination_item"),

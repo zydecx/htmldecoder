@@ -61,6 +61,10 @@ public class HtmlDecoderJob {
 	private List<Article> analyzeContentFolderAndMoveResources(File contentFolder, boolean skipStaticPage) throws GeneralException {
 		List<Article> articleList = new ArrayList<>();
 		
+		if (!contentFolder.isDirectory()) {
+			return articleList;
+		}
+		
 		for (File file : contentFolder.listFiles()) {
 			if (isIgnored(file, skipStaticPage)) {
 				continue;

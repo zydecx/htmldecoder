@@ -42,7 +42,7 @@ public class FileUtil {
 	}
 	
 	/**
-	 * 递归复制文件夹
+	 * copy directory recursively
 	 * @param from
 	 * @param to
 	 * @throws GeneralException 
@@ -100,7 +100,8 @@ public class FileUtil {
 	}
 	
 	/**
-	 * 获得相对路径，不以“/”开头；相对路径中文件分隔符统计替换成“/”
+	 * get relative path of <i>child</i> to <i>parent</i>.<br>
+	 * To be noticed, relative returned NOT start with "/" and file separator will be replaced by "/" 
 	 * @param parent
 	 * @param child
 	 * @return
@@ -109,7 +110,27 @@ public class FileUtil {
 	public static final String relativePath(File parent, File child) throws IOException {
 		String parentPath = parent.getCanonicalPath();
 		String childPath = child.getCanonicalPath();
+
+		if (parentPath.equals(childPath)) {
+			return "";
+		} else {
+			return childPath.substring(parentPath.length() + 1).replace(File.separator, "/");
+		}
+	}
+	
+	public static final String fileName(File file) {
+		String fileName = file.getName();
 		
-		return childPath.substring(parentPath.length() + 1).replace(File.separator, "/");
+		int index = fileName.lastIndexOf(".");
+		
+		return index == -1 ? fileName : fileName.substring(0, index);
+	}
+	
+	public static final String fileExtensionName(File file) {
+		String fileName = file.getName();
+		
+		int index = fileName.lastIndexOf(".");
+		
+		return index == -1 || fileName.endsWith(".") ? "" : fileName.substring(index + 1);	
 	}
 }

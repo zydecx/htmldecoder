@@ -211,6 +211,11 @@ input.search:focus {
   background: #DEDEDE;
 }
 
+#header-container .menu-container nav {
+  position: relative;
+  height: 32px;
+}
+
 #header-container .menu-container ul {
   margin: 0;
   padding: 0;
@@ -240,6 +245,32 @@ input.search:focus {
 
 #header-container .menu-container ul a:hover {
   background: #ababab none repeat scroll 0 0;
+}
+
+#header-container .menu-container ul.main-menu {
+  position: absolute;
+  z-index: 20;
+}
+
+#header-container .menu-container ul.sub-menu {
+  background: #DEDEDE;
+  margin-top: -1px;
+  transition: opacity 0.2s ease-in 0s;
+  visibility: hidden;
+}
+
+#header-container .menu-container ul.sub-menu.active {
+  visibility: visible;
+}
+
+#header-container .menu-container ul.sub-menu li {
+  float: none;
+}
+
+#header-container .menu-container ul.sub-menu ul.sub-menu {
+  position: absolute;
+  left: 100%;
+  top: 0;
 }
 
 #main-container {
