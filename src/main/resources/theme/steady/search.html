@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+	<script type="text/javascript">
+		function extractUrlParameters() {
+			var params = {};
+			var locationSearch = window.location.search;
+			if (locationSearch.length > 0) {
+				var paramSplit = locationSearch.substr(1).split("&");
+				for (var i = 0; i < paramSplit.length; i++) {
+					var paramPair = paramSplit[i].split("=");
+					params[decodeURIComponent(paramPair[0])] = decodeURIComponent(paramPair[1]);
+				}
+			}
+	
+			return params;
+		}
+	</script>
+	<!--htmldecoder:head-->
+  </head>
+  <body>
+	
+	<!--htmldecoder:body-->
+
+  </body>
+ </html>

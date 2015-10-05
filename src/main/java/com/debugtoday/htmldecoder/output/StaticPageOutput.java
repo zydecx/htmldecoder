@@ -90,7 +90,7 @@ public class StaticPageOutput implements Output {
 						indexWrapper == null ? "#" : indexWrapper.getArticle().formatUrl(conf.getSiteUrl()))
 				.replaceAll(
 						GeneralDecoder.formatArgumentRegex("title"),
-						FileUtil.fileName(wrapper.getFile()))
+						indexWrapper == null ? FileUtil.fileName(wrapper.getFile()) : indexWrapper.getArticle().getTitle().getContentText())
 				.replaceAll(
 						GeneralDecoder.formatPlaceholderRegex("sub_menu_container"),
 						sb.toString());

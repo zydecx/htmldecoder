@@ -32,30 +32,54 @@ public class ThemeDecoder extends GeneralDecoder {
 	 */
 	public static Theme decode(ConfigurationWrapper conf) throws GeneralException {
 		String currentTheme = conf.getConfiguration().getConf(Configuration.CURRENT_THEME);
-		boolean isDefault = "default".equalsIgnoreCase(currentTheme);
+		boolean isDefault = true/* = "default".equalsIgnoreCase(currentTheme)*/;
 		
 		Theme theme = new Theme(currentTheme);
 		Map<TemplateKey, Template> templates = theme.getTemplates();
 		
-		File themeFile;
+		// find workspace first; if not, find if package contains the theme
+		File themeFile = new File(conf.getThemeFile().getAbsolutePath() + File.separator + currentTheme);
+		if (themeFile.isDirectory()) {
+			isDefault = false;
+		} else {
+			themeFile = new File(ThemeDecoder.class.getResource("/theme/" + currentTheme).getFile());
+		}
+		/*
 		if (isDefault) {
 			themeFile = new File(ThemeDecoder.class.getResource("/theme/default").getFile());
 		} else {
 			themeFile = new File(conf.getThemeFile().getAbsolutePath() + File.separator + currentTheme);
-		}
+		}*/
 		
 		// if packaged in jar, theme CANNOT be read like an usual file.
 		// decodeTemplateFromJarFile() is specially designed to process such situation.
 		if (themeFile.isDirectory()) {
-			decodeTemplateFromFileSystem(conf, themeFile, templates);
+			decodeTemplateFromFileSystem(conf, currentTheme, themeFile, templates);
 		} else {
-			decodeTemplateFromJarFile(conf, themeFile, templates);
+			decodeTemplateFromJarFile(conf, currentTheme, themeFile, templates);
 		}
 		
 		return theme;
 	}
 	
-	private static void decodeTemplateFromFileSystem(ConfigurationWrapper conf, File themeFile, Map<TemplateKey, Template> templates) throws GeneralException {
+	/**
+	 * if there's default theme with given name in package
+	 * @param themeName
+	 * @return
+	 */
+	public static boolean isDefaultThemeExisted(String themeName) {
+		boolean isThemeExisted = false;
+		try (
+				InputStream inputStream = ThemeDecoder.class.getResourceAsStream("/theme/" + themeName + "/META");
+		) {
+			inputStream.read();
+			isThemeExisted = true;
+		} catch (Exception e) {}
+		
+		return isThemeExisted;
+	}
+	
+	private static void decodeTemplateFromFileSystem(ConfigurationWrapper conf, String themeName, File themeFile, Map<TemplateKey, Template> templates) throws GeneralException {
 		for (File file : themeFile.listFiles()) {
 			TemplateKey templateKey = decodeTemplateKey(file.getName());
 			if (templateKey == null) {
@@ -78,14 +102,15 @@ public class ThemeDecoder extends GeneralDecoder {
 	 * and template resources will be decoded and others copied to output folder.
 	 * @param conf
 	 * @param themeFile
+	 * @param themeName
 	 * @param templates
 	 * @throws GeneralException
 	 */
-	private static void decodeTemplateFromJarFile(ConfigurationWrapper conf, File themeFile, Map<TemplateKey, Template> templates) throws GeneralException {
+	private static void decodeTemplateFromJarFile(ConfigurationWrapper conf, String themeName, File themeFile, Map<TemplateKey, Template> templates) throws GeneralException {
 		String jarPath = themeFile.getPath().replaceFirst("[.]jar[!].*", ".jar").replaceFirst("file:", "");
 		
 		// traverse jar file to extract entries under default theme path
-		String resourcePath = "theme/default/";
+		String resourcePath = "theme/" + themeName + "/";
 		List<String> themeEntry = new ArrayList<>();
 		try (
 				JarFile jarFile = new JarFile(jarPath);
@@ -97,7 +122,7 @@ public class ThemeDecoder extends GeneralDecoder {
 				if (entryName.startsWith(resourcePath)) {
 					themeEntry.add(entryName);
 				}
-			}	
+			}
 		} catch (IOException e) {
 			throw new GeneralException("fail to read file[" + themeFile.getAbsolutePath() + "]");
 		}
@@ -116,7 +141,7 @@ public class ThemeDecoder extends GeneralDecoder {
 				String keyName = templateKey.getKey();
 				Template template = TemplateDecoder.decodeDefault(keyName, "/" + s, conf);
 				templates.put(templateKey, template);
-			} else { // copy non-template resources
+			} else if (!entryName.equalsIgnoreCase("META")) { // copy non-template resources
 //				System.out.println(entryName);
 				// DONOT use replaceAll(). StringIndexOutOfBoundsException when applied for "javascripts/jquery-2.1.4.min.js"
 				File file = new File(conf.getOutputFile().getAbsoluteFile() + File.separator + entryName.replace("/", File.separator));

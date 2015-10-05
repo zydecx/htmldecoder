@@ -1,0 +1,23 @@
+
+<article>
+	<header style="{{article_header_display}}">
+		<h1><a href="{{url}}">{{title}}</a></h1>
+		<div class="article-media">
+			<p class="media-extra">
+				<span>Time: <time>{{time}}</time></span>
+				<span>, by <a href="{{author_url}}">{{author}}</a></span>
+			</p>
+			<ul class="category">
+				Category:
+				<!--htmldecoder:article_media_category-->
+			</ul>
+			<ul class="tag">
+				Tag:
+				<!--htmldecoder:article_media_tag-->
+			</ul>
+		</div>
+	</header>
+	<div class="article-content">
+		{{content}}<!--htmldecoder:article_more-->
+	</div>
+</article>

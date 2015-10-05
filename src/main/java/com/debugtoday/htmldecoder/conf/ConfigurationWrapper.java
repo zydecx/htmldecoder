@@ -1,9 +1,14 @@
 package com.debugtoday.htmldecoder.conf;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.debugtoday.htmldecoder.decoder.ThemeDecoder;
 import com.debugtoday.htmldecoder.exception.GeneralException;
 
 /**
@@ -115,7 +120,7 @@ public class ConfigurationWrapper {
 		
 		String currentTheme = configuration.getConf(Configuration.CURRENT_THEME);
 		File currentThemeFile = new File(themeFile.getAbsolutePath() + File.separator + currentTheme);
-		if (!currentTheme.equals("default") && !currentThemeFile.isDirectory()) {
+		if (!currentThemeFile.isDirectory() && !ThemeDecoder.isDefaultThemeExisted(currentTheme)) {
 			throw new GeneralException("theme file [" + currentThemeFile.getAbsolutePath() + "] is not a valid folder");
 		}
 		
