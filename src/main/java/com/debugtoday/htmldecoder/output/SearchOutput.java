@@ -72,7 +72,7 @@ public class SearchOutput extends AbstractFileOutput {
 	}
 	
 	private String exportEnginePageHead(Template engineTemplate, String engine) throws GeneralException {
-		if (engine.equals("google")) {
+		if (engine.equalsIgnoreCase("google")) {
 			return exportGoogleEnginePageHead(engineTemplate);
 		} else {
 			logger.warn("search engine[" + engine + "] not recognized. Fail to export engine page.");
@@ -90,7 +90,7 @@ public class SearchOutput extends AbstractFileOutput {
 	}
 	
 	private String exportEnginePageBody(Template engineTemplate, String engine) throws GeneralException {
-		if (engine.equals("google")) {
+		if (engine.equalsIgnoreCase("google")) {
 			return exportGoogleEnginePageBody(engineTemplate);
 		} else {
 			logger.warn("search engine[" + engine + "] not recognized. Fail to export engine page.");
