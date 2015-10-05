@@ -98,6 +98,7 @@ public class HtmlDecoderJob {
 				}
 				articleList.addAll(analyzeContentFolderAndMoveResources(file, skipStaticPage));
 			} else {
+				logger.info("read article from [" + file.getAbsolutePath() + "]");
 				Article article = analyzeContentFileAndMoveResource(file);
 				if (article != null) {
 					articleList.add(article);
@@ -115,7 +116,7 @@ public class HtmlDecoderJob {
 	 * @throws GeneralException
 	 */
 	private Article analyzeContentFileAndMoveResource(File file) throws GeneralException {
-		if (file.getName().endsWith(".htm") || file.getName().endsWith(".html")) {
+		if (ArticleDecoder.isArticleFile(file)) {
 			Article article = ArticleDecoder.decode(file, conf);
 			
 			return article;

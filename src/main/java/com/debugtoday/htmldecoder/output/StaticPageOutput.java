@@ -76,7 +76,7 @@ public class StaticPageOutput implements Output {
 		StringBuilder sb = new StringBuilder();
 		for (StaticPageWrapper subWrapper : wrapper.getSubArticles()) {
 			if (subWrapper.getArticle() != null) {
-				if (subWrapper.getFile().getName().startsWith("index.htm")) {
+				if (subWrapper.getName().equalsIgnoreCase("index")) {	// use name instead of file name to avoid failure for markdown file, i.g. index.md
 					indexWrapper = subWrapper;
 				} else {
 					sb.append(exportFullTextOfItem(itemTemplate, subWrapper));
@@ -109,7 +109,12 @@ public class StaticPageOutput implements Output {
 		for (Article article : articleList) {
 			File file = article.getFile();
 			try {
-				String relativePath = FileUtil.relativePath(rootFile, file);
+				// even for markdown file, can be outputted as html file
+				String relativePath = FileUtil.relativePath(rootFile, file.getParentFile());
+				if (!relativePath.equals("")) {
+					relativePath += "/";
+				}
+				relativePath += FileUtil.fileName(article.getFile()) + ".html";
 				int depth = -1;
 				int separatorIndex = -1;
 				do {
@@ -128,6 +133,7 @@ public class StaticPageOutput implements Output {
 						file = parentFile;
 						relativePath = parentRelativePath;
 						parentFile = file.getParentFile();
+//						logger.info("[[[" + parentFile.getAbsolutePath());
 						parentRelativePath = FileUtil.relativePath(rootFile, parentFile);
 						if (!wrapperMap.containsKey(relativePath)) {
 							wrapper = new StaticPageWrapper(file, relativePath, parentRelativePath, depth);

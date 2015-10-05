@@ -63,6 +63,9 @@ public abstract class Configuration {
 	
 	public static final String ARTICLE_HEADER_ENABLED = "article_header_enabled";
 	
+	public static final String MARKDOWN_INTERPRETER = "markdown_interpreter";
+	public static final String MARKDOWN_INTERPRETER_PANDOC = "markdown_interpreter_pandoc";
+	
 	private static final Logger logger = CommonLog.getLogger();
 	
 	private Map<String, String> conf = new HashMap<>();

@@ -111,7 +111,7 @@ public class FileUtil {
 		String parentPath = parent.getCanonicalPath();
 		String childPath = child.getCanonicalPath();
 
-		if (parentPath.equals(childPath)) {
+		if (parentPath.equalsIgnoreCase(childPath)) {
 			return "";
 		} else {
 			return childPath.substring(parentPath.length() + 1).replace(File.separator, "/");

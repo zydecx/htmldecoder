@@ -29,7 +29,7 @@ public class ArticleOutput implements Output {
 		// TODO Auto-generated method stub
 		ArticleOutputArg arg = (ArticleOutputArg) object;
 		Article article = arg.getArticle();
-		
+//		logger.info("[[[" + article.getFile().getAbsolutePath());
 		Template template = theme.getTemplates().get(TemplateKey.ARTICLE);
 		String templateFullText = template.getFullText()
 				.replaceAll(GeneralDecoder.formatArgumentRegex("url"), article.formatUrl(conf.getSiteUrl()))
@@ -54,7 +54,7 @@ public class ArticleOutput implements Output {
 							article.extractExcerpt())
 					.replaceAll(
 							GeneralDecoder.formatPlaceholderRegex(TemplateKey.ARTICLE_MORE.getKey()),
-							new ArticleMoreOutput(conf, theme).export(article));
+							article.getMore() == null ? "" : new ArticleMoreOutput(conf, theme).export(article));
 		} else {
 
 			templateFullText = templateFullText

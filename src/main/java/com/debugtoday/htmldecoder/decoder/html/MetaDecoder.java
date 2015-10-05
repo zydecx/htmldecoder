@@ -152,6 +152,11 @@ public class MetaDecoder {
 		Meta meta = new Meta();
 		meta.setName(readMeta(s, "name"));
 		meta.setContent(readMeta(s, "content"));
+		
+		if (meta.getName() == null || meta.getContent() == null) {
+			return null;
+		}
+		
 		meta.setFullText(s);
 		meta.setStartPos(metaIndex);
 		
@@ -175,6 +180,10 @@ public class MetaDecoder {
 		}
 		
 		return metaStr.substring(firstQuote + 1, secondQuote);
+	}
+	
+	public static String formatMetaName(String name) {
+		return "htmldecoder:" + name;
 	}
 
 }

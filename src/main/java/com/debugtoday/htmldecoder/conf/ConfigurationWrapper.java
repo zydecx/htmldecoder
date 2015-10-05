@@ -130,6 +130,11 @@ public class ConfigurationWrapper {
 			throw new GeneralException("theme file [" + currentThemeFile.getAbsolutePath() + "] is not a valid folder");
 		}
 		
+		if (configuration.getConf(Configuration.MARKDOWN_INTERPRETER).equals("pandoc")
+				&& configuration.getConf(Configuration.MARKDOWN_INTERPRETER_PANDOC).equals("")) {
+			throw new GeneralException("pandoc interpreter is empty");
+		}
+		
 		if (defaultPagination <= 0) {
 			throw new GeneralException("default pagination [" + defaultPagination + "] is invalid");
 		}

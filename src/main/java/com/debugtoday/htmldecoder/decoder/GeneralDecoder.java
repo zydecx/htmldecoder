@@ -81,7 +81,7 @@ public abstract class GeneralDecoder {
 		int startIndex = fromIndex - 1;
 		do {
 			startIndex = ElementDecoder.matchElementStart(fullText, element, ++startIndex);
-		} while (startIndex != -1 && isInPreElement(document, startIndex));		
+		} while (startIndex != -1 && !element.equalsIgnoreCase("pre") && isInPreElement(document, startIndex));		
 		if (startIndex == -1) {
 			return null;
 		}
@@ -89,7 +89,7 @@ public abstract class GeneralDecoder {
 		int endIndex = startIndex;
 		do {
 			endIndex = ElementDecoder.matchElementEnd(fullText, element, ++endIndex);
-		} while (endIndex != -1 && isInPreElement(document, endIndex));
+		} while (endIndex != -1 && !element.equalsIgnoreCase("pre") && isInPreElement(document, endIndex));
 		if (endIndex == -1) {
 			return null;
 		}
@@ -128,6 +128,7 @@ public abstract class GeneralDecoder {
 		while (pre != null) {
 			preList.add(pre);
 			index = pre.getFileStartPos() + pre.getEndPosOffset();
+			pre = decodeGeneralElement(document, "pre", index);
 		}
 		
 		return preList;
