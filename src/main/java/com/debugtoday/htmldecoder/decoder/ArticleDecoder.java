@@ -127,13 +127,16 @@ public class ArticleDecoder extends GeneralDecoder {
 		article.setMore(more);
 		
 		// even for markdown file, can be outputted as html file
-		String relativePath = null;
+		String relativePath;
 		try {
 			relativePath = FileUtil.relativePath(conf.getContentFile(), article.getFile().getParentFile());
 		} catch (IOException e) {
 			throw new GeneralException(e);
 		}
-		relativePath += "/" + FileUtil.fileName(article.getFile()) + ".html";
+		if (!relativePath.equals("")) {
+			relativePath += "/";
+		}
+		relativePath += FileUtil.fileName(article.getFile()) + ".html";
 		article.setRelativePath(relativePath);
 
 		ArticleMeta articleMeta = new ArticleMeta();

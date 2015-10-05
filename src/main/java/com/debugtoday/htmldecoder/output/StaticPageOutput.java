@@ -237,8 +237,8 @@ public class StaticPageOutput implements Output {
 			int index = Integer.MAX_VALUE;
 			String name = fileName;
 			
-			if (fileName.startsWith("_")) {
-				int nextSeparator = fileName.indexOf("_", 1);
+			if (fileName.startsWith("-")) {
+				int nextSeparator = fileName.indexOf("-", 1);
 				if (nextSeparator >= 0) {
 					try {
 						index = Integer.parseInt(fileName.substring(1, nextSeparator));
