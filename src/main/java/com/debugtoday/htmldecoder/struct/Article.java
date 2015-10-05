@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Date;
 
 import com.debugtoday.htmldecoder.struct.html.Element;
+import com.debugtoday.htmldecoder.util.FileUtil;
 
 public class Article extends Document {
 
@@ -68,7 +69,7 @@ public class Article extends Document {
 	 * @return
 	 */
 	public String extractTitle() {
-		return title == null ? getFile().getName() : title.getContentText();
+		return title == null ? FileUtil.fileName(getFile()) : title.getContentText();
 	}
 	
 	/**

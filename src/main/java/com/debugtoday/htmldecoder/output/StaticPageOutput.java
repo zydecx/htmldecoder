@@ -62,7 +62,7 @@ public class StaticPageOutput implements Output {
 						article.formatUrl(conf.getSiteUrl()))
 				.replaceAll(
 						GeneralDecoder.formatArgumentRegex("title"),
-						article.getTitle().getContentText());
+						article.extractTitle());
 		return fullText;
 		
 	}
@@ -90,7 +90,7 @@ public class StaticPageOutput implements Output {
 						indexWrapper == null ? "#" : indexWrapper.getArticle().formatUrl(conf.getSiteUrl()))
 				.replaceAll(
 						GeneralDecoder.formatArgumentRegex("title"),
-						indexWrapper == null ? FileUtil.fileName(wrapper.getFile()) : indexWrapper.getArticle().getTitle().getContentText())
+						indexWrapper == null ? FileUtil.fileName(wrapper.getFile()) : indexWrapper.getArticle().extractTitle())
 				.replaceAll(
 						GeneralDecoder.formatPlaceholderRegex("sub_menu_container"),
 						sb.toString());

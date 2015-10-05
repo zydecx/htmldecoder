@@ -81,7 +81,7 @@ public class TemplateOutput extends TemplateNoasideOutput {
 		List<NavItemOutputArg> itemArgList = new ArrayList<>();
 		for (int i = 0; i < length; i++) {
 			Article article = articleList.get(i);
-			String title = article.getTitle().getContentText();
+			String title = article.extractTitle();
 			String url = article.formatUrl(conf.getSiteUrl());
 			itemArgList.add(new NavItemOutputArg(title, url));
 		}
