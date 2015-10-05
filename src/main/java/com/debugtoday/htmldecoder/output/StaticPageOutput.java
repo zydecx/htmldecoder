@@ -3,6 +3,8 @@ package com.debugtoday.htmldecoder.output;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,7 +92,7 @@ public class StaticPageOutput implements Output {
 						indexWrapper == null ? "#" : indexWrapper.getArticle().formatUrl(conf.getSiteUrl()))
 				.replaceAll(
 						GeneralDecoder.formatArgumentRegex("title"),
-						indexWrapper == null ? FileUtil.fileName(wrapper.getFile()) : indexWrapper.getArticle().extractTitle())
+						indexWrapper == null ? wrapper.getName() : indexWrapper.getArticle().extractTitle())
 				.replaceAll(
 						GeneralDecoder.formatPlaceholderRegex("sub_menu_container"),
 						sb.toString());
@@ -150,6 +152,19 @@ public class StaticPageOutput implements Output {
 			wrapperMap.get(wrapper.getParentRelativePath()).getSubArticles().add(wrapper);
 		}
 		
+		Comparator<StaticPageWrapper> comparator = new Comparator<StaticPageWrapper>() {
+				@Override
+				public int compare(StaticPageWrapper o1, StaticPageWrapper o2) {
+					return o1.getIndex() - o2.getIndex();
+				}
+			};
+		
+		// sort <i>subArticles</i> of each wrapper
+		for (StaticPageWrapper wrapper : wrapperMap.values()) {
+			Collections.sort(wrapper.getSubArticles(), comparator); 
+		}
+		Collections.sort(mainList, comparator);
+		
 		return mainList;
 	}
 	
@@ -161,9 +176,8 @@ public class StaticPageOutput implements Output {
 	 */
 	private static class StaticPageWrapper {
 		
-		private static int INDEX_GENERATOR = 1;
-		
 		private int index;
+		private String name;
 		private Article article;
 		private File file;
 		private String relativePath;
@@ -186,8 +200,8 @@ public class StaticPageOutput implements Output {
 			this.depth = depth;
 			this.parent = null;
 			this.article = article;
-			this.subArticles = null;
-			this.index = INDEX_GENERATOR++;
+			this.subArticles = new ArrayList<>();
+			extractIndexAndName();
 		}
 		
 		/**
@@ -205,7 +219,30 @@ public class StaticPageOutput implements Output {
 			this.parent = null;
 			this.article = null;
 			this.subArticles = new ArrayList<>();
-			this.index = INDEX_GENERATOR++;
+			extractIndexAndName();
+		}
+		
+		/**
+		 * extract index and name from file.<br>
+		 * index used for order; name used for display(folder only)
+		 */
+		private void extractIndexAndName() {
+			String fileName = FileUtil.fileName(file);
+			int index = Integer.MAX_VALUE;
+			String name = fileName;
+			
+			if (fileName.startsWith("_")) {
+				int nextSeparator = fileName.indexOf("_", 1);
+				if (nextSeparator >= 0) {
+					try {
+						index = Integer.parseInt(fileName.substring(1, nextSeparator));
+						name = fileName.substring(nextSeparator + 1);
+					} catch (Exception e) {}
+				}
+			}
+			
+			this.setName(name);
+			this.index = index;
 		}
 
 		public int getIndex() {
@@ -214,6 +251,14 @@ public class StaticPageOutput implements Output {
 
 		public void setIndex(int index) {
 			this.index = index;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
 		}
 
 		public String getRelativePath() {

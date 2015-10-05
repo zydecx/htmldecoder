@@ -5,12 +5,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+
 import com.debugtoday.htmldecoder.conf.Configuration;
 import com.debugtoday.htmldecoder.conf.ConfigurationWrapper;
 import com.debugtoday.htmldecoder.conf.FileConfiguration;
 import com.debugtoday.htmldecoder.decoder.ArticleDecoder;
 import com.debugtoday.htmldecoder.decoder.ThemeDecoder;
 import com.debugtoday.htmldecoder.exception.GeneralException;
+import com.debugtoday.htmldecoder.log.CommonLog;
 import com.debugtoday.htmldecoder.output.SiteOutput;
 import com.debugtoday.htmldecoder.output.object.SiteOutputArg;
 import com.debugtoday.htmldecoder.struct.Article;
@@ -19,18 +22,25 @@ import com.debugtoday.htmldecoder.util.FileUtil;
 
 public class HtmlDecoderJob {
 	
+	private static final Logger logger = CommonLog.getLogger();
+	
 	public static void main(String[] args) {
-		System.out.println("Welcome to HtmlDecoder project!");
+		logger.info("Welcome to HtmlDecoder project!");
 		String confFilePath = args.length > 0 ? args[0] : null;
 		Configuration conf = new FileConfiguration(confFilePath);
 		try {
+			logger.info("init configuration...");
 			conf.init();
+			logger.info("init configuration done.");
 			ConfigurationWrapper confWrapper = ConfigurationWrapper.parse(conf);
+			logger.info("check configuration...");
 			confWrapper.check();
+			logger.info("check configuration done.");
+			logger.info("output site...");
 			new HtmlDecoderJob(confWrapper).start();
+			logger.info("output site done.");
 		} catch (GeneralException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.warn("work fails", e);
 		}
 	}
 	
@@ -41,12 +51,17 @@ public class HtmlDecoderJob {
 	}
 	
 	public void start() throws GeneralException {
-		
+		logger.info("decode theme...");
 		Theme theme = ThemeDecoder.decode(conf);
+		logger.info("decode theme done.");
 		
+		logger.info("decode articles...");
 		List<Article> articleList = analyzeContentFolderAndMoveResources(conf.getContentFile(), true);
+		logger.info("decode articles of size [" + articleList.size() + "]");
+		logger.info("decode static pages...");
 		List<Article> staticPageList = analyzeContentFolderAndMoveResources(conf.getStaticPageFile(), false);
-		
+		logger.info("decode static pages of size [" + articleList.size() + "]");
+		logger.info("export site...");
 		new SiteOutput(conf, theme).export(new SiteOutputArg(articleList, staticPageList));
 		
 	}
@@ -75,6 +90,7 @@ public class HtmlDecoderJob {
 					String relativePath = FileUtil.relativePath(conf.getContentFile(), file);
 					File tempDir = new File(conf.getOutputFile().getCanonicalPath() + File.separator + relativePath.replace("/", File.separator));
 					if (!tempDir.exists()) {
+						logger.info("move resouce- make directory[" + tempDir.getAbsolutePath() + "]");
 						tempDir.mkdirs();
 					}
 				} catch (IOException e) {
@@ -106,7 +122,9 @@ public class HtmlDecoderJob {
 		} else {
 			try {
 				String relativePath = FileUtil.relativePath(conf.getContentFile(), file);
-				FileUtil.copy(file, new File(conf.getOutputFile().getCanonicalPath() + File.separator + relativePath.replace("/", File.separator)));
+				File toFile = new File(conf.getOutputFile().getCanonicalPath() + File.separator + relativePath.replace("/", File.separator));
+				logger.info("move resouce- copy resource to [" + toFile.getAbsolutePath() + "]");
+				FileUtil.copy(file, toFile);
 			} catch (IOException e) {
 				throw new GeneralException(e);
 			}

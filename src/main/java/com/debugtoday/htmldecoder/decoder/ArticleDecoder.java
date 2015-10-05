@@ -11,9 +11,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+
 import com.debugtoday.htmldecoder.conf.ConfigurationWrapper;
 import com.debugtoday.htmldecoder.decoder.html.MetaDecoder;
 import com.debugtoday.htmldecoder.exception.GeneralException;
+import com.debugtoday.htmldecoder.log.CommonLog;
 import com.debugtoday.htmldecoder.struct.Article;
 import com.debugtoday.htmldecoder.struct.ArticleMeta;
 import com.debugtoday.htmldecoder.struct.Document;
@@ -22,6 +25,9 @@ import com.debugtoday.htmldecoder.struct.html.Meta;
 import com.debugtoday.htmldecoder.util.FileUtil;
 
 public class ArticleDecoder extends GeneralDecoder {
+	
+	private static final Logger logger = CommonLog.getLogger();
+	
 	public static Article decode(File file, ConfigurationWrapper conf) throws GeneralException {
 		try (
 				BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));

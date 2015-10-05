@@ -8,8 +8,11 @@ import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.slf4j.Logger;
+
 import com.debugtoday.htmldecoder.decoder.ThemeDecoder;
 import com.debugtoday.htmldecoder.exception.GeneralException;
+import com.debugtoday.htmldecoder.log.CommonLog;
 
 /**
  * wrapper of Configuration class.<br>
@@ -18,6 +21,9 @@ import com.debugtoday.htmldecoder.exception.GeneralException;
  *
  */
 public class ConfigurationWrapper {
+	
+	private static final Logger logger = CommonLog.getLogger();
+	
 	private String siteUrl;
 	
 	private File workspaceFile;

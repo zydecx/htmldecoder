@@ -9,8 +9,11 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
+import org.slf4j.Logger;
+
 import com.debugtoday.htmldecoder.decoder.GeneralDecoder;
 import com.debugtoday.htmldecoder.exception.GeneralException;
+import com.debugtoday.htmldecoder.log.CommonLog;
 import com.debugtoday.htmldecoder.output.object.FileOutputArg;
 import com.debugtoday.htmldecoder.output.object.PaginationOutputArg;
 import com.debugtoday.htmldecoder.output.object.TagFileOutputArg;
@@ -24,6 +27,8 @@ import com.debugtoday.htmldecoder.output.object.TemplateFullTextWrapper;
  *
  */
 public class AbstractFileOutput implements Output {
+	
+	private static final Logger logger = CommonLog.getLogger();
 
 	@Override
 	public String export(Object object) throws GeneralException {

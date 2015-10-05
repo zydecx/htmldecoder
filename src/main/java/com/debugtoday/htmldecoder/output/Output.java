@@ -1,6 +1,9 @@
 package com.debugtoday.htmldecoder.output;
 
+import org.slf4j.Logger;
+
 import com.debugtoday.htmldecoder.exception.GeneralException;
+import com.debugtoday.htmldecoder.log.CommonLog;
 
 /**
  * This interface includes only one method-<i>export()</i>.<br>
@@ -11,6 +14,7 @@ import com.debugtoday.htmldecoder.exception.GeneralException;
  *
  */
 public interface Output {
+	
 	String export(Object object) throws GeneralException;
 	
 	String DONE = "done";

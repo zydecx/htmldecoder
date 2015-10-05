@@ -3,8 +3,11 @@ package com.debugtoday.htmldecoder.output;
 import java.io.File;
 import java.util.List;
 
+import org.slf4j.Logger;
+
 import com.debugtoday.htmldecoder.conf.ConfigurationWrapper;
 import com.debugtoday.htmldecoder.exception.GeneralException;
+import com.debugtoday.htmldecoder.log.CommonLog;
 import com.debugtoday.htmldecoder.output.object.ArticleOutputArg;
 import com.debugtoday.htmldecoder.output.object.FileOutputArg;
 import com.debugtoday.htmldecoder.output.object.TemplateFullTextWrapper;
@@ -19,6 +22,8 @@ import com.debugtoday.htmldecoder.struct.Theme;
  *
  */
 public class ArticleFileOutput extends AbstractFileOutput {
+	
+	private static final Logger logger = CommonLog.getLogger();
 	
 	private ConfigurationWrapper conf;
 	private Theme theme;

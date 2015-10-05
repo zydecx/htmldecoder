@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.debugtoday.htmldecoder.exception.GeneralException;
+import com.debugtoday.htmldecoder.log.CommonLog;
 
 /**
  * Read configuration from properties file.
@@ -22,8 +23,8 @@ import com.debugtoday.htmldecoder.exception.GeneralException;
  *
  */
 public class FileConfiguration extends Configuration {
-	
-	private static final Logger logger = LoggerFactory.getLogger(FileConfiguration.class);
+
+	private static final Logger logger = CommonLog.getLogger();
 	
 	private String confFilePath;
 	
@@ -64,8 +65,7 @@ public class FileConfiguration extends Configuration {
 			}
 			logger.info("reading configuraions from file DONE.");
 		} catch (IOException e) {
-			logger.error("fail to read configuration from file[" + this.confFilePath + "]");
-			throw(new GeneralException("fail to read configuration from file[" + this.confFilePath + "]", e));
+			throw new GeneralException("fail to read configuration from file[" + this.confFilePath + "]", e);
 		}
 	}
 

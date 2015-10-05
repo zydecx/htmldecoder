@@ -9,9 +9,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+
 import com.debugtoday.htmldecoder.conf.Configuration;
 import com.debugtoday.htmldecoder.conf.ConfigurationWrapper;
 import com.debugtoday.htmldecoder.exception.GeneralException;
+import com.debugtoday.htmldecoder.log.CommonLog;
 import com.debugtoday.htmldecoder.output.object.ArticlePageArg;
 import com.debugtoday.htmldecoder.output.object.SiteOutputArg;
 import com.debugtoday.htmldecoder.output.object.TagWrapper;
@@ -22,6 +25,8 @@ import com.debugtoday.htmldecoder.struct.ArticleAbstract;
 import com.debugtoday.htmldecoder.struct.Theme;
 
 public class SiteOutput implements Output {
+	
+	private static final Logger logger = CommonLog.getLogger();
 	
 	private ConfigurationWrapper conf;
 	private Theme theme;
@@ -43,7 +48,9 @@ public class SiteOutput implements Output {
 		allArticleList.addAll(staticPageList);
 		allArticleList.addAll(articleList);
 		List<TagWrapper> tagList = analyzeArticleTag(allArticleList);
+		logger.info("decode tag of size [" + tagList.size() + "]");
 		List<TagWrapper> categoryList = analyzeArticleCategory(allArticleList);
+		logger.info("decode category of size [" + categoryList.size() + "]");
 		
 		// sort article list by time descending
 		Collections.sort(articleList, new Comparator<Article>() {
@@ -70,23 +77,30 @@ public class SiteOutput implements Output {
 		});
 		
 		// output common part of template, leaving only article part to output in the following 
+		logger.info("output template...");
 		String templateOutput = new TemplateOutput(conf, theme).export(new TemplateOutputArg(staticPageList, articleList, tagList, categoryList));
 		TemplateFullTextWrapper templateWrapper = new TemplateFullTextWrapper(templateOutput);
 		
 		// output articles/static pages, writing to output folder
 		ArticleFileOutput articleFileOutput = new ArticleFileOutput(conf, theme, templateWrapper);
+		logger.info("output article files...");
 		articleFileOutput.export(articleList);
+		logger.info("output static page files...");
 		articleFileOutput.export(staticPageList);
 		
 		// output tag/category page, writing to output folder
+		logger.info("output tag page files...");
 		new TagPageOutput(conf, theme, templateWrapper).export(tagList);
+		logger.info("output category page files...");
 		new CategoryPageOutput(conf, theme, templateWrapper).export(categoryList);
 		
 		// output article page, writing to output folder
+		logger.info("output article pages...");
 		ArticlePageOutput articlePageOutput = new ArticlePageOutput(conf, theme, templateWrapper);
 		ArticlePageArg articlePageArg = new ArticlePageArg(conf.getConf(Configuration.SITE_TITLE), null, conf.getSiteUrl(), conf.getOutputFile(), articleList, null);
 		articlePageOutput.export(articlePageArg);
 
+		logger.info("output tag files...");
 		Output bodyTitleOutput = new TagTitleOutput(conf, theme);
 		for (TagWrapper tag : tagList) {
 			String bodyTitle = "#" + tag.getName();
@@ -94,6 +108,7 @@ public class SiteOutput implements Output {
 			articlePageArg = new ArticlePageArg(bodyTitle, bodyTitle, TagWrapper.formatTagUrl(conf.getSiteUrl()), tagFile , new ArrayList<>(tag.getArticleSet()), bodyTitleOutput);
 			articlePageOutput.export(articlePageArg);
 		}
+		logger.info("output category files...");
 		bodyTitleOutput = new CategoryTitleOutput(conf, theme);
 		for (TagWrapper category : categoryList) {
 			String bodyTitle = "::" + category.getName();
@@ -104,6 +119,7 @@ public class SiteOutput implements Output {
 		
 
 		// output common part of noaside-template, leaving only article part to output in the following 
+		logger.info("output search file...");
 		String templateNoasideOutput = new TemplateNoasideOutput(conf, theme).export(new TemplateOutputArg(staticPageList, articleList, tagList, categoryList));
 		TemplateFullTextWrapper templateNoAsideWrapper = new TemplateFullTextWrapper(templateNoasideOutput);
 		// output search page, writing to output folder

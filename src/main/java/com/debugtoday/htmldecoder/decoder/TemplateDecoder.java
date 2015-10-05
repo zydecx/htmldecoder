@@ -12,14 +12,19 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+
 import com.debugtoday.htmldecoder.conf.ConfigurationWrapper;
 import com.debugtoday.htmldecoder.exception.GeneralException;
+import com.debugtoday.htmldecoder.log.CommonLog;
 import com.debugtoday.htmldecoder.struct.Template;
 import com.debugtoday.htmldecoder.struct.TemplateArgument;
 import com.debugtoday.htmldecoder.struct.TemplatePlaceHolder;
 import com.debugtoday.htmldecoder.struct.html.Element;
 
 public class TemplateDecoder extends GeneralDecoder {
+	
+	private static final Logger logger = CommonLog.getLogger();
 	
 	public static Template decodeDefault(String templateName, String resourceName, ConfigurationWrapper conf) throws GeneralException {
 		File file = new File(ThemeDecoder.class.getResource(resourceName).getFile());	// CANNOT be read

@@ -14,15 +14,20 @@ import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import org.slf4j.Logger;
+
 import com.debugtoday.htmldecoder.conf.Configuration;
 import com.debugtoday.htmldecoder.conf.ConfigurationWrapper;
 import com.debugtoday.htmldecoder.exception.GeneralException;
+import com.debugtoday.htmldecoder.log.CommonLog;
 import com.debugtoday.htmldecoder.struct.Template;
 import com.debugtoday.htmldecoder.struct.TemplateKey;
 import com.debugtoday.htmldecoder.struct.Theme;
 import com.debugtoday.htmldecoder.util.FileUtil;
 
 public class ThemeDecoder extends GeneralDecoder {
+	
+	private static final Logger logger = CommonLog.getLogger();
 	
 	/**
 	 * decode theme file
@@ -80,6 +85,7 @@ public class ThemeDecoder extends GeneralDecoder {
 	}
 	
 	private static void decodeTemplateFromFileSystem(ConfigurationWrapper conf, String themeName, File themeFile, Map<TemplateKey, Template> templates) throws GeneralException {
+		logger.info("decode templates from file [" + themeFile + "]...");
 		for (File file : themeFile.listFiles()) {
 			TemplateKey templateKey = decodeTemplateKey(file.getName());
 			if (templateKey == null) {
@@ -111,6 +117,7 @@ public class ThemeDecoder extends GeneralDecoder {
 		
 		// traverse jar file to extract entries under default theme path
 		String resourcePath = "theme/" + themeName + "/";
+		logger.info("decode templates from resource [" + resourcePath + "]...");
 		List<String> themeEntry = new ArrayList<>();
 		try (
 				JarFile jarFile = new JarFile(jarPath);
@@ -124,7 +131,7 @@ public class ThemeDecoder extends GeneralDecoder {
 				}
 			}
 		} catch (IOException e) {
-			throw new GeneralException("fail to read file[" + themeFile.getAbsolutePath() + "]");
+			throw new GeneralException("fail to read file[" + themeFile.getAbsolutePath() + "]", e);
 		}
 		
 		// process entries under default theme path

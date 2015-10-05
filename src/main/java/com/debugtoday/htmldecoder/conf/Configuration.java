@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.debugtoday.htmldecoder.exception.GeneralException;
+import com.debugtoday.htmldecoder.log.CommonLog;
 
 /**
  * <strong>Configuration</strong> is an abstract class, which defines constant name of configurations and processes their getting/setting.<br>
@@ -62,7 +63,7 @@ public abstract class Configuration {
 	
 	public static final String ARTICLE_HEADER_ENABLED = "article_header_enabled";
 	
-	private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
+	private static final Logger logger = CommonLog.getLogger();
 	
 	private Map<String, String> conf = new HashMap<>();
 	
@@ -132,14 +133,12 @@ public abstract class Configuration {
 			
 			logger.info("reading default conifigurations DONE.");
 		} catch (IOException e) {
-			logger.error("fail to read default configuration");
-			throw(new GeneralException("fail to read default configuration", e));
+			throw new GeneralException("fail to read default configuration", e);
 		}
 	}
 	
 	private boolean checkConfInited() throws GeneralException {
 		if (!isInited()) {
-			logger.error("configuration not initialized");
 			throw new GeneralException("configuration not initialized");
 		}
 		
