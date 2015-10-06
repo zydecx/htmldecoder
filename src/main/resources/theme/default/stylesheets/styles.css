@@ -275,7 +275,7 @@ input.search:focus {
 
 #main-container {
   position: relative;
-/*  overflow: hidden;*/
+  overflow: hidden;
 }
 
 article {
@@ -343,8 +343,9 @@ article .article-more {
 }
 
 #main-container .page-content {
-  float: left;
+  /* float: left; */
   margin-right: 270px;
+  overflow: hidden;
 }
 
 #main-container .page-content.noaside {
@@ -356,6 +357,7 @@ article .article-more {
   width: 250px;
   position: absolute;
   right: 0;
+  top: 0;
 }
 
 #main-container aside nav {
@@ -558,23 +560,51 @@ footer p:first-child {
   margin-left: 0;
 }
 
-@media print, screen and (max-width: 740px) {
+
+@media print, screen and (max-width: 960px) {
+  #page-wrapper {
+    width: 90%;
+  }
+}
+
+@media print, screen and (max-width: 840px) {
+  #page-wrapper {
+    width: 96%;
+  }
+}
+
+@media print, screen and (max-width: 640px) {
   body {
     padding: 0;
   }
 
-  .wrapper {
+  #page-wrapper {
+    width: 100%;
+  }
+
+  #main-container .page-content {
+    margin: 0;
+  }
+
+  #main-container aside {
+    position: relative;
+    width: 100%;
+  }
+
+  #header-container  .header-wrapper, #main-container .page-content, #main-container aside nav {
     -moz-border-radius: 0;
     -webkit-border-radius: 0;
     -o-border-radius: 0;
     -ms-border-radius: 0;
     -khtml-border-radius: 0;
     border-radius: 0;
+  }
+
+  #header-container, #main-container .page-content, #main-container aside nav {
     -moz-box-shadow: none;
     -webkit-box-shadow: none;
     -o-box-shadow: none;
     box-shadow: none;
-    width: 100%;
   }
 
   footer {
@@ -595,8 +625,9 @@ footer p:first-child {
     float: none;
   }
 }
+
 @media print, screen and (max-width:580px) {
-  header ul {
+  header .header-wrapper ul {
     display: none;
   }
 

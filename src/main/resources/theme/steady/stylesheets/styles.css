@@ -219,7 +219,8 @@ input.search:focus {
 
 .menu-container ul {
   margin: 0;
-  padding: 0;
+  padding-left: 10px;
+  padding-right: 10px;
   list-style: none;
 }
 
@@ -232,16 +233,16 @@ input.search:focus {
 .menu-container ul li {
   /*float: left;*/
   position: relative;
-  margin-left: 10px;
 }
 
 .menu-container ul a {
   color:#333;
-  font-size:12px;
-  height:32px;
-  line-height:32px;
-  padding:0;
-  display: inline-block;
+  font-size:14px;
+  line-height:20px;
+  margin-left: -10px;
+  margin-right: -10px;
+  padding: 4px 15px;
+  display: block;
   transition: opacity 0.2s ease-in 0s;
 }
 
@@ -259,11 +260,11 @@ input.search:focus {
   margin-top: -1px;
   transition: opacity 0.2s ease-in 0s;
   margin-left: 10px;
-  /* visibility: hidden; */
+  display:none;
 }
 
 .menu-container ul.sub-menu.active {
-  visibility: visible;
+  display: block;
 }
 
 .menu-container ul.sub-menu li {
@@ -276,9 +277,65 @@ input.search:focus {
   top: 0; */
 }
 
+.menu-container .menu-wrapper {
+  position: relative;
+}
+
+.menu-container .menu-wrapper > a {
+  padding-right: 40px;
+}
+
+.menu-container .menu-wrapper > .menu {
+  display: block;
+  position: absolute;
+  right: 0;
+  top: 0px;
+  width: 30px;
+  height: 20px;
+  line-height: 20px;
+  padding: 4px 0;
+  text-align: center;
+}
+
+.menu-container .menu-wrapper > .menu {
+  display: block;
+  border-radius: 1px;
+  display: block;
+  opacity: 0.1;
+  cursor: pointer;
+}
+
+.menu-container .menu-wrapper > .menu:hover {
+  opacity: 0.3;
+}
+
+.menu-container .menu-wrapper > .menu.active .icon-chevron-right {
+  background-position: -313px -119px;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  background-image: url("../images/glyphicons-halflings.png");
+  background-position: 14px 14px;
+  background-repeat: no-repeat;
+  display: inline-block;
+  height: 14px;
+  line-height: 14px;
+  margin-top: 1px;
+  vertical-align: text-top;
+  width: 14px;
+}
+
+.icon-chevron-right {
+  background-position: -456px -72px;
+}
+
+.icon-chevron-down {
+  background-position: -313px -119px;
+}
+
 #main-container {
   position: relative;
-/*  overflow: hidden;*/
+  overflow: hidden;
 }
 
 article {
@@ -349,7 +406,7 @@ article .article-more {
 }
 
 #main-container .page-content-wrapper {
-  float: left;
+  /* float: left; */
   margin-right: 270px;
 }
 
@@ -366,6 +423,7 @@ article .article-more {
   width: 250px;
   position: absolute;
   right: 0;
+  top: 0;
 }
 
 #main-container aside nav {
@@ -457,6 +515,10 @@ nav ul li a {
   line-height: 0;
 }
 
+.hide {
+  display: none !important;
+}
+
 h1, h2, h3, h4, h5, h6 {
   color: #222;
   padding: 0;
@@ -508,7 +570,7 @@ pre {
   background: #3A3C42;
   color: #f8f8f2;
   margin: 0 -20px 20px;
-  overflow-x:auto;
+  overflow-x:scroll;
 }
 pre code {
   color: #f8f8f2;
@@ -566,6 +628,46 @@ footer p {
 }
 footer p:first-child {
   margin-left: 0;
+}
+
+@media print, screen and (max-width: 1024px) {
+  #page-wrapper {
+    width: 90%;
+  }
+}
+
+@media print, screen and (max-width: 920px) {
+  #page-wrapper {
+    width: 96%;
+  }
+}
+
+@media print, screen and (max-width: 800px) {
+  #page-wrapper {
+    width: 100%;
+  }
+}
+
+@media print, screen and (max-width: 740px) {
+  #main-container .page-content-wrapper {
+    margin: 0;
+  }
+
+  #main-container aside {
+    position: relative;
+    width: 100%;
+  }
+}
+
+@media print, screen and (max-width: 600px) {
+  #main-container .page-content {
+    margin: 0;
+  }
+
+  .menu-container {
+    position: relative;
+    width: 100%;
+  }
 }
 
 @media print, screen and (max-width: 740px) {
