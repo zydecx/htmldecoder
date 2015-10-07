@@ -129,7 +129,7 @@ public class PandocDecoder implements MarkdownDecoder {
 	 * @return
 	 */
 	private MarkdownWrapper decodeMarkdownWrapperFromString(String s) {
-		Pattern p = Pattern.compile("\\\\\\\\\\w+\\\\\\\\.*\n");
+		Pattern p = Pattern.compile("^\\\\\\\\\\w+\\\\\\\\.*\n", Pattern.MULTILINE);
 		
 		Map<String, String> metas = new HashMap<>();
 		Matcher m = p.matcher(s);

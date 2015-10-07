@@ -335,7 +335,7 @@ input.search:focus {
 
 #main-container {
   position: relative;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 article {

@@ -83,7 +83,7 @@ public class PaginationOutput implements Output {
 		if (index <= 1) {
 			return rootPath + File.separator + "index.html";
 		} else {
-			return rootPath + File.separator + "page" + File.separator + "index.html";
+			return rootPath + File.separator + "page" + File.separator + index + File.separator + "index.html";
 		}
 	}
 

@@ -105,7 +105,7 @@ public class SiteOutput implements Output {
 		for (TagWrapper tag : tagList) {
 			String bodyTitle = "#" + tag.getName();
 			File tagFile = new File(conf.getOutputFile().getAbsolutePath() + File.separator + TagWrapper.extractTagRelativePath().replace("/", File.separator) + File.separator + tag.getName());
-			articlePageArg = new ArticlePageArg(bodyTitle, bodyTitle, TagWrapper.formatTagUrl(conf.getSiteUrl()), tagFile , new ArrayList<>(tag.getArticleSet()), bodyTitleOutput);
+			articlePageArg = new ArticlePageArg(bodyTitle, bodyTitle, TagWrapper.formatTagUrl(conf.getSiteUrl(), tag.getName()), tagFile , new ArrayList<>(tag.getArticleSet()), bodyTitleOutput);
 			articlePageOutput.export(articlePageArg);
 		}
 		logger.info("output category files...");
@@ -113,7 +113,7 @@ public class SiteOutput implements Output {
 		for (TagWrapper category : categoryList) {
 			String bodyTitle = "::" + category.getName();
 			File categoryFile = new File(conf.getOutputFile().getAbsolutePath() + File.separator + TagWrapper.extractCategoryRelativePath().replace("/", File.separator) + File.separator + category.getName());
-			articlePageArg = new ArticlePageArg(bodyTitle, bodyTitle, TagWrapper.formatCategoryUrl(conf.getSiteUrl()), categoryFile , new ArrayList<>(category.getArticleSet()), bodyTitleOutput);
+			articlePageArg = new ArticlePageArg(bodyTitle, bodyTitle, TagWrapper.formatCategoryUrl(conf.getSiteUrl(), category.getName()), categoryFile , new ArrayList<>(category.getArticleSet()), bodyTitleOutput);
 			articlePageOutput.export(articlePageArg);
 		}
 		
