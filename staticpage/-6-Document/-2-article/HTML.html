@@ -10,17 +10,17 @@
     <script src="http://zydecx.github.io/htmldecoder/javascripts/scale.fix.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
-    <title>Download</title>
+    <title>Article with HTML</title>
 
 <meta name="htmldecoder:abstract" content="">
 <meta name="htmldecoder:tags" content="">
 <meta name="htmldecoder:enabled" content="true">
 <meta name="htmldecoder:author" content="zydecx">
-<title>Download</title>
+<title>Article with HTML</title>
 <meta name="htmldecoder:category" content="document">
 <meta name="htmldecoder:authorurl" content="https://github.com/zydecx">
-<meta name="htmldecoder:date" content="2015-10-04 16:00">
-<meta name="htmldecoder:modified" content="2015-10-04 16:00">
+<meta name="htmldecoder:date" content="2015-10-07 16:26">
+<meta name="htmldecoder:modified" content="2015-10-07 16:26">
 
 
     <!--[if lt IE 9]>
@@ -284,10 +284,10 @@
             
 <article>
 	<header style="display:none;">
-		<h1><a href="http://zydecx.github.io/htmldecoder/staticpage/-2-download.html">Download</a></h1>
+		<h1><a href="http://zydecx.github.io/htmldecoder/staticpage/-6-Document/-2-article/HTML.html">Article with HTML</a></h1>
 		<div class="article-media">
 			<p class="media-extra">
-				<span>Time: <time>Sun Oct 04 16:00:00 CST 2015</time></span>
+				<span>Time: <time>Wed Oct 07 16:26:00 CST 2015</time></span>
 				<span>, by <a href="https://github.com/zydecx">zydecx</a></span>
 			</p>
 			<ul class="category">
@@ -304,37 +304,90 @@
 	</header>
 	<div class="article-content">
 		
-<h2 id="download-htmldecoder">Download <code>htmldecoder</code></h2>
-<p><code>htmldecoder</code> is now available for downloading. You could create you own static page site with it.</p>
-<h3 id="system-requirements">System Requirements</h3>
+<h2 id="article-with-html">Article with HTML</h2>
+<h3 id="basic-knowledge-of-article">Basic Knowledge of Article</h3>
+<p>To get basic knowledge of article, i.g. where to write, where to find output file, refer to <a href="http://zydecx.github.io/htmldecoder/staticpage/-6-Document/-2-article/index.html">Article Document</a>.</p>
+<p>This document mainly focus on writing format of HTML.</p>
+<h3 id="title-and-meta-information">Title and Meta Information</h3>
+<p>Title and meta information provides important information about article, i.g. when created, by whom, etc.</p>
+<!--htmldecoder:more-->
+<h4 id="title">Title</h4>
+<p>Title uses typical HTML <code>&lt;title&gt;</code> element. You CANNOT leaves it empty, otherwise there may encounter display or generating problems.</p>
+<p>Title, instead of file name, will be used to format header part of the article automatically.</p>
+<h4 id="meta">Meta</h4>
+<p>Meta information tells more about the article, i.g. when created, by whom, etc. Details of meta available now is shown below.</p>
 <table>
 <thead>
 <tr class="header">
-<th align="left">Condition</th>
-<th align="left">Requirement</th>
+<th align="left">Meta</th>
+<th align="left">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">Java Development Kit(JDK)</td>
-<td align="left">JDK 1.7 or above</td>
+<td align="left">htmldecoder:date</td>
+<td align="left">create time of article, format like 2015-10-05 00:03; If not set, replaced by create time of file</td>
 </tr>
 <tr class="even">
-<td align="left">Maven</td>
-<td align="left">Maven 3.0 or above(older versions have not tested)</td>
+<td align="left">htmldecoder:modified</td>
+<td align="left">last modified time of article, format like 2015-10-05 00:03; If not set, replaced by create time of file</td>
 </tr>
 <tr class="odd">
-<td align="left">Pandoc(Optional)</td>
-<td align="left">latest version (install it only if markdown files are used)</td>
+<td align="left">htmldecoder:author</td>
+<td align="left">author of article</td>
+</tr>
+<tr class="even">
+<td align="left">htmldecoder:authorurl</td>
+<td align="left">personal web site of author</td>
+</tr>
+<tr class="odd">
+<td align="left">htmldecoder:category</td>
+<td align="left">category, multiple categories can be separated by ','</td>
+</tr>
+<tr class="even">
+<td align="left">htmldecoder:tags</td>
+<td align="left">tag, multiple tags can be separated by ','</td>
+</tr>
+<tr class="odd">
+<td align="left">htmldecoder:abstract</td>
+<td align="left">abstract</td>
+</tr>
+<tr class="even">
+<td align="left">htmldecoder:enabled</td>
+<td align="left">if use template to format current article; If false, file will be copied to output folder directly</td>
 </tr>
 </tbody>
 </table>
-<!--htmldecoder:more-->
-<h3 id="files">Files</h3>
-<p>You can download lastest stable version of <code>htmldecoder</code> from <a href="http://zydecx.github.io/htmldecoder/resources/htmldecoder-latest.zip">Here</a>. It provides zip file of <code>htmldecoder</code> jar and jars it depends on.</p>
-<p>If you are a programmer who is familiar with Java, you could just download the lastest version of code from <a href="https://github.com/zydecx/htmldecoder/archive/master.zip">Here</a>. It's also recommended to clone the latest code from project repository in GitHub: <a href="https://github.com/zydecx/htmldecoder"><a href="https://github.com/zydecx/htmldecoder" class="uri">https://github.com/zydecx/htmldecoder</a></a>.</p>
-<h3 id="demos">Demos</h3>
-<p>To get more familiar with how to use <code>htmldecoder</code> and arrange your directory, you can download <a href="http://zydecx.github.io/htmldecoder/resources/htmldecoder-demo.zip">htmldecoder-site-demo</a>, which displays the workspace of this site. As a project site, almost all pages are put under staticpage directory. To be noticed, this demo writes artilces with markdown, so you have to install pandoc first and add configurations. Refer <a href="http://zydecx.github.io/htmldecoder/staticpage/-6-Document/-2-article/Markdown.html">Article with Markdown</a> to learn more about how to configure.</p>
+<p>Use these meta information to better orgnize your article and help readers learn more information.</p>
+<p>Write meta in <code>&lt;header&gt;</code> with format like <code>&lt;meta name=&quot;htmldecoder:date&quot; content=&quot;2015-10-02 23:30&quot;&gt;</code>.</p>
+<h3 id="more-tag">More Tag</h3>
+<p>For pages like pagination, it's more friendly to display only part of an article rather than the whole article. So more tag is imported for such situations. Put <code>&lt;!--htmldecoder:more--&gt;</code> in your article. And content before this tag in <code>&lt;body&gt;</code> will be extracted as excerpt to display in pagination pages. If not set, the whole article will be displayed.</p>
+<h3 id="a-typical-article">A Typical Article</h3>
+<p>A typical format of article with markdown is shown as below.</p>
+<pre><code>&lt;!doctype html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+
+    &lt;meta name=&quot;htmldecoder:date&quot; content=&quot;2015-10-02 23:30&quot;&gt;
+    &lt;meta name=&quot;htmldecoder:modified&quot; content=&quot;2015-10-02 23:30&quot;&gt;
+    &lt;meta name=&quot;htmldecoder:author&quot; content=&quot;zydecx&quot;&gt;
+    &lt;meta name=&quot;htmldecoder:authorurl&quot; content=&quot;https://github.com/zydecx&quot;&gt;
+    &lt;meta name=&quot;htmldecoder:category&quot; content=&quot;article&quot;&gt;
+    &lt;meta name=&quot;htmldecoder:tags&quot; content=&quot;Help&quot;&gt;
+    &lt;meta name=&quot;htmldecoder:abstract&quot; content=&quot;&quot;&gt;
+    &lt;meta name=&quot;htmldecoder:enabled&quot; content=&quot;true&quot;&gt;
+    &lt;title&gt;Welcome to GitHub Pages&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h3&gt;
+    &lt;a id=&quot;welcome-to-github-pages&quot; class=&quot;anchor&quot; href=&quot;#welcome-to-github-pages&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;octicon octicon-link&quot;&gt;&lt;/span&gt;&lt;/a&gt;Welcome to GitHub Pages.&lt;/h3&gt;
+    &lt;!--htmldecoder:more--&gt;
+
+    &lt;p&gt;This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here &lt;a href=&quot;https://guides.github.com/features/mastering-markdown/&quot;&gt;using GitHub Flavored Markdown&lt;/a&gt;, select a template crafted by a designer, and publish. After your page is generated, you can check out the new &lt;code&gt;gh-pages&lt;/code&gt; branch locally. If you&#39;re using GitHub Desktop, simply sync your repository and you’ll see the new branch.&lt;/p&gt;
+        
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
 
 <!--htmldecoder:article_more-->
 	</div>

@@ -10,17 +10,17 @@
     <script src="http://zydecx.github.io/htmldecoder/javascripts/scale.fix.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
-    <title>Download</title>
+    <title>Article with Markdown</title>
 
 <meta name="htmldecoder:abstract" content="">
 <meta name="htmldecoder:tags" content="">
 <meta name="htmldecoder:enabled" content="true">
 <meta name="htmldecoder:author" content="zydecx">
-<title>Download</title>
+<title>Article with Markdown</title>
 <meta name="htmldecoder:category" content="document">
 <meta name="htmldecoder:authorurl" content="https://github.com/zydecx">
-<meta name="htmldecoder:date" content="2015-10-04 16:00">
-<meta name="htmldecoder:modified" content="2015-10-04 16:00">
+<meta name="htmldecoder:date" content="2015-10-07 16:08">
+<meta name="htmldecoder:modified" content="2015-10-07 16:08">
 
 
     <!--[if lt IE 9]>
@@ -284,10 +284,10 @@
             
 <article>
 	<header style="display:none;">
-		<h1><a href="http://zydecx.github.io/htmldecoder/staticpage/-2-download.html">Download</a></h1>
+		<h1><a href="http://zydecx.github.io/htmldecoder/staticpage/-6-Document/-2-article/Markdown.html">Article with Markdown</a></h1>
 		<div class="article-media">
 			<p class="media-extra">
-				<span>Time: <time>Sun Oct 04 16:00:00 CST 2015</time></span>
+				<span>Time: <time>Wed Oct 07 16:08:00 CST 2015</time></span>
 				<span>, by <a href="https://github.com/zydecx">zydecx</a></span>
 			</p>
 			<ul class="category">
@@ -304,37 +304,90 @@
 	</header>
 	<div class="article-content">
 		
-<h2 id="download-htmldecoder">Download <code>htmldecoder</code></h2>
-<p><code>htmldecoder</code> is now available for downloading. You could create you own static page site with it.</p>
-<h3 id="system-requirements">System Requirements</h3>
+<h2 id="article-with-markdown">Article with Markdown</h2>
+<h3 id="basic-knowledge-of-article">Basic Knowledge of Article</h3>
+<p>To get basic knowledge of article, i.g. where to write, where to find output file, refer to <a href="http://zydecx.github.io/htmldecoder/staticpage/-6-Document/-2-article/index.html">Article Document</a>.</p>
+<p>This document mainly focus on writing format of markdown.</p>
+<h2 id="get-markdown-interpreter">Get Markdown Interpreter</h2>
+<p>To support writing with markdown, a markdown interpreter is needed. Now the only interpreter supported is <code>pandoc</code>. Refer to <a href="http://pandoc.org/">official site</a> for more information about pandoc. Download and install it before using <code>htmldecoder</code>.</p>
+<!--htmldecoder:more-->
+<p>As configurations below.<code>markdown_interpreter_pandoc</code> refers to path of pandoc command. If it has been added to system environment, you can just set it as shown below. Otherwise, add full path to the execution file.</p>
+<pre><code># markdown interpreter, i.g. pandoc
+markdown_interpreter=pandoc
+
+# pandoc installation path
+markdown_interpreter_pandoc=pandoc</code></pre>
+<h3 id="title-and-meta-information">Title and Meta Information</h3>
+<p>Title and meta information provides important information about article, i.g. when created, by whom, etc.</p>
+<p>For writing with markdown, put meta information on the top. Each meta information occupies a line, with format of <code>meta-namemeta-value</code>.</p>
+<p>Meta information tells more about the article, i.g. when created, by whom, etc. Details of meta available now is shown below.</p>
 <table>
 <thead>
 <tr class="header">
-<th align="left">Condition</th>
-<th align="left">Requirement</th>
+<th align="left">Meta</th>
+<th align="left">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">Java Development Kit(JDK)</td>
-<td align="left">JDK 1.7 or above</td>
+<td align="left">date</td>
+<td align="left">create time of article, format like 2015-10-05 00:03; If not set, replaced by create time of file</td>
 </tr>
 <tr class="even">
-<td align="left">Maven</td>
-<td align="left">Maven 3.0 or above(older versions have not tested)</td>
+<td align="left">modified</td>
+<td align="left">last modified time of article, format like 2015-10-05 00:03; If not set, replaced by create time of file</td>
 </tr>
 <tr class="odd">
-<td align="left">Pandoc(Optional)</td>
-<td align="left">latest version (install it only if markdown files are used)</td>
+<td align="left">author</td>
+<td align="left">author of article</td>
+</tr>
+<tr class="even">
+<td align="left">authorurl</td>
+<td align="left">personal web site of author</td>
+</tr>
+<tr class="odd">
+<td align="left">category</td>
+<td align="left">category, multiple categories can be separated by ','</td>
+</tr>
+<tr class="even">
+<td align="left">tags</td>
+<td align="left">tag, multiple tags can be separated by ','</td>
+</tr>
+<tr class="odd">
+<td align="left">abstract</td>
+<td align="left">abstract</td>
+</tr>
+<tr class="even">
+<td align="left">enabled</td>
+<td align="left">if use template to format current article; If false, file will be copied to output folder directly</td>
 </tr>
 </tbody>
 </table>
-<!--htmldecoder:more-->
-<h3 id="files">Files</h3>
-<p>You can download lastest stable version of <code>htmldecoder</code> from <a href="http://zydecx.github.io/htmldecoder/resources/htmldecoder-latest.zip">Here</a>. It provides zip file of <code>htmldecoder</code> jar and jars it depends on.</p>
-<p>If you are a programmer who is familiar with Java, you could just download the lastest version of code from <a href="https://github.com/zydecx/htmldecoder/archive/master.zip">Here</a>. It's also recommended to clone the latest code from project repository in GitHub: <a href="https://github.com/zydecx/htmldecoder"><a href="https://github.com/zydecx/htmldecoder" class="uri">https://github.com/zydecx/htmldecoder</a></a>.</p>
-<h3 id="demos">Demos</h3>
-<p>To get more familiar with how to use <code>htmldecoder</code> and arrange your directory, you can download <a href="http://zydecx.github.io/htmldecoder/resources/htmldecoder-demo.zip">htmldecoder-site-demo</a>, which displays the workspace of this site. As a project site, almost all pages are put under staticpage directory. To be noticed, this demo writes artilces with markdown, so you have to install pandoc first and add configurations. Refer <a href="http://zydecx.github.io/htmldecoder/staticpage/-6-Document/-2-article/Markdown.html">Article with Markdown</a> to learn more about how to configure.</p>
+<p>Use these meta information to better orgnize your article and help readers learn more information.</p>
+<p>Specially, <code>title</code> will output as <code>&lt;title&gt;</code> in the end. You CANNOT leaves it empty, otherwise there may encounter display or generating problems. What's more, title, rather than file name, will be used to format header part of the article automatically.</p>
+<h3 id="more-tag">More Tag</h3>
+<p>For pages like pagination, it's more friendly to display only part of an article rather than the whole article. So more tag is imported for such situations. Put <code>&lt;!--htmldecoder:more--&gt;</code> in your article. And content before this tag will be extracted as excerpt to display in pagination pages. If not set, the whole article will be displayed.</p>
+<h3 id="a-typical-article">A Typical Article</h3>
+<p>A typical format of article with markdown is shown as below.</p>
+<pre><code>    \\author\\zydecx
+    \\authorurl\\https://github.com/zydecx
+    \\date\\2015-10-03 23:50
+    \\modified\\2015-10-03 23:50
+    \\category\\document
+    \\tags\\
+    \\abstract\\
+    \\enabled\\true
+    \\title\\Htmldecoder Project
+    
+    ## `htmldecoder` Project
+    
+    ### What&#39;s `htmldecoder`
+    
+    `htmldecoder` is a simple static site generator. With it, you could just focus on your content and free from trivial matters like pagination/category/tag/search/... `htmldecoder` now is stepping out its first stage, you&#39;re welcomed to join to make it better.
+
+    &lt;!--htmldecoder:more--&gt;
+    
+    `htmldecoder` is developed with Java and compiled with jdk1.7. Older versions of jdk might not work. Project is arranged using Maven and can be packaged as a jar file to run(several dependency jars should included into classpath).</code></pre>
 
 <!--htmldecoder:article_more-->
 	</div>

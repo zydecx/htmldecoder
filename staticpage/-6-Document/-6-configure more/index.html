@@ -192,6 +192,24 @@
 	</div>
 	<ul class="sub-menu">
 		
+<li>
+	<div class="menu-wrapper">
+		<a href="http://zydecx.github.io/htmldecoder/staticpage/-6-Document/-2-article/Markdown.html">Article with Markdown</a>
+		<span class="menu hide">
+			<i class="icon-chevron-right"></i>
+		</span>
+	</div>
+</li>
+
+<li>
+	<div class="menu-wrapper">
+		<a href="http://zydecx.github.io/htmldecoder/staticpage/-6-Document/-2-article/HTML.html">Article with HTML</a>
+		<span class="menu hide">
+			<i class="icon-chevron-right"></i>
+		</span>
+	</div>
+</li>
+
 	</ul>
 </li>
 
@@ -288,6 +306,7 @@
 		
 <h2 id="configure-more">Configure More</h2>
 <p>Below is the list of full configurations.</p>
+<!--htmldecoder:more-->
 <table>
 <thead>
 <tr class="header">
@@ -399,6 +418,14 @@
 <tr class="even">
 <td align="left">article_header_enabled</td>
 <td align="left">If display article header, like title, tag, category, etc, default true.</td>
+</tr>
+<tr class="odd">
+<td align="left">markdown_interpreter</td>
+<td align="left">interpreter for markdown file. Now support <code>pandoc</code>. Put it empty if no markdown files used.</td>
+</tr>
+<tr class="even">
+<td align="left">markdown_interpreter_pandoc</td>
+<td align="left">path of pandoc command</td>
 </tr>
 </tbody>
 </table>
