@@ -48,7 +48,7 @@ public class TemplateNoasideOutput implements Output {
 						Configuration.SITE_GITHUB_HOME,
 						Configuration.HOME_STATIC_TITLE });
 		
-		templateFullText = templateFullText.replaceAll(GeneralDecoder
+		templateFullText = templateFullText.replace(GeneralDecoder
 				.formatPlaceholderRegex("static_page"),
 				new StaticPageOutput(conf, theme).export(arg.getStaticPageList()));
 
@@ -57,7 +57,7 @@ public class TemplateNoasideOutput implements Output {
 	
 	private String replaceConfigurationArguments(String s, String[] confNames) throws GeneralException {
 		for (String confName : confNames) {
-			s = s.replaceAll(GeneralDecoder.formatArgumentRegex(confName), conf.getConf(confName));
+			s = s.replace(GeneralDecoder.formatArgumentRegex(confName), conf.getConf(confName));
 		}
 		return s;
 	}

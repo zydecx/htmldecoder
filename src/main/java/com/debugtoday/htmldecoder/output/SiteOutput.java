@@ -47,10 +47,19 @@ public class SiteOutput implements Output {
 		List<Article> allArticleList = new ArrayList<>();
 		allArticleList.addAll(staticPageList);
 		allArticleList.addAll(articleList);
+
+		// sort article list by time descending, so that articles under each tag/category are sorted by time descending
+		Collections.sort(allArticleList, new Comparator<Article>() {
+			@Override
+			public int compare(Article o1, Article o2) {
+				return o2.getMeta().getLastUpdateDate().compareTo(o1.getMeta().getLastUpdateDate());
+			}
+		});
 		List<TagWrapper> tagList = analyzeArticleTag(allArticleList);
 		logger.info("decode tag of size [" + tagList.size() + "]");
 		List<TagWrapper> categoryList = analyzeArticleCategory(allArticleList);
 		logger.info("decode category of size [" + categoryList.size() + "]");
+		
 		
 		// sort article list by time descending
 		Collections.sort(articleList, new Comparator<Article>() {
@@ -59,12 +68,11 @@ public class SiteOutput implements Output {
 				return o2.getMeta().getLastUpdateDate().compareTo(o1.getMeta().getLastUpdateDate());
 			}
 		});
-		
 		// sort tag list by article sizes descending
 		Collections.sort(tagList, new Comparator<TagWrapper>() {
 			@Override
 			public int compare(TagWrapper o1, TagWrapper o2) {
-				return o2.getArticleSet().size() - o1.getArticleSet().size();
+				return o2.getArticleList().size() - o1.getArticleList().size();
 			}
 		});
 		
@@ -72,7 +80,7 @@ public class SiteOutput implements Output {
 		Collections.sort(categoryList, new Comparator<TagWrapper>() {
 			@Override
 			public int compare(TagWrapper o1, TagWrapper o2) {
-				return o2.getArticleSet().size() - o1.getArticleSet().size();
+				return o2.getArticleList().size() - o1.getArticleList().size();
 			}
 		});
 		
@@ -105,7 +113,7 @@ public class SiteOutput implements Output {
 		for (TagWrapper tag : tagList) {
 			String bodyTitle = "#" + tag.getName();
 			File tagFile = new File(conf.getOutputFile().getAbsolutePath() + File.separator + TagWrapper.extractTagRelativePath().replace("/", File.separator) + File.separator + tag.getName());
-			articlePageArg = new ArticlePageArg(bodyTitle, bodyTitle, TagWrapper.formatTagUrl(conf.getSiteUrl(), tag.getName()), tagFile , new ArrayList<>(tag.getArticleSet()), bodyTitleOutput);
+			articlePageArg = new ArticlePageArg(bodyTitle, bodyTitle, TagWrapper.formatTagUrl(conf.getSiteUrl(), tag.getName()), tagFile , tag.getArticleList(), bodyTitleOutput);
 			articlePageOutput.export(articlePageArg);
 		}
 		logger.info("output category files...");
@@ -113,7 +121,7 @@ public class SiteOutput implements Output {
 		for (TagWrapper category : categoryList) {
 			String bodyTitle = "::" + category.getName();
 			File categoryFile = new File(conf.getOutputFile().getAbsolutePath() + File.separator + TagWrapper.extractCategoryRelativePath().replace("/", File.separator) + File.separator + category.getName());
-			articlePageArg = new ArticlePageArg(bodyTitle, bodyTitle, TagWrapper.formatCategoryUrl(conf.getSiteUrl(), category.getName()), categoryFile , new ArrayList<>(category.getArticleSet()), bodyTitleOutput);
+			articlePageArg = new ArticlePageArg(bodyTitle, bodyTitle, TagWrapper.formatCategoryUrl(conf.getSiteUrl(), category.getName()), categoryFile , category.getArticleList(), bodyTitleOutput);
 			articlePageOutput.export(articlePageArg);
 		}
 		
@@ -146,7 +154,7 @@ public class SiteOutput implements Output {
 					categoryMap.put(category, categoryWrapper);
 				}
 				
-				categoryWrapper.getArticleSet().add(article);
+				categoryWrapper.getArticleList().add(article);
 			}
 		}
 		
@@ -169,7 +177,7 @@ public class SiteOutput implements Output {
 					tagMap.put(tag, tagWrapper);
 				}
 				
-				tagWrapper.getArticleSet().add(article);
+				tagWrapper.getArticleList().add(article);
 			}
 		}
 		

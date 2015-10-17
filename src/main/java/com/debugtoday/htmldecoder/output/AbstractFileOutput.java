@@ -68,18 +68,18 @@ public class AbstractFileOutput implements Output {
 				formattedHead += "\n" + arg.getHead();
 			}
 			String templateFullText = template.getFullText()
-					.replaceAll(GeneralDecoder.formatPlaceholderRegex("head"), formattedHead);
+					.replace(GeneralDecoder.formatPlaceholderRegex("head"), formattedHead);
 			if (arg.getBodyTitle() != null) {
 				templateFullText = templateFullText
-						.replaceAll(GeneralDecoder.formatPlaceholderRegex("body_title"), arg.getBodyTitle());
+						.replace(GeneralDecoder.formatPlaceholderRegex("body_title"), arg.getBodyTitle());
 			}
 			if (arg.getBody() != null) {
 				templateFullText = templateFullText
-						.replaceAll(GeneralDecoder.formatPlaceholderRegex("body"), Matcher.quoteReplacement(arg.getBody()));
+						.replace(GeneralDecoder.formatPlaceholderRegex("body"), arg.getBody());
 			}
 			if (arg.getPagination() != null) {
 				templateFullText = templateFullText
-						.replaceAll(GeneralDecoder.formatPlaceholderRegex("pagination"), arg.getPagination());
+						.replace(GeneralDecoder.formatPlaceholderRegex("pagination"), arg.getPagination());
 			}
 			
 			pw.write(templateFullText);
@@ -108,7 +108,7 @@ public class AbstractFileOutput implements Output {
 			StringBuilder sb = new StringBuilder();
 			for (TagWrapper item : subList) {
 				String itemName = item.getName();
-				TagOutputArg tagArg = new TagOutputArg(itemName, arg.getRootUrl() + "/" + item.getName(), item.getArticleSet().size());
+				TagOutputArg tagArg = new TagOutputArg(itemName, arg.getRootUrl() + "/" + item.getName(), item.getArticleList().size());
 				sb.append(tagOutput.export(tagArg));
 			}
 			

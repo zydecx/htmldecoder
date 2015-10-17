@@ -31,36 +31,36 @@ public class ArticleOutput implements Output {
 		// TODO Auto-generated method stub
 		ArticleOutputArg arg = (ArticleOutputArg) object;
 		Article article = arg.getArticle();
-//		logger.info("[[[" + article.getFile().getAbsolutePath());
+		logger.info("[[[" + article.getFile().getAbsolutePath());
 		Template template = theme.getTemplates().get(TemplateKey.ARTICLE);
 		String templateFullText = template.getFullText()
-				.replaceAll(GeneralDecoder.formatArgumentRegex("url"), article.formatUrl(conf.getSiteUrl()))
-				.replaceAll(GeneralDecoder.formatArgumentRegex("title"), article.extractTitle())
-				.replaceAll(GeneralDecoder.formatArgumentRegex("time"), article.getMeta().getCreateDate() == null ? "" : article.getMeta().getCreateDate().toString())
-				.replaceAll(GeneralDecoder.formatArgumentRegex("author"), article.getMeta().getAuthor())
-				.replaceAll(GeneralDecoder.formatArgumentRegex("author_url"), article.getMeta().getAuthorUrl())
-				.replaceAll(GeneralDecoder.formatArgumentRegex("article_header_display"), conf.isArticleHeaderEnabled() ? "" : "display:none;");
+				.replace(GeneralDecoder.formatArgumentRegex("url"), article.formatUrl(conf.getSiteUrl()))
+				.replace(GeneralDecoder.formatArgumentRegex("title"), article.extractTitle())
+				.replace(GeneralDecoder.formatArgumentRegex("time"), article.getMeta().getCreateDate() == null ? "" : article.getMeta().getCreateDate().toString())
+				.replace(GeneralDecoder.formatArgumentRegex("author"), article.getMeta().getAuthor())
+				.replace(GeneralDecoder.formatArgumentRegex("author_url"), article.getMeta().getAuthorUrl())
+				.replace(GeneralDecoder.formatArgumentRegex("article_header_display"), conf.isArticleHeaderEnabled() ? "" : "display:none;");
 		
 		templateFullText = templateFullText
-				.replaceAll(
+				.replace(
 						GeneralDecoder.formatPlaceholderRegex(TemplateKey.ARTICLE_MEDIA_CATEGORY.getKey()),
 						new ArticleMediaCategoryOutput(conf, theme).export(article.getMeta().getCategories()))
-				.replaceAll(
+				.replace(
 						GeneralDecoder.formatPlaceholderRegex(TemplateKey.ARTICLE_MEDIA_TAG.getKey()),
 						new ArticleMediaTagOutput(conf, theme).export(article.getMeta().getTags()));
 
 		if (arg.isOutputExcerptOnly()) {
 			templateFullText = templateFullText
-					.replaceAll(
+					.replace(
 							GeneralDecoder.formatArgumentRegex("content"),
 							article.extractExcerpt())
-					.replaceAll(
+					.replace(
 							GeneralDecoder.formatPlaceholderRegex(TemplateKey.ARTICLE_MORE.getKey()),
 							article.getMore() == null ? "" : new ArticleMoreOutput(conf, theme).export(article));
 		} else {
 
 			templateFullText = templateFullText
-					.replaceAll(
+					.replace(
 							GeneralDecoder.formatArgumentRegex("content"),
 							article.getBody().getContentText());
 		}

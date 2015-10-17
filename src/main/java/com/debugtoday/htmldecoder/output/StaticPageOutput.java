@@ -59,10 +59,10 @@ public class StaticPageOutput implements Output {
 		Article article = wrapper.getArticle();
 		
 		String fullText = template.getFullText()
-				.replaceAll(
+				.replace(
 						GeneralDecoder.formatArgumentRegex("url"),
 						article.formatUrl(conf.getSiteUrl()))
-				.replaceAll(
+				.replace(
 						GeneralDecoder.formatArgumentRegex("title"),
 						article.extractTitle());
 		return fullText;
@@ -87,13 +87,13 @@ public class StaticPageOutput implements Output {
 		}
 		
 		fullText = fullText
-				.replaceAll(
+				.replace(
 						GeneralDecoder.formatArgumentRegex("url"),
 						indexWrapper == null ? "#" : indexWrapper.getArticle().formatUrl(conf.getSiteUrl()))
-				.replaceAll(
+				.replace(
 						GeneralDecoder.formatArgumentRegex("title"),
 						indexWrapper == null ? wrapper.getName() : indexWrapper.getArticle().extractTitle())
-				.replaceAll(
+				.replace(
 						GeneralDecoder.formatPlaceholderRegex("sub_menu_container"),
 						sb.toString());
 		

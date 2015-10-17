@@ -29,7 +29,7 @@ public class Element {
 		this.fullText = fullText;
 	}
 	public String getContentText() {
-		return contentStartPosOffset < 0 ? "" : Matcher.quoteReplacement(this.fullText.substring(contentStartPosOffset, contentEndPosOffset + 1));
+		return contentStartPosOffset < 0 ? "" : this.fullText.substring(contentStartPosOffset, contentEndPosOffset + 1);
 	}
 	public Document getDocument() {
 		return document;

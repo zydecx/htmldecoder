@@ -50,12 +50,12 @@ public class SearchOutput extends AbstractFileOutput {
 		Template engineTemplate = theme.getTemplates().get(engineKey);
 		
 		String headFullText = template.getHead().getContentText()
-				.replaceAll(
+				.replace(
 						GeneralDecoder.formatPlaceholderRegex("head"),
 						exportEnginePageHead(engineTemplate, searchEngine));
 		
 		String bodyFullText = template.getBody().getContentText()
-				.replaceAll(
+				.replace(
 						GeneralDecoder.formatPlaceholderRegex("body"),
 						exportEnginePageBody(engineTemplate, searchEngine));
 		
@@ -83,7 +83,7 @@ public class SearchOutput extends AbstractFileOutput {
 	
 	private String exportGoogleEnginePageHead(Template template) throws GeneralException {
 		String templateFullText = template.getHead().getContentText()
-				.replaceAll(
+				.replace(
 						GeneralDecoder.formatArgumentRegex("customer_search_id"),
 						conf.getConf(Configuration.GOOGLE_CUSTOMER_SEARCH_ID));
 		return templateFullText;
@@ -101,7 +101,7 @@ public class SearchOutput extends AbstractFileOutput {
 	
 	private String exportGoogleEnginePageBody(Template template) throws GeneralException {
 		String templateFullText = template.getBody().getContentText()
-				.replaceAll(
+				.replace(
 						GeneralDecoder.formatArgumentRegex("customer_search_id"),
 						conf.getConf(Configuration.GOOGLE_CUSTOMER_SEARCH_ID));
 		return templateFullText;

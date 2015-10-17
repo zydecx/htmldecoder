@@ -45,7 +45,7 @@ public class TemplateOutput extends TemplateNoasideOutput {
 		} else {
 			Template template = theme.getTemplates().get(TemplateKey.TEMPLATE);
 			templateFullText = exportFromTemplate(template, arg)
-					.replaceAll(
+					.replace(
 							GeneralDecoder.formatPlaceholderRegex(TemplateKey.NAV.getKey()),
 							navFullText);
 		}
@@ -75,7 +75,7 @@ public class TemplateOutput extends TemplateNoasideOutput {
 	
 	private String replaceConfigurationArguments(String s, String[] confNames) throws GeneralException {
 		for (String confName : confNames) {
-			s = s.replaceAll(GeneralDecoder.formatArgumentRegex(confName), conf.getConf(confName));
+			s = s.replace(GeneralDecoder.formatArgumentRegex(confName), conf.getConf(confName));
 		}
 		return s;
 	}

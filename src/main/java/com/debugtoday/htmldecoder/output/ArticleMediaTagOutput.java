@@ -37,10 +37,10 @@ public class ArticleMediaTagOutput implements Output {
 		StringBuilder sb = new StringBuilder();
 		for (String name : arg) {
 			sb.append(templateFullText
-					.replaceAll(
+					.replace(
 							GeneralDecoder.formatArgumentRegex("url"),
 							TagWrapper.formatTagUrl(conf.getSiteUrl(), name))
-					.replaceAll(
+					.replace(
 							GeneralDecoder.formatArgumentRegex("title"),
 							name));
 		}

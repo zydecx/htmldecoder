@@ -30,9 +30,9 @@ public class TagOutput implements Output {
 		
 		Template template = theme.getTemplates().get(getTemplateKey());
 		String templateFullText = template.getFullText()
-				.replaceAll(GeneralDecoder.formatArgumentRegex("title"), arg.getTitle())
-				.replaceAll(GeneralDecoder.formatArgumentRegex("url"), arg.getUrl())
-				.replaceAll(GeneralDecoder.formatArgumentRegex("article_num"), "" + arg.getArticleNum());
+				.replace(GeneralDecoder.formatArgumentRegex("title"), arg.getTitle())
+				.replace(GeneralDecoder.formatArgumentRegex("url"), arg.getUrl())
+				.replace(GeneralDecoder.formatArgumentRegex("article_num"), "" + arg.getArticleNum());
 		
 		return templateFullText;
 	}

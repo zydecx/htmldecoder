@@ -32,7 +32,7 @@ public class NavSearchOutput implements Output {
 		Template template = theme.getTemplates().get(TemplateKey.NAV_SEARCH);
 		
 		String templateFullText = template.getFullText()
-				.replaceAll(GeneralDecoder.formatArgumentRegex("search_engine"), conf.getConf(Configuration.SEARCH_ENGINE));
+				.replace(GeneralDecoder.formatArgumentRegex("search_engine"), conf.getConf(Configuration.SEARCH_ENGINE));
 		
 		
 		return templateFullText;

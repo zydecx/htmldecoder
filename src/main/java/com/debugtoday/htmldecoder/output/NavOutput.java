@@ -37,9 +37,9 @@ public class NavOutput implements Output {
 			sb.append(navItemOutput.export(item));
 		}
 		String templateFullText = template.getFullText()
-				.replaceAll(GeneralDecoder.formatArgumentRegex("title"), arg.getTitle())
-				.replaceAll(GeneralDecoder.formatArgumentRegex("url"), arg.getUrl())
-				.replaceAll(GeneralDecoder.formatPlaceholderRegex(TemplateKey.NAV_ITEM.getKey()), sb.toString());
+				.replace(GeneralDecoder.formatArgumentRegex("title"), arg.getTitle())
+				.replace(GeneralDecoder.formatArgumentRegex("url"), arg.getUrl())
+				.replace(GeneralDecoder.formatPlaceholderRegex(TemplateKey.NAV_ITEM.getKey()), sb.toString());
 		
 		
 		return templateFullText;

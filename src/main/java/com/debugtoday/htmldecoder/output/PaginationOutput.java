@@ -67,7 +67,7 @@ public class PaginationOutput implements Output {
 		itemArg = new NavItemOutputArg("Next", formatPaginationUrl(rootUrl, currentPage));
 		sb.append(output.export(itemArg));
 		
-		templateFullText = templateFullText.replaceAll(GeneralDecoder.formatPlaceholderRegex(TemplateKey.PAGINATION_ITEM.getKey()), sb.toString());
+		templateFullText = templateFullText.replace(GeneralDecoder.formatPlaceholderRegex(TemplateKey.PAGINATION_ITEM.getKey()), sb.toString());
 		return templateFullText;
 	}
 	

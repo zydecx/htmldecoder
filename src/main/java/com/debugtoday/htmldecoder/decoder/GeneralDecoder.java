@@ -17,7 +17,7 @@ public abstract class GeneralDecoder {
 	 * @return
 	 */
 	public static String formatArgumentRegex(String conf) {
-		return "\\{\\{" + conf + "\\}\\}";
+		return "{{" + conf + "}}";
 	}
 	
 	/**
@@ -32,7 +32,7 @@ public abstract class GeneralDecoder {
 	}
 	
 	protected static String replaceGeneralArgument(String fullText, Configuration conf, String argument) throws GeneralException {
-		return fullText.replaceAll(formatArgumentRegex(argument), conf.getConf(argument));
+		return fullText.replace(formatArgumentRegex(argument), conf.getConf(argument));
 	}
 	
 	/**

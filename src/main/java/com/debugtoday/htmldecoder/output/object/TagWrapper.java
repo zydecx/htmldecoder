@@ -1,6 +1,7 @@
 package com.debugtoday.htmldecoder.output.object;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import com.debugtoday.htmldecoder.struct.Article;
@@ -12,12 +13,12 @@ import com.debugtoday.htmldecoder.struct.Article;
  */
 public class TagWrapper {
 	private String name;
-	private Set<Article> articleSet;
+	private List<Article> articleList;
 
 	
 	public TagWrapper(String name) {
 		this.name = name;
-		this.articleSet = new HashSet<>();
+		this.articleList = new ArrayList<>();
 	}
 	
 	public String getName() {
@@ -28,12 +29,12 @@ public class TagWrapper {
 		this.name = name;
 	}
 	
-	public Set<Article> getArticleSet() {
-		return this.articleSet;
+	public List<Article> getArticleList() {
+		return this.articleList;
 	}
 	
-	public void setArticleSet(Set<Article> articleSet) {
-		this.articleSet = articleSet;
+	public void setArticleList(List<Article> articleList) {
+		this.articleList = articleList;
 	}
 	
 	public static String formatTagUrl(String siteUrl) {

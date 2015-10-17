@@ -34,10 +34,10 @@ public class ArticleMediaCategoryOutput  implements Output {
 		StringBuilder sb = new StringBuilder();
 		for (String name : arg) {
 			sb.append(templateFullText
-					.replaceAll(
+					.replace(
 							GeneralDecoder.formatArgumentRegex("url"),
 							TagWrapper.formatCategoryUrl(conf.getSiteUrl(), name))
-					.replaceAll(
+					.replace(
 							GeneralDecoder.formatArgumentRegex("title"),
 							name));
 		}
