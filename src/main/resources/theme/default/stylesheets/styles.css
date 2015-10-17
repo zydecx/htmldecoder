@@ -275,11 +275,21 @@ input.search:focus {
 
 #main-container {
   position: relative;
-  overflow: hidden;
+/*  overflow: hidden;*/
+}
+
+.article-separator {
+  background: #aaa;
+  border: none;
+  -webkit-box-shadow: 0 0 4px #a4a4a4;
+  box-shadow: 0 0 4px #a4a4a4;
+  clear: both;
+  height: 1px;
+  margin: 1.5em 0 1.8em 0;
 }
 
 article {
-  margin-bottom: 25px;
+  margin-bottom: 1em;
 }
 
 article header {
@@ -539,6 +549,10 @@ hr {
   background: #aaa;
   height: 1px;
   margin: 0 0 20px;
+}
+
+iframe {
+  border: 0;
 }
 
 footer {

@@ -147,18 +147,20 @@ public class MetaDecoder {
 			return null;
 		}
 		
+		
 		s = s.substring(metaIndex, metaEndIndex + 1);
 		
 		Meta meta = new Meta();
-		meta.setName(readMeta(s, "name"));
-		meta.setContent(readMeta(s, "content"));
-		
-		if (meta.getName() == null || meta.getContent() == null) {
-			return null;
-		}
 		
 		meta.setFullText(s);
 		meta.setStartPos(metaIndex);
+		meta.setName(readMeta(s, "name"));
+		meta.setContent(readMeta(s, "content"));
+		
+		// even meta.name/meta.content is null, it's still a matched meta element 
+		/*if (meta.getName() == null || meta.getContent() == null) {
+			return null;
+		}*/
 		
 		return meta;
 	}

@@ -8,6 +8,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.regex.Matcher;
 
 import org.slf4j.Logger;
 
@@ -74,7 +75,7 @@ public class AbstractFileOutput implements Output {
 			}
 			if (arg.getBody() != null) {
 				templateFullText = templateFullText
-						.replaceAll(GeneralDecoder.formatPlaceholderRegex("body"), arg.getBody());
+						.replaceAll(GeneralDecoder.formatPlaceholderRegex("body"), Matcher.quoteReplacement(arg.getBody()));
 			}
 			if (arg.getPagination() != null) {
 				templateFullText = templateFullText

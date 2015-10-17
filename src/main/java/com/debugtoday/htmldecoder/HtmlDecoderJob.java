@@ -110,7 +110,7 @@ public class HtmlDecoderJob {
 	}
 	
 	/**
-	 * analyze content file, decode to Java Object if the file is an article; otherwise, copy to output folder.
+	 * analyze content file, decode to Java Object if the file is an article and enable htmldecoder; otherwise, copy to output folder.
 	 * @param file
 	 * @return
 	 * @throws GeneralException
@@ -119,18 +119,20 @@ public class HtmlDecoderJob {
 		if (ArticleDecoder.isArticleFile(file)) {
 			Article article = ArticleDecoder.decode(file, conf);
 			
-			return article;
-		} else {
-			try {
-				String relativePath = FileUtil.relativePath(conf.getContentFile(), file);
-				File toFile = new File(conf.getOutputFile().getCanonicalPath() + File.separator + relativePath.replace("/", File.separator));
-				logger.info("move resouce- copy resource to [" + toFile.getAbsolutePath() + "]");
-				FileUtil.copy(file, toFile);
-			} catch (IOException e) {
-				throw new GeneralException(e);
+			if (article.getMeta().getEnabled()) {
+				return article;
 			}
-			return null;
 		}
+		
+		try {
+			String relativePath = FileUtil.relativePath(conf.getContentFile(), file);
+			File toFile = new File(conf.getOutputFile().getCanonicalPath() + File.separator + relativePath.replace("/", File.separator));
+			logger.info("move resouce- copy resource to [" + toFile.getAbsolutePath() + "]");
+			FileUtil.copy(file, toFile);
+		} catch (IOException e) {
+			throw new GeneralException(e);
+		}
+		return null;
 	}
 	
 	private boolean isIgnored(File file, boolean skipStaticPage) {

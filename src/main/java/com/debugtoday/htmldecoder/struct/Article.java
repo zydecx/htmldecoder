@@ -79,7 +79,7 @@ public class Article extends Document {
 	public String extractExcerpt() {
 		
 		if (more == null) {
-			return body.getFullText();
+			return body.getContentText();
 		}
 		
 		return body.getContentText().substring(0, more.getFileStartPos() - body.getFileStartPos() - body.getContentStartPosOffset());

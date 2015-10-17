@@ -1,5 +1,7 @@
 package com.debugtoday.htmldecoder.output;
 
+import java.util.regex.Matcher;
+
 import org.slf4j.Logger;
 
 import com.debugtoday.htmldecoder.conf.ConfigurationWrapper;

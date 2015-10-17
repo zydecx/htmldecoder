@@ -154,7 +154,7 @@ public class ArticleDecoder extends GeneralDecoder {
 		if (head != null) {
 			List<Meta> metaList = new ArrayList<>();
 			Meta nextMeta = null;
-			offsetPos = head.getFileStartPos();
+			offsetPos = 0;
 			// get all meta available
 			while(true) {
 				nextMeta = MetaDecoder.matchMeta(head.getFullText(), offsetPos);
