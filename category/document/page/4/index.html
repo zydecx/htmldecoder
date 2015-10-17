@@ -277,10 +277,10 @@
             
 <article>
 	<header style="display:none;">
-		<h1><a href="http://zydecx.github.io/htmldecoder/staticpage/-6-Document/-1-Getting Start/-2-Developers/-1-backgrounds.html">Project Backgrounds</a></h1>
+		<h1><a href="http://zydecx.github.io/htmldecoder/staticpage/-6-Document/-5-theme/index.html">Theme</a></h1>
 		<div class="article-media">
 			<p class="media-extra">
-				<span>Time: <time>Sun Oct 04 17:36:00 CST 2015</time></span>
+				<span>Time: <time>Mon Oct 05 13:34:00 CST 2015</time></span>
 				<span>, by <a href="https://github.com/zydecx">zydecx</a></span>
 			</p>
 			<ul class="category">
@@ -297,57 +297,19 @@
 	</header>
 	<div class="article-content">
 		
-<h2 id="project-backgrounds">Project Backgrounds</h2>
-<h3 id="backgrounds">Backgrounds</h3>
-<p>The starting point of <code>htmldecoder</code> project is really simple-making blog writing more convenient. Nowadays, there're really so many ways to write blog. You could use public blog service provider, you could also get your own server and build with wordpress. I really don't like the first one as you should only do what they let you do and write in browser within a textarea. I've tried wordpress. Yes, you are free to do what you want, accessing database, changing styles. It's just a little bit time costing and money costing to maintain a server and a domain. By chance, I get to know pelican and Jekyll. They provide me a new view on blog site. I really appriciate their work. Unfortunatly, I fail to start it up. So getting bored by environment configuration, I decide to write my own, with Java.</p>
-<p>As said above, the starting point is simple. Bloggers do care about styles. But within a period of time, the sense of style is stable. So we should focus more on content, while on the other side, the blog could easily have a united style. Without dynamic language, there really comes some trouble. To overcome it, we build wheels.</p>
-<div class="article-more"><a href="http://zydecx.github.io/htmldecoder/staticpage/-6-Document/-1-Getting Start/-2-Developers/-1-backgrounds.html">...more</a></div>
+<h2 id="theme">Theme</h2>
+<h3 id="about-theme">About Theme</h3>
+<p>A theme contains a collection of template and relative style or script files. Each template stucts one part of the page, i.g. nav, search page, pagination...</p>
+<p>Templates are written by HTML(ends with .html or .htm).</p>
+<p>Each theme also contains a marked file --<code>META</code>.</p>
+<div class="article-more"><a href="http://zydecx.github.io/htmldecoder/staticpage/-6-Document/-5-theme/index.html">...more</a></div>
 
 	</div>
 </article>
 
 <article>
 	<header style="display:none;">
-		<h1><a href="http://zydecx.github.io/htmldecoder/staticpage/-6-Document/-1-Getting Start/-1-Users/-3-generate site.html">Generate Site</a></h1>
-		<div class="article-media">
-			<p class="media-extra">
-				<span>Time: <time>Sun Oct 04 17:36:00 CST 2015</time></span>
-				<span>, by <a href="https://github.com/zydecx">zydecx</a></span>
-			</p>
-			<ul class="category">
-				Category:
-				
-<li><a href="http://zydecx.github.io/htmldecoder/category/document">document</a></li>
-
-			</ul>
-			<ul class="tag">
-				Tag:
-				
-			</ul>
-		</div>
-	</header>
-	<div class="article-content">
-		
-<h2 id="generate-site">Generate Site</h2>
-<h3 id="configure-htmldecoder">Configure <code>htmldecoder</code></h3>
-<p>For <code>htmldecoder</code>, configurations are all stored in a single properties file. So before running, create a properties file with name like <code>configuration.properties</code> under workspace directory. Below shows a simple format of this file.</p>
-<pre><code>site_url=http://zydecx.github.io
-
-# messages shown in header
-site_title=Modernist
-site_description=A Theme for GitHub Pages
-site_github_home=#
-
-# root path of workspace
-workspace=.</code></pre>
-<div class="article-more"><a href="http://zydecx.github.io/htmldecoder/staticpage/-6-Document/-1-Getting Start/-1-Users/-3-generate site.html">...more</a></div>
-
-	</div>
-</article>
-
-<article>
-	<header style="display:none;">
-		<h1><a href="http://zydecx.github.io/htmldecoder/staticpage/-5-run.html">Run</a></h1>
+		<h1><a href="http://zydecx.github.io/htmldecoder/staticpage/-4-configure.html">Configure</a></h1>
 		<div class="article-media">
 			<p class="media-extra">
 				<span>Time: <time>Sun Oct 04 16:00:00 CST 2015</time></span>
@@ -367,11 +329,79 @@ workspace=.</code></pre>
 	</header>
 	<div class="article-content">
 		
-<h2 id="run-htmldecoder">Run <code>htmldecoder</code></h2>
-<p>To run <code>htmldecoder</code>, open terminal(Linux) or CMD(Windows) and switch to the root directory of code. Put your site pages under <code>{workspace directory}/content</code>, run the command below to run:</p>
-<pre><code>java -jar htmldecoder-{version}.jar {path of configuration file}</code></pre>
-<p>And site pages will be outputed to <code>{workspace directory}/output</code>. Upload all the resourses generated to your site server.</p>
-<div class="article-more"><a href="http://zydecx.github.io/htmldecoder/staticpage/-5-run.html">...more</a></div>
+<h2 id="configure-htmldecoder">Configure <code>htmldecoder</code></h2>
+<p>For <code>htmldecoder</code>, configurations are all stored in a single properties file. So before running, create a properties file with name like <code>configuration.properties</code>. Below shows a simple format of this file.</p>
+<pre><code>site_url=http://zydecx.github.io
+
+# messages shown in header
+site_title=Modernist
+site_description=A Theme for GitHub Pages
+site_github_home=#
+
+# root path of workspace
+workspace=.</code></pre>
+<div class="article-more"><a href="http://zydecx.github.io/htmldecoder/staticpage/-4-configure.html">...more</a></div>
+
+	</div>
+</article>
+
+<article>
+	<header style="display:none;">
+		<h1><a href="http://zydecx.github.io/htmldecoder/staticpage/-3-install.html">Install</a></h1>
+		<div class="article-media">
+			<p class="media-extra">
+				<span>Time: <time>Sun Oct 04 16:00:00 CST 2015</time></span>
+				<span>, by <a href="https://github.com/zydecx">zydecx</a></span>
+			</p>
+			<ul class="category">
+				Category:
+				
+<li><a href="http://zydecx.github.io/htmldecoder/category/document">document</a></li>
+
+			</ul>
+			<ul class="tag">
+				Tag:
+				
+			</ul>
+		</div>
+	</header>
+	<div class="article-content">
+		
+<h2 id="install-htmldecoder">Install <code>htmldecoder</code></h2>
+<p>There is no formal demand for installation. If your computer satisfies the requirements in download page, you could just be ready to configure and run.</p>
+<ul>
+<li>If you download the zip file of jars, just unzip them to the disk.</li>
+<li><p>If you download the lastest version of code, do as the following steps:<div class="article-more"><a href="http://zydecx.github.io/htmldecoder/staticpage/-3-install.html">...more</a></div>
+
+	</div>
+</article>
+
+<article>
+	<header style="display:none;">
+		<h1><a href="http://zydecx.github.io/htmldecoder/staticpage/-1-what is htmldecoder.html">About HtmlDecoder</a></h1>
+		<div class="article-media">
+			<p class="media-extra">
+				<span>Time: <time>Sun Oct 04 16:00:00 CST 2015</time></span>
+				<span>, by <a href="https://github.com/zydecx">zydecx</a></span>
+			</p>
+			<ul class="category">
+				Category:
+				
+<li><a href="http://zydecx.github.io/htmldecoder/category/document">document</a></li>
+
+			</ul>
+			<ul class="tag">
+				Tag:
+				
+			</ul>
+		</div>
+	</header>
+	<div class="article-content">
+		
+<h2 id="whats-htmldecoder">What's <code>htmldecoder</code></h2>
+<p><code>htmldecoder</code> is a simple static site generator. With it, you could just focus on your content and free from trivial matters like pagination/category/tag/search/... <code>htmldecoder</code> now is stepping out its first stage, you're welcomed to join to make it better.</p>
+<p><code>htmldecoder</code> is developed with Java and compiled with jdk1.7. Older versions of jdk might not work. Project is arranged using Maven and can be packaged as a jar file to run(several dependency jars should included into classpath).</p>
+<div class="article-more"><a href="http://zydecx.github.io/htmldecoder/staticpage/-1-what is htmldecoder.html">...more</a></div>
 
 	</div>
 </article>
